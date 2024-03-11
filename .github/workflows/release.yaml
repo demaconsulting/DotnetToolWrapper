@@ -1,0 +1,52 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      semver:
+        description: 'Release semantic version (1.2.3-rc.4)'
+        required: true
+      winver:
+        description: 'Release windows version (1.2.3.4)'
+        required: true
+
+jobs:
+  release:
+  
+    permissions:
+      contents: write
+      packages: write
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    
+      - uses: actions/checkout@v4
+      
+      - name: Setup dotnet 6.x
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '6.x'
+
+      - name: Install dependencies
+        run: dotnet restore
+      
+      - name: Build
+        run: > 
+          dotnet build
+          -c Release
+          -p:Version=${{ github.event.inputs.semver }}
+          -p:InformationalVersion=${{ github.event.inputs.semver }}
+          -p:AssemblyVersion=${{ github.event.inputs.winver }}
+
+      - name: Assemble
+        run: |
+          cd src/DemaConsulting.DotnetToolWrapper/bin/Release/net6.0
+          zip DotnetToolWrapper.zip *.dll *.deps.json *.runtimeconfig.json
+
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: src/DemaConsulting.DotnetToolWrapper/bin/Release/net6.0/DotnetToolWrapper.zip
+          generateReleaseNotes: true
+          tag: ${{ github.event.inputs.semver }}
