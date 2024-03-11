@@ -57,7 +57,7 @@ The following is a sample .nuspec file for a tool:
     </metadata>
     <files>
         <file src="README.md" target="docs/README.md" />
-        <file src="tools/**/*" target="." />
+        <file src="tools/**/*" target="tools" />
     </files>
 </package>
 ```
