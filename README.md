@@ -5,7 +5,7 @@
 
 # About
 
-This project generates a .NET 6.0 console application suitable for use in Dotnet Tool packages to wrap a native application.
+This project generates a .NET 6.0 console application suitable for use in [Dotnet Tool](https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools) packages which wrap native applications.
 
 # Usage
 
@@ -24,16 +24,16 @@ The following is an example folder structure for a tool:
 
 ```
 root
-|- tool.nuspec                                                      Nuspec file
-|- README.md                                                        README file
+|- tool.nuspec                                                   Nuspec file
+|- README.md                                                     README file
 |- tools
    |- net6.0
       |- any
-         |- DotnetToolSettings.xml                                  Dotnet tool settings
-         |- DotnetToolWrapper.json                                  DotnetToolWrapper application settings
-         |- DemaConsulting.DotnetToolWrapper.deps.json              DotnetToolWrapper dependencies
-         |- DemaConsulting.DotnetToolWrapper.dll                    DotnetToolWrapper application
-         |- DemaConsulting.DotnetToolWrapper.runtimeconfig.json     DotnetToolWrapper runtime
+         |- DotnetToolSettings.xml                               Dotnet tool settings
+         |- DotnetToolWrapper.json                               DotnetToolWrapper application settings
+         |- DemaConsulting.DotnetToolWrapper.deps.json           DotnetToolWrapper dependencies
+         |- DemaConsulting.DotnetToolWrapper.dll                 DotnetToolWrapper application
+         |- DemaConsulting.DotnetToolWrapper.runtimeconfig.json  DotnetToolWrapper runtime
 ```
 
 ## Nuspec File
@@ -62,7 +62,7 @@ The following is a sample .nuspec file for a tool:
 </package>
 ```
 
-It copies the README.md and the tools folder into the nuget package.
+Refer to the [.nuspec File Reference](https://learn.microsoft.com/en-us/nuget/reference/nuspec) for more details.
 
 ## DotnetToolSettings.xml
 
@@ -81,7 +81,7 @@ The `Name` should be customized to match the desired name of the Dotnet tool. Do
 
 ## DotnetToolWrapper.json
 
-The following is a sample DotnetToolWrapper.json file:
+The following is a sample DotnetToolWrapper.json file indicating the program to execute for each supported target:
 
 ```json
 {
@@ -94,8 +94,8 @@ The following is a sample DotnetToolWrapper.json file:
 }
 ```
 
-This defines the program to run for each operating system.
+The target strings consist of the operating system and architecture. Supported operating systems are `win`, `linux`, `freebsd`, and `osx`. Supported architectures are `x86`, `x64`, `arm`, `arm64`, `wasm`, and `s390x`.
 
 ## Packaging
 
-To create the Dotnet tool Nuget package run `dotnet pack -Version <x.y.z>` specifying the version of the package to create.
+To create the Dotnet tool Nuget package run `nuget pack -Version <x.y.z>` specifying the version of the package to create.
