@@ -22,15 +22,19 @@ To create a DotNet tool for an existing application:
 
 The following is an example folder structure for a tool:
 
-| Path | Description |
-| :-------- | :----- |
-| /tool.nuspec | Tool Nuspec file |
-| /README.md | Tool README file |
-| /tools/net6.0/any/DotnetToolSettings.xml | Dotnet tool settings |
-| /tools/net6.0/any/DotnetToolWrapper.json | DotnetToolWrapper application settings |
-| /tools/net6.0/any/DemaConsulting.DotnetToolWrapper.deps.json | DotnetToolWrapper dependencies |
-| /tools/net6.0/any/DemaConsulting.DotnetToolWrapper.dll | DotnetToolWrapper application |
-| /tools/net6.0/any/DemaConsulting.DotnetToolWrapper.runtimeconfig.json | DotnetToolWrapper runtime |
+```
+root
+|- tool.nuspec                                                      Nuspec file
+|- README.md                                                        README file
+|- tools
+   |- net6.0
+      |- any
+         |- DotnetToolSettings.xml                                  Dotnet tool settings
+         |- DotnetToolWrapper.json                                  DotnetToolWrapper application settings
+         |- DemaConsulting.DotnetToolWrapper.deps.json              DotnetToolWrapper dependencies
+         |- DemaConsulting.DotnetToolWrapper.dll                    DotnetToolWrapper application
+         |- DemaConsulting.DotnetToolWrapper.runtimeconfig.json     DotnetToolWrapper runtime
+```
 
 ## Nuspec File
 
