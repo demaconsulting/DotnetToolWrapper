@@ -69,6 +69,6 @@ jobs:
       if: ${{ inputs.publish == 'release' }}
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "DotnetToolWrapper.zip,dist/_manifest/spdx_2.2/*.*"
+        artifacts: "DotnetToolWrapper.zip,build-artifacts/_manifest/spdx_2.2/*.*"
         generateReleaseNotes: true
         tag: ${{ inputs.semver }}
