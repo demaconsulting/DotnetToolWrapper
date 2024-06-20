@@ -36,7 +36,7 @@ jobs:
 
     - name: Cleanup Drop
       shell: bash
-      run: >
+      run: |
         rm src/DemaConsulting.DotnetToolWrapper/bin/Release/net6.0/*.exe
         rm src/DemaConsulting.DotnetToolWrapper/bin/Release/net6.0/*.pdb
         rm src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.exe
