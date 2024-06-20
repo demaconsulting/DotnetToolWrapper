@@ -8,7 +8,8 @@ env:
 
 jobs:
   build:
-    uses: ./github/workflows/build.yaml
+    name: Build Artifacts
+    uses: ./.github/workflows/build.yaml
     with:
       semver: ${{ env.semver }}
       winver: ${{ env.winver }}

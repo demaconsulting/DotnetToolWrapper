@@ -22,12 +22,14 @@ on:
 
 jobs:
   build:
-    uses: ./github/workflows/build.yaml
+    name: Build Artifacts
+    uses: ./.github/workflows/build.yaml
     with:
       semver: ${{ github.event.inputs.semver }}
       winver: ${{ github.event.inputs.winver }}
 
   release:
+    name: Release Artifacts
     permissions:
       contents: write
       packages: write
