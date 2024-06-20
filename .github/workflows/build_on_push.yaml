@@ -2,31 +2,13 @@ name: Build
 
 on: [push]
 
+env:
+  semver: '0.0.0-run.${{ github.run_number }}'
+  winver: '0.0.0.${{ github.run_number }}'
+
 jobs:
   build:
-
-    runs-on: ubuntu-latest
-
-    steps:
-
-      - uses: actions/checkout@v4
-
-      - name: Setup dotnet 6.x
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '6.x'
-
-      - name: Install dependencies
-        run: dotnet restore
-      
-      - name: Build
-        run: dotnet build -c Release
-
-      - name: Upload asset
-        uses: actions/upload-artifact@v4
-        with:
-          name: DotnetToolWrapper
-          path: |
-            src/DemaConsulting.DotnetToolWrapper/bin/Release/net6.0/*.dll
-            src/DemaConsulting.DotnetToolWrapper/bin/Release/net6.0/*.deps.json
-            src/DemaConsulting.DotnetToolWrapper/bin/Release/net6.0/*.runtimeconfig.json
+    uses: ./github/workflows/build.yaml
+    with:
+      semver: ${{ env.semver }}
+      winver: ${{ env.winver }}

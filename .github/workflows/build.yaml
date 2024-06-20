@@ -1,0 +1,65 @@
+on:
+  workflow_call:
+    inputs:
+      semver:
+        required: true
+        type: string
+      winver:
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v4
+
+    - name: Setup dotnet 6/8
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          6.x
+          8.x          
+
+    - name: Restore Tools
+      run: >
+        dotnet tool restore
+
+    - name: Build
+      run: >
+        dotnet build
+        --configuration Release
+        --property:Version=${{ env.version }}       
+
+    - name: Cleanup Drop
+      shell: bash
+      run: >
+        rm src/DemaConsulting.DotnetToolWrapper/bin/Release/net6.0/*.exe
+        rm src/DemaConsulting.DotnetToolWrapper/bin/Release/net6.0/*.pdb
+        rm src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.exe
+        rm src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.pdb
+
+    - name: Generate SBOM
+      run: >
+        dotnet sbom-tool generate
+        -b src/DemaConsulting.DotnetToolWrapper/bin/Release
+        -bc src/DemaConsulting.DotnetToolWrapper
+        -pn DemaConsulting.DotnetToolWrapper
+        -pv ${{ env.version }}
+        -ps DemaConsulting
+        -nsb https://DemaConsulting.com/DotnetToolWrapper
+
+    - name: Enhance SBOM
+      run: >
+        dotnet spdx-tool
+        run-workflow spdx-workflow.yaml
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifacts
+        path: |
+          src/DemaConsulting.DotnetToolWrapper/bin/Release/_manifest/spdx_2.2/*.*
+          src/DemaConsulting.DotnetToolWrapper/bin/Release/net6.0/*.*
+          src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.*
