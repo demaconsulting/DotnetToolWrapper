@@ -1,0 +1,71 @@
+on:
+  workflow_call:
+    inputs:
+      semver:
+        required: true
+        type: string
+      winver:
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v4
+
+    - name: Setup dotnet 6/8
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: |
+          6.x
+          8.x          
+
+    - name: Restore Tools
+      run: >
+        dotnet tool restore
+
+    - name: Build
+      run: >
+        dotnet build
+        --configuration Release
+        --property:Version=${{ inputs.semver }}
+        --property:InformationalVersion=${{ inputs.semver }}
+        --property:AssemblyVersion=${{ inputs.winver }}
+
+    - name: Create Drop Folder
+      shell: bash
+      run: |
+        mkdir -p drop/net6.0
+        mkdir -p drop/net8.0
+        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net6.0/*.dll drop/net6.0
+        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net6.0/*.runtimeconfig.json drop/net6.0
+        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net6.0/*.deps.json drop/net6.0
+        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.dll drop/net8.0
+        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.runtimeconfig.json drop/net8.0
+        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.deps.json drop/net8.0
+
+    - name: Generate SBOM
+      run: >
+        dotnet sbom-tool generate
+        -b drop
+        -bc src/DemaConsulting.DotnetToolWrapper
+        -pn DemaConsulting.DotnetToolWrapper
+        -pv ${{ inputs.semver }}
+        -ps DemaConsulting
+        -nsb https://DemaConsulting.com/DotnetToolWrapper
+
+    - name: Enhance SBOM
+      run: >
+        dotnet spdx-tool
+        run-workflow spdx-workflow.yaml
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifacts
+        path: |
+          drop/_manifest/spdx_2.2/*.*
+          drop/net6.0/*.*
+          drop/net8.0/*.*

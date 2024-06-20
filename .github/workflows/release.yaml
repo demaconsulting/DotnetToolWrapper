@@ -6,47 +6,69 @@ on:
       semver:
         description: 'Release semantic version (1.2.3-rc.4)'
         required: true
+        type: string
       winver:
         description: 'Release windows version (1.2.3.4)'
         required: true
+        type: string
+      publish:
+        description: 'Release Type'
+        required: true
+        default: 'release'
+        type: choice
+        options:
+        - none
+        - release
 
 jobs:
+  build:
+    name: Build Artifacts
+    uses: ./.github/workflows/build.yaml
+    with:
+      semver: ${{ inputs.semver }}
+      winver: ${{ inputs.winver }}
+
   release:
-  
+    name: Release Artifacts
     permissions:
       contents: write
       packages: write
 
     runs-on: ubuntu-latest
     
+    needs: build
+
     steps:
     
-      - uses: actions/checkout@v4
-      
-      - name: Setup dotnet 6.x
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '6.x'
+    - uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: dotnet restore
-      
-      - name: Build
-        run: > 
-          dotnet build
-          -c Release
-          -p:Version=${{ github.event.inputs.semver }}
-          -p:InformationalVersion=${{ github.event.inputs.semver }}
-          -p:AssemblyVersion=${{ github.event.inputs.winver }}
+    - name: Download Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: build-artifacts
+        path: build-artifacts
 
-      - name: Assemble
-        run: |
-          cd src/DemaConsulting.DotnetToolWrapper/bin/Release/net6.0
-          zip DotnetToolWrapper.zip *.dll *.deps.json *.runtimeconfig.json
+    - name: Assemble
+      shell: bash
+      run: |
+        mkdir -p dist/net6.0
+        mkdir -p dist/net8.0
+        cp build-artifacts/net6.0/*.* dist/net6.0
+        cp build-artifacts/net8.0/*.* dist/net8.0
+        cd dist
+        zip -r ../DotnetToolWrapper.zip *
 
-      - name: Create release
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: src/DemaConsulting.DotnetToolWrapper/bin/Release/net6.0/DotnetToolWrapper.zip
-          generateReleaseNotes: true
-          tag: ${{ github.event.inputs.semver }}
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-artifacts
+        path: |
+          DotnetToolWrapper.zip
+
+    - name: Create release
+      if: ${{ inputs.publish == 'release' }}
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "DotnetToolWrapper.zip,dist/_manifest/spdx_2.2/*.*"
+        generateReleaseNotes: true
+        tag: ${{ inputs.semver }}
