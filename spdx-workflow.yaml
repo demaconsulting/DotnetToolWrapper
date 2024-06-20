@@ -4,8 +4,8 @@
 
 # Workflow Parameters
 parameters:
-  spdx: src/DemaConsulting.DotnetToolWrapper/bin/Release/_manifest/spdx_2.2/manifest.spdx.json
-  md: src/DemaConsulting.DotnetToolWrapper/bin/Release/_manifest/spdx_2.2/sbom_summary.md
+  spdx: drop/_manifest/spdx_2.2/manifest.spdx.json
+  md: drop/_manifest/spdx_2.2/sbom_summary.md
 
 # Steps
 steps:

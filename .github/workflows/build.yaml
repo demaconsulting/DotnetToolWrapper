@@ -34,18 +34,22 @@ jobs:
         --property:InformationalVersion=${{ inputs.semver }}
         --property:AssemblyVersion=${{ inputs.winver }}
 
-    - name: Cleanup Drop
+    - name: Create Drop Folder
       shell: bash
       run: |
-        rm -f src/DemaConsulting.DotnetToolWrapper/bin/Release/net6.0/*.exe
-        rm -f src/DemaConsulting.DotnetToolWrapper/bin/Release/net6.0/*.pdb
-        rm -f src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.exe
-        rm -f src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.pdb
+        mkdir -p drop/net6.0
+        mkdir -p drop/net8.0
+        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net6.0/*.dll drop/net6.0
+        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net6.0/*.runtimeconfig.json drop/net6.0
+        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net6.0/*.deps.json drop/net6.0
+        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.dll drop/net8.0
+        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.runtimeconfig.json drop/net8.0
+        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.deps.json drop/net8.0
 
     - name: Generate SBOM
       run: >
         dotnet sbom-tool generate
-        -b src/DemaConsulting.DotnetToolWrapper/bin/Release
+        -b drop
         -bc src/DemaConsulting.DotnetToolWrapper
         -pn DemaConsulting.DotnetToolWrapper
         -pv ${{ inputs.semver }}
@@ -62,6 +66,6 @@ jobs:
       with:
         name: build-artifacts
         path: |
-          src/DemaConsulting.DotnetToolWrapper/bin/Release/_manifest/spdx_2.2/*.*
-          src/DemaConsulting.DotnetToolWrapper/bin/Release/net6.0/*.*
-          src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.*
+          drop/_manifest/spdx_2.2/*.*
+          drop/net6.0/*.*
+          drop/net8.0/*.*
