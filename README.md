@@ -5,17 +5,17 @@
 
 # About
 
-This project generates a .NET 6.0 console application suitable for use in [Dotnet Tool](https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools) packages which wrap native applications.
+This project generates a .NET 6.0 and 8.0 console application suitable for use in [Dotnet Tool](https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools) packages which wrap native applications.
 
 # Usage
 
 To create a DotNet tool for an existing application:
 
 1. Create a .nuspec file for the Dotnet tool
-2. Create a `tools/net6.0/any/DotnetToolSettings.xml` file which points to this DotnetToolWrapper
-3. Create a `tools/net6.0/any/DotnetToolWrapper.json` file describing the existing application to run
-4. Copy this DotnetToolWrapper application (.dll) into the `tools/net6.0/any` folder
-5. Add the existing application files under the `tools/net6.0/any` folder.
+2. Create a `tools/net8.0/any/DotnetToolSettings.xml` file which points to this DotnetToolWrapper
+3. Create a `tools/net8.0/any/DotnetToolWrapper.json` file describing the existing application to run
+4. Copy this DotnetToolWrapper application (.dll) into the `tools/net8.0/any` folder
+5. Add the existing application files under the `tools/net8.0/any` folder.
 6. Package the NuGet package
 
 ## Folder Structure
@@ -27,7 +27,7 @@ root
 |- tool.nuspec                                                   Nuspec file
 |- README.md                                                     README file
 |- tools
-   |- net6.0
+   |- net8.0
       |- any
          |- DotnetToolSettings.xml                               Dotnet tool settings
          |- DotnetToolWrapper.json                               DotnetToolWrapper application settings
