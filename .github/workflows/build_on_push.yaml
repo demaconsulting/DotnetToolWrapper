@@ -2,14 +2,10 @@ name: Build
 
 on: [push]
 
-env:
-  semver: '0.0.0-run.${{ github.run_number }}'
-  winver: '0.0.0.${{ github.run_number }}'
-
 jobs:
   build:
     name: Build Artifacts
     uses: ./.github/workflows/build.yaml
     with:
-      semver: ${{ env.semver }}
-      winver: ${{ env.winver }}
+      semver: '0.0.0-run.${{ github.run_number }}'
+      winver: '0.0.0.${{ github.run_number }}'
