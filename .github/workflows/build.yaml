@@ -30,9 +30,9 @@ jobs:
       run: >
         dotnet build
         --configuration Release
-        --property:Version=${{ github.event.inputs.semver }}
-        --property:InformationalVersion=${{ github.event.inputs.semver }}
-        --property:AssemblyVersion=${{ github.event.inputs.winver }}
+        --property:Version=${{ inputs.semver }}
+        --property:InformationalVersion=${{ inputs.semver }}
+        --property:AssemblyVersion=${{ inputs.winver }}
 
     - name: Cleanup Drop
       shell: bash
@@ -48,7 +48,7 @@ jobs:
         -b src/DemaConsulting.DotnetToolWrapper/bin/Release
         -bc src/DemaConsulting.DotnetToolWrapper
         -pn DemaConsulting.DotnetToolWrapper
-        -pv ${{ github.event.inputs.semver }}
+        -pv ${{ inputs.semver }}
         -ps DemaConsulting
         -nsb https://DemaConsulting.com/DotnetToolWrapper
 

@@ -25,8 +25,8 @@ jobs:
     name: Build Artifacts
     uses: ./.github/workflows/build.yaml
     with:
-      semver: ${{ github.event.inputs.semver }}
-      winver: ${{ github.event.inputs.winver }}
+      semver: ${{ inputs.semver }}
+      winver: ${{ inputs.winver }}
 
   release:
     name: Release Artifacts
@@ -71,4 +71,4 @@ jobs:
       with:
         artifacts: "dist/DotnetToolWrapper.zip,dist/_manifest/spdx_2.2/*.*"
         generateReleaseNotes: true
-        tag: ${{ github.event.inputs.semver }}
+        tag: ${{ inputs.semver }}
