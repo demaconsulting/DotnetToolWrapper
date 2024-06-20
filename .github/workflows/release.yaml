@@ -55,19 +55,20 @@ jobs:
         mkdir -p dist/net8.0
         cp build-artifacts/net6.0/*.* dist/net6.0
         cp build-artifacts/net8.0/*.* dist/net8.0
-        zip -r DotnetToolWrapper.zip dist
+        cd dist
+        zip -r ../DotnetToolWrapper.zip *
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: artifacts-release
         path: |
-          dist/DotnetToolWrapper.zip
+          DotnetToolWrapper.zip
 
     - name: Create release
       if: ${{ inputs.publish == 'release' }}
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "dist/DotnetToolWrapper.zip,dist/_manifest/spdx_2.2/*.*"
+        artifacts: "DotnetToolWrapper.zip,dist/_manifest/spdx_2.2/*.*"
         generateReleaseNotes: true
         tag: ${{ inputs.semver }}
