@@ -3,13 +3,13 @@
   "isRoot": true,
   "tools": {
     "microsoft.sbom.dotnettool": {
-      "version": "2.2.6",
+      "version": "3.0.1",
       "commands": [
         "sbom-tool"
       ]
     },
     "demaconsulting.spdxtool": {
-      "version": "0.1.0-alpha.10",
+      "version": "2.2.0",
       "commands": [
         "spdx-tool"
       ]
