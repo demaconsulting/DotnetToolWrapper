@@ -40,10 +40,10 @@ jobs:
 
     steps:
     
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
 
     - name: Download Artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v5
       with:
         name: build-artifacts
         path: build-artifacts
@@ -51,15 +51,17 @@ jobs:
     - name: Assemble
       shell: bash
       run: |
-        mkdir -p dist/net6.0
         mkdir -p dist/net8.0
-        cp build-artifacts/net6.0/*.* dist/net6.0
+        mkdir -p dist/net9.0
+        mkdir -p dist/net10.0
         cp build-artifacts/net8.0/*.* dist/net8.0
+        cp build-artifacts/net9.0/*.* dist/net9.0
+        cp build-artifacts/net10.0/*.* dist/net10.0
         cd dist
         zip -r ../DotnetToolWrapper.zip *
 
     - name: Upload Artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: release-artifacts
         path: |

@@ -5,7 +5,7 @@
 
 # About
 
-This project generates a .NET 6.0 and 8.0 console application suitable for use in [Dotnet Tool](https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools) packages which wrap native applications.
+This project generates a .NET 8.0, 9.0, and 10.0 console application suitable for use in [Dotnet Tool](https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools) packages which wrap native applications.
 
 # Usage
 
