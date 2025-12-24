@@ -74,6 +74,8 @@ dotnet build --configuration Release --framework net8.0
 
 ### Project Structure
 
+Key files and directories:
+
 ```text
 DotnetToolWrapper/
 ├── .github/workflows/       # CI/CD workflows
@@ -81,6 +83,10 @@ DotnetToolWrapper/
 │   └── DemaConsulting.DotnetToolWrapper/
 │       ├── Program.cs       # Main application logic
 │       └── DemaConsulting.DotnetToolWrapper.csproj
+├── .cspell.json             # Spelling check configuration
+├── .gitignore               # Git ignore patterns
+├── .markdownlint.json       # Markdown linting rules
+├── AGENTS.md                # GitHub Copilot agent instructions
 ├── ARCHITECTURE.md          # Architecture documentation
 ├── CODE_OF_CONDUCT.md       # Code of conduct
 ├── CONTRIBUTING.md          # This file

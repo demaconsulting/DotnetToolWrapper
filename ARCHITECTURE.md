@@ -85,12 +85,13 @@ The configuration file uses a simple JSON structure:
 
 ### Supported Target Strings
 
-| OS      | Architectures                                    |
-|---------|--------------------------------------------------|
-| win     | x86, x64, arm, arm64                             |
-| linux   | x86, x64, arm, arm64, s390x                      |
-| freebsd | x86, x64, arm, arm64                             |
-| osx     | x64, arm64                                       |
+| OS      | Architectures                                    | Notes                           |
+|---------|--------------------------------------------------|---------------------------------|
+| win     | x86, x64, arm, arm64                             | Windows platforms               |
+| linux   | x86, x64, arm, arm64, s390x                      | Linux distributions             |
+| freebsd | x86, x64, arm, arm64                             | FreeBSD platforms               |
+| osx     | x64, arm64                                       | macOS platforms                 |
+| browser | wasm                                             | WebAssembly (experimental)      |
 
 ## Design Decisions
 
