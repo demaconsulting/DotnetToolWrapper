@@ -27,7 +27,10 @@
     "malware",
     "sandboxing",
     "socio",
-    "appsettings"
+    "appsettings",
+    "USERPROFILE",
+    "LOCALAPPDATA",
+    "mytool"
   ],
   "ignorePaths": [
     "node_modules",

@@ -7,7 +7,7 @@ namespace DemaConsulting.DotnetToolWrapper;
 /// <summary>
 /// Dotnet Tool Wrapper Program
 /// </summary>
-public class Program
+public static class Program
 {
     /// <summary>
     /// Get the operating system
