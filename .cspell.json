@@ -26,12 +26,11 @@
   "ignorePaths": [
     "node_modules",
     ".git",
-    "bin",
-    "obj",
-    "drop",
+    "**/bin/**",
+    "**/obj/**",
+    "**/drop/**",
     "*.dll",
     "*.exe",
-    "*.json",
     ".vs",
     "*.bak"
   ]

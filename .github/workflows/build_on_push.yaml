@@ -15,17 +15,11 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install cspell
-        run: npm install -g cspell
-
-      - name: Install markdownlint-cli
-        run: npm install -g markdownlint-cli
-
       - name: Run Spelling Check
-        run: cspell "**/*.md"
+        run: npx cspell "**/*.md"
 
       - name: Run Markdown Linting
-        run: markdownlint "**/*.md"
+        run: npx markdownlint-cli "**/*.md"
 
   build:
     name: Build Artifacts
