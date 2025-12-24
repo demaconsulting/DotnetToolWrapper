@@ -5,7 +5,9 @@
 
 # About
 
-This project generates a .NET 8.0, 9.0, and 10.0 console application suitable for use in [Dotnet Tool](https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools) packages which wrap native applications.
+This project generates a .NET 8.0, 9.0, and 10.0 console application suitable for use in
+[Dotnet Tool](https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools) packages which wrap
+native applications.
 
 # Usage
 
@@ -22,7 +24,7 @@ To create a DotNet tool for an existing application:
 
 The following is an example folder structure for a tool:
 
-```
+```text
 root
 |- tool.nuspec                                                   Nuspec file
 |- README.md                                                     README file
@@ -77,7 +79,8 @@ The following is a sample DotnetToolSettings.xml file:
 </DotNetCliTool>
 ```
 
-The `Name` should be customized to match the desired name of the Dotnet tool. Dotnet uses this information when installing the package.
+The `Name` should be customized to match the desired name of the Dotnet tool. Dotnet uses this information
+when installing the package.
 
 ## DotnetToolWrapper.json
 
@@ -94,7 +97,8 @@ The following is a sample DotnetToolWrapper.json file indicating the program to 
 }
 ```
 
-The target strings consist of the operating system and architecture. Supported operating systems are `win`, `linux`, `freebsd`, and `osx`. Supported architectures are `x86`, `x64`, `arm`, `arm64`, `wasm`, and `s390x`.
+The target strings consist of the operating system and architecture. Supported operating systems are `win`,
+`linux`, `freebsd`, and `osx`. Supported architectures are `x86`, `x64`, `arm`, `arm64`, `wasm`, and `s390x`.
 
 ## Packaging
 
