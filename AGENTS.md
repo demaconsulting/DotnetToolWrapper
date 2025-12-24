@@ -84,6 +84,15 @@ Quality checks are automated through GitHub Actions:
 1. Follow the markdown linting rules in `.markdownlint.json`
 2. Check spelling against `.cspell.json` dictionary
 3. Keep README.md synchronized with actual functionality
+4. Update ARCHITECTURE.md if making architectural changes
+5. Reference appropriate documentation files (README.md, ARCHITECTURE.md, CONTRIBUTING.md, SECURITY.md)
+
+### When Addressing Security Issues
+
+1. Follow the security policy outlined in `SECURITY.md`
+2. Never commit sensitive information
+3. Consider all supported platforms when evaluating security impact
+4. Update security documentation if introducing new security considerations
 
 ## Common Tasks
 
@@ -108,6 +117,15 @@ Before committing:
 1. Build locally: `dotnet build --configuration Release`
 2. Run spelling checks: `npx cspell "**/*.md"`
 3. Run markdown linting: `npx markdownlint "**/*.md"`
+
+## Related Documentation
+
+- [README.md](README.md) - Project overview and quick start guide
+- [ARCHITECTURE.md](ARCHITECTURE.md) - Detailed architecture and design documentation
+- [CONTRIBUTING.md](CONTRIBUTING.md) - Contribution guidelines and development setup
+- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) - Community code of conduct
+- [SECURITY.md](SECURITY.md) - Security policy and vulnerability reporting
+- [LICENSE](LICENSE) - MIT License terms
 
 ## Contact
 

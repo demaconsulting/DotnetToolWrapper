@@ -21,7 +21,13 @@
     "DotnetToolWrapper",
     "github",
     "workflows",
-    "yaml"
+    "yaml",
+    "mermaid",
+    "PowerPC",
+    "malware",
+    "sandboxing",
+    "socio",
+    "appsettings"
   ],
   "ignorePaths": [
     "node_modules",
