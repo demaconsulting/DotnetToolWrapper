@@ -5,7 +5,7 @@ This document describes the architecture and design of the DotnetToolWrapper pro
 ## Overview
 
 DotnetToolWrapper is a .NET console application that serves as a universal launcher for native applications packaged
-as [.NET Tools](https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools). It enables developers to distribute
+as [.NET Tools][link1]. It enables developers to distribute
 platform-specific native executables through the .NET tool ecosystem.
 
 ## Problem Statement
@@ -171,3 +171,5 @@ The project uses GitHub Actions for CI/CD:
 - [README.md](README.md) - Usage instructions and examples
 - [CONTRIBUTING.md](CONTRIBUTING.md) - Contribution guidelines
 - [SECURITY.md](SECURITY.md) - Security policy
+
+[link1]: https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools

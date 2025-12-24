@@ -33,6 +33,12 @@ target .NET frameworks (net8.0, net9.0, and net10.0) to ensure compatibility:
 root
 |- tool.nuspec                                                   Nuspec file
 |- README.md                                                     README file
+|- win-x64
+|  |- my-tool.exe                                               Windows x64 executable
+|- linux-x64
+|  |- my-tool                                                   Linux x64 executable
+|- osx-x64
+|  |- my-tool                                                   macOS x64 executable
 |- tools
    |- net8.0
    |  |- any
@@ -41,12 +47,6 @@ root
    |     |- DemaConsulting.DotnetToolWrapper.deps.json           DotnetToolWrapper dependencies
    |     |- DemaConsulting.DotnetToolWrapper.dll                 DotnetToolWrapper application
    |     |- DemaConsulting.DotnetToolWrapper.runtimeconfig.json  DotnetToolWrapper runtime
-   |     |- win-x64
-   |     |  |- my-tool.exe                                       Windows x64 executable
-   |     |- linux-x64
-   |     |  |- my-tool                                           Linux x64 executable
-   |     |- osx-x64
-   |        |- my-tool                                           macOS x64 executable
    |- net9.0
    |  |- any
    |     |- DotnetToolSettings.xml                               Dotnet tool settings
@@ -54,12 +54,6 @@ root
    |     |- DemaConsulting.DotnetToolWrapper.deps.json           DotnetToolWrapper dependencies
    |     |- DemaConsulting.DotnetToolWrapper.dll                 DotnetToolWrapper application
    |     |- DemaConsulting.DotnetToolWrapper.runtimeconfig.json  DotnetToolWrapper runtime
-   |     |- win-x64
-   |     |  |- my-tool.exe                                       Windows x64 executable
-   |     |- linux-x64
-   |     |  |- my-tool                                           Linux x64 executable
-   |     |- osx-x64
-   |        |- my-tool                                           macOS x64 executable
    |- net10.0
       |- any
          |- DotnetToolSettings.xml                               Dotnet tool settings
@@ -67,12 +61,6 @@ root
          |- DemaConsulting.DotnetToolWrapper.deps.json           DotnetToolWrapper dependencies
          |- DemaConsulting.DotnetToolWrapper.dll                 DotnetToolWrapper application
          |- DemaConsulting.DotnetToolWrapper.runtimeconfig.json  DotnetToolWrapper runtime
-         |- win-x64
-         |  |- my-tool.exe                                       Windows x64 executable
-         |- linux-x64
-         |  |- my-tool                                           Linux x64 executable
-         |- osx-x64
-            |- my-tool                                           macOS x64 executable
 ```
 
 **Note**: While the example above shows net8.0, net9.0, and net10.0 folders, you can choose to include only
@@ -117,7 +105,7 @@ Create a `.nuspec` file that defines your package metadata:
 - Include `<packageType name="DotnetTool" />` to mark this as a .NET tool
 - Adjust file paths in the `<files>` section to match your structure
 
-Refer to the [.nuspec File Reference](https://learn.microsoft.com/en-us/nuget/reference/nuspec) for more details.
+Refer to the [.nuspec File Reference][link1] for more details.
 
 ### 2. Create DotnetToolSettings.xml
 
@@ -145,22 +133,22 @@ Create a `DotnetToolWrapper.json` file in each framework folder that maps platfo
 ```json
 {
   "win-x64": {
-    "program": "win-x64/my-tool.exe"
+    "program": "../../../win-x64/my-tool.exe"
   },
   "win-x86": {
-    "program": "win-x86/my-tool.exe"
+    "program": "../../../win-x86/my-tool.exe"
   },
   "linux-x64": {
-    "program": "linux-x64/my-tool"
+    "program": "../../../linux-x64/my-tool"
   },
   "linux-arm64": {
-    "program": "linux-arm64/my-tool"
+    "program": "../../../linux-arm64/my-tool"
   },
   "osx-x64": {
-    "program": "osx-x64/my-tool"
+    "program": "../../../osx-x64/my-tool"
   },
   "osx-arm64": {
-    "program": "osx-arm64/my-tool"
+    "program": "../../../osx-arm64/my-tool"
   }
 }
 ```
@@ -203,15 +191,15 @@ into your `tools/{framework}/any/` folder:
 
 You can obtain these files by:
 
-1. Downloading from the [releases page](https://github.com/demaconsulting/DotnetToolWrapper/releases)
-2. Building from source (see [Building from Source](#building-from-source))
+1. Downloading from the [releases page][link2]
+2. Building from source (see [Building from Source][link3])
 
 ### 5. Add Your Native Executables
 
-Place your native executables in subdirectories matching the platform identifiers. For example:
+Place your native executables at the root of the package in subdirectories matching the platform identifiers. For example:
 
 ```text
-tools/net8.0/any/
+root/
 ├── win-x64/
 │   └── my-tool.exe
 ├── linux-x64/
@@ -298,7 +286,7 @@ If you want to support multiple .NET framework versions:
 
 1. Create separate folders for each framework: `net8.0`, `net9.0`, `net10.0`
 2. Copy the appropriate DotnetToolWrapper binaries for each framework
-3. Copy your native executables to each framework folder (they can be the same binaries)
+3. Place your native executables at the root of the package (they are shared across all frameworks)
 4. Update your .nuspec to include all framework folders
 
 Users with different .NET SDK versions will automatically use the appropriate framework version.
@@ -404,20 +392,30 @@ dotnet build --configuration Release
 
 For real-world examples of tools using DotnetToolWrapper:
 
-- Browse repositories on GitHub with the [dotnettoolwrapper topic](https://github.com/topics/dotnettoolwrapper)
+- Browse repositories on GitHub with the [dotnettoolwrapper topic][link4]
 - Check the examples in the DotnetToolWrapper repository (if available)
 
 ## Support
 
-- **Issues**: Report bugs or request features via [GitHub Issues](https://github.com/demaconsulting/DotnetToolWrapper/issues)
-- **Discussions**: Ask questions via [GitHub Discussions](https://github.com/demaconsulting/DotnetToolWrapper/discussions)
+- **Issues**: Report bugs or request features via [GitHub Issues][link5]
+- **Discussions**: Ask questions via [GitHub Discussions][link6]
 - **Documentation**: See [README.md](../README.md) for project overview
 - **Architecture**: See [ARCHITECTURE.md](../ARCHITECTURE.md) for design details
 - **Contributing**: See [CONTRIBUTING.md](../CONTRIBUTING.md) for contribution guidelines
 
 ## Additional Resources
 
-- [.NET Tool Documentation](https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools)
-- [.nuspec File Reference](https://learn.microsoft.com/en-us/nuget/reference/nuspec)
-- [NuGet Package Creation](https://learn.microsoft.com/en-us/nuget/create-packages/creating-a-package)
-- [NuGet CLI Reference](https://learn.microsoft.com/en-us/nuget/reference/nuget-exe-cli-reference)
+- [.NET Tool Documentation][link7]
+- [.nuspec File Reference][link1]
+- [NuGet Package Creation][link8]
+- [NuGet CLI Reference][link9]
+
+[link1]: https://learn.microsoft.com/en-us/nuget/reference/nuspec
+[link2]: https://github.com/demaconsulting/DotnetToolWrapper/releases
+[link3]: #building-from-source
+[link4]: https://github.com/topics/dotnettoolwrapper
+[link5]: https://github.com/demaconsulting/DotnetToolWrapper/issues
+[link6]: https://github.com/demaconsulting/DotnetToolWrapper/discussions
+[link7]: https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools
+[link8]: https://learn.microsoft.com/en-us/nuget/create-packages/creating-a-package
+[link9]: https://learn.microsoft.com/en-us/nuget/reference/nuget-exe-cli-reference

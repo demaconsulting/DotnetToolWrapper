@@ -6,7 +6,7 @@
 ![GitHub](https://img.shields.io/github/license/demaconsulting/DotnetToolWrapper?style=plastic)
 
 A .NET console application that enables native executables to be distributed as
-[.NET Tools](https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools).
+[.NET Tools][link1].
 
 ## Overview
 
@@ -34,7 +34,7 @@ dotnet tool install -g YourTool.Package
 your-tool --help
 ```
 
-Create your own wrapped tool by following the [Usage](#usage) section below.
+Create your own wrapped tool by following the [Usage][link2] section below.
 
 ## Usage
 
@@ -54,6 +54,9 @@ Here's a minimal folder structure:
 ```text
 root
 |- tool.nuspec
+|- win-x64/my-tool.exe
+|- linux-x64/my-tool
+|- osx-arm64/my-tool
 |- tools
    |- net8.0/any
    |- net9.0/any
@@ -62,9 +65,6 @@ root
       |- DotnetToolWrapper.json
       |- DemaConsulting.DotnetToolWrapper.dll
       |- (other wrapper files)
-      |- win-x64/my-tool.exe
-      |- linux-x64/my-tool
-      |- osx-arm64/my-tool
 ```
 
 Package and install:
@@ -135,7 +135,7 @@ dotnet build --configuration Release
 
 For real-world examples of tools using DotnetToolWrapper, see:
 
-- Check the [GitHub topic](https://github.com/topics/dotnettoolwrapper) for projects using this wrapper
+- Check the [GitHub topic][link3] for projects using this wrapper
 
 ## Contributing
 
@@ -153,6 +153,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-- **Issues**: Report bugs or request features via [GitHub Issues](https://github.com/demaconsulting/DotnetToolWrapper/issues)
-- **Discussions**: Ask questions via [GitHub Discussions](https://github.com/demaconsulting/DotnetToolWrapper/discussions)
+- **Issues**: Report bugs or request features via [GitHub Issues][link4]
+- **Discussions**: Ask questions via [GitHub Discussions][link5]
 - **Security**: Report vulnerabilities per [SECURITY.md](SECURITY.md)
+
+[link1]: https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools
+[link2]: #usage
+[link3]: https://github.com/topics/dotnettoolwrapper
+[link4]: https://github.com/demaconsulting/DotnetToolWrapper/issues
+[link5]: https://github.com/demaconsulting/DotnetToolWrapper/discussions
