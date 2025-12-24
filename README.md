@@ -16,16 +16,14 @@ to distribute cross-platform command-line tools through NuGet.
 
 ## Features
 
-| Feature                    | Description                                              |
-| -------------------------- | -------------------------------------------------------- |
-| **Multi-Platform Support** | Works on Windows, Linux, FreeBSD, and macOS              |
-| **Multi-Architecture**     | Supports x86, x64, ARM, ARM64, WASM, and S390x           |
-| **Multi-Framework**        | Targets .NET 8.0, 9.0, and 10.0                          |
-| **Zero Dependencies**      | No external dependencies beyond .NET runtime             |
-| **Simple Configuration**   | JSON-based configuration for platform-to-executable map  |
-| **Transparent Execution**  | Passes arguments and exit codes through seamlessly       |
-| **Environment Variables**  | Supports environment variable expansion in paths         |
-| **Minimal Overhead**       | Lightweight wrapper with negligible performance impact   |
+- 🌍 **Multi-Platform Support** - Works on Windows, Linux, FreeBSD, and macOS
+- 🏗️ **Multi-Architecture** - Supports x86, x64, ARM, ARM64, WASM, and S390x
+- 🎯 **Multi-Framework** - Targets .NET 8.0, 9.0, and 10.0
+- 📦 **Zero Dependencies** - No external dependencies beyond .NET runtime
+- ⚙️ **Simple Configuration** - JSON-based configuration for platform-to-executable mapping
+- 🔄 **Transparent Execution** - Passes arguments and exit codes through seamlessly
+- 🌐 **Environment Variables** - Supports environment variable expansion in paths
+- ⚡ **Minimal Overhead** - Lightweight wrapper with negligible performance impact
 
 ## Quick Start
 
