@@ -36,6 +36,7 @@ DotnetToolWrapper/
 │       ├── Runner.cs
 │       └── DemaConsulting.DotnetToolWrapper.Tests.csproj
 ├── .cspell.json            # Spelling check configuration
+├── .editorconfig           # Editor configuration for consistent formatting
 ├── .gitignore              # Git ignore patterns
 ├── .markdownlint.json      # Markdown linting configuration
 ├── AGENTS.md               # This file - Agent instructions
@@ -89,6 +90,7 @@ The test project uses MSTest and includes:
 - **Nullable Reference Types**: Enabled
 - **Implicit Usings**: Enabled
 - **Target Frameworks**: net8.0, net9.0, net10.0
+- **EditorConfig**: Follow the .editorconfig rules for consistent code formatting
 
 ### Workflow Structure
 
