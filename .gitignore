@@ -1,3 +1,7 @@
 .vs
 *.bak
 node_modules
+bin/
+obj/
+TestResults/
+drop/
