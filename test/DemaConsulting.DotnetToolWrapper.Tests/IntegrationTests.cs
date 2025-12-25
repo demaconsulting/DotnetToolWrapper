@@ -5,10 +5,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace DemaConsulting.DotnetToolWrapper.Tests;
 
 /// <summary>
-/// Tests for the DotnetToolWrapper application
+/// Integration tests for the DotnetToolWrapper application
 /// </summary>
 [TestClass]
-public class DotnetToolWrapperTests
+public class IntegrationTests
 {
     /// <summary>
     /// Test setup directory
@@ -57,7 +57,7 @@ public class DotnetToolWrapperTests
     /// <returns>Path to DLL</returns>
     private static string GetDotnetToolWrapperDllPath()
     {
-        var assemblyLocation = Path.GetDirectoryName(typeof(DotnetToolWrapperTests).Assembly.Location);
+        var assemblyLocation = Path.GetDirectoryName(typeof(IntegrationTests).Assembly.Location);
         Assert.IsNotNull(assemblyLocation, "Assembly location should not be null");
         return Path.Combine(assemblyLocation, "DemaConsulting.DotnetToolWrapper.dll");
     }
@@ -249,54 +249,5 @@ public class DotnetToolWrapperTests
         // Assert
         Assert.AreEqual(1, exitCode, "Exit code should be 1 for bad configuration");
         Assert.IsTrue(output.Contains("Bad configuration"), "Output should mention bad configuration");
-    }
-
-    /// <summary>
-    /// Test GetOs method returns valid OS identifier
-    /// </summary>
-    [TestMethod]
-    public void TestGetOs()
-    {
-        // Act
-        var os = Program.GetOs();
-
-        // Assert
-        Assert.IsNotNull(os);
-        Assert.IsTrue(
-            os is "win" or "linux" or "freebsd" or "osx" or "unknown",
-            $"OS should be one of the known values, got: {os}");
-    }
-
-    /// <summary>
-    /// Test GetArchitecture method returns valid architecture identifier
-    /// </summary>
-    [TestMethod]
-    public void TestGetArchitecture()
-    {
-        // Act
-        var arch = Program.GetArchitecture();
-
-        // Assert
-        Assert.IsNotNull(arch);
-        Assert.IsTrue(
-            arch is "x86" or "x64" or "arm" or "arm64" or "wasm" or "s390x" or "unknown",
-            $"Architecture should be one of the known values, got: {arch}");
-    }
-
-    /// <summary>
-    /// Test GetTarget method returns valid target string
-    /// </summary>
-    [TestMethod]
-    public void TestGetTarget()
-    {
-        // Act
-        var target = Program.GetTarget();
-
-        // Assert
-        Assert.IsNotNull(target);
-        Assert.IsTrue(target.Contains('-'), "Target should contain a hyphen");
-        
-        var parts = target.Split('-');
-        Assert.AreEqual(2, parts.Length, "Target should have exactly two parts");
     }
 }
