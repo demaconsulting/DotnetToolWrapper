@@ -22,7 +22,7 @@ report it to us as described below.
 
 Instead, please report them via GitHub's private vulnerability reporting feature:
 
-1. Navigate to the [Security tab](https://github.com/demaconsulting/DotnetToolWrapper/security) of the repository
+1. Navigate to the [Security tab][github-security] of the repository
 2. Click "Report a vulnerability"
 3. Fill out the vulnerability report form with as much detail as possible
 
@@ -175,9 +175,9 @@ For security-related questions that are not vulnerability reports:
 
 This security policy is based on security best practices from:
 
-- [Microsoft Security Development Lifecycle](https://www.microsoft.com/en-us/securityengineering/sdl/)
-- [OWASP Secure Coding Practices](https://owasp.org/www-project-secure-coding-practices-quick-reference-guide/)
-- [GitHub Security Advisories](https://docs.github.com/en/code-security/security-advisories)
+- [Microsoft Security Development Lifecycle][microsoft-sdl]
+- [OWASP Secure Coding Practices][owasp-secure-coding]
+- [GitHub Security Advisories][github-security-advisories]
 
 ## Updates to This Policy
 
@@ -188,3 +188,8 @@ We may update this security policy from time to time. We will notify users of ma
 - Creating a GitHub discussion for significant changes
 
 Last updated: December 2024
+
+[github-security]: https://github.com/demaconsulting/DotnetToolWrapper/security
+[microsoft-sdl]: https://www.microsoft.com/en-us/securityengineering/sdl/
+[owasp-secure-coding]: https://owasp.org/www-project-secure-coding-practices-quick-reference-guide/
+[github-security-advisories]: https://docs.github.com/en/code-security/security-advisories

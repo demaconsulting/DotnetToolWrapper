@@ -6,7 +6,7 @@
 ![GitHub](https://img.shields.io/github/license/demaconsulting/DotnetToolWrapper?style=plastic)
 
 A .NET console application that enables native executables to be distributed as
-[.NET Tools](https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools).
+[.NET Tools][dotnet-tools].
 
 ## Overview
 
@@ -34,108 +34,46 @@ dotnet tool install -g YourTool.Package
 your-tool --help
 ```
 
-Create your own wrapped tool by following the [Usage](#usage) section below.
+Create your own wrapped tool by following the [Usage][usage] section below.
 
 ## Usage
 
-To create a DotNet tool for an existing application:
+To create a .NET tool using DotnetToolWrapper, you'll need to:
 
-1. Create a .nuspec file for the Dotnet tool
-2. Create a `tools/net8.0/any/DotnetToolSettings.xml` file which points to this DotnetToolWrapper
-3. Create a `tools/net8.0/any/DotnetToolWrapper.json` file describing the existing application to run
-4. Copy this DotnetToolWrapper application (.dll) into the `tools/net8.0/any` folder
-5. Add the existing application files under the `tools/net8.0/any` folder.
-6. Package the NuGet package
+1. Create a .nuspec file for the .NET tool package
+2. Create configuration files (DotnetToolSettings.xml and DotnetToolWrapper.json)
+3. Copy DotnetToolWrapper files and your native executables
+4. Package as a NuGet package
 
-## Folder Structure
+For complete step-by-step instructions, detailed examples, and troubleshooting, see the [Usage Guide](docs/usage.md).
 
-The following is an example folder structure for a tool:
+## Quick Example
+
+Here's a minimal folder structure:
 
 ```text
 root
-|- tool.nuspec                                                   Nuspec file
-|- README.md                                                     README file
+|- tool.nuspec
+|- win-x64/my-tool.exe
+|- linux-x64/my-tool
+|- osx-arm64/my-tool
 |- tools
-   |- net8.0
-      |- any
-         |- DotnetToolSettings.xml                               Dotnet tool settings
-         |- DotnetToolWrapper.json                               DotnetToolWrapper application settings
-         |- DemaConsulting.DotnetToolWrapper.deps.json           DotnetToolWrapper dependencies
-         |- DemaConsulting.DotnetToolWrapper.dll                 DotnetToolWrapper application
-         |- DemaConsulting.DotnetToolWrapper.runtimeconfig.json  DotnetToolWrapper runtime
+   |- net8.0/any
+   |- net9.0/any
+   |- net10.0/any
+      |- DotnetToolSettings.xml
+      |- DotnetToolWrapper.json
+      |- DemaConsulting.DotnetToolWrapper.dll
+      |- (other wrapper files)
 ```
 
-## Nuspec File
-
-The following is a sample .nuspec file for a tool:
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-    <metadata>
-        <id>My.Tool.Package</id>
-        <version>0.0.0</version>
-        <title>Title of Tool</title>
-        <authors>Author Name</authors>
-        <license type="expression">MIT</license>
-        <readme>docs/README.md</readme>
-        <description>Description of Tool</description>
-        <packageTypes>
-            <packageType name="DotnetTool" />
-        </packageTypes>
-    </metadata>
-    <files>
-        <file src="README.md" target="docs/README.md" />
-        <file src="tools/**/*" target="tools" />
-    </files>
-</package>
-```
-
-Refer to the [.nuspec File Reference](https://learn.microsoft.com/en-us/nuget/reference/nuspec) for more details.
-
-## DotnetToolSettings.xml
-
-The following is a sample DotnetToolSettings.xml file:
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<DotNetCliTool Version="1">
-  <Commands>
-    <Command Name="my-tool" EntryPoint="DemaConsulting.DotnetToolWrapper.dll" Runner="dotnet" />
-  </Commands>
-</DotNetCliTool>
-```
-
-The `Name` should be customized to match the desired name of the Dotnet tool. Dotnet uses this information
-when installing the package.
-
-## DotnetToolWrapper.json
-
-The following is a sample DotnetToolWrapper.json file indicating the program to execute for each supported target:
-
-```json
-{
-  "win-x64": {
-    "program": "win-x64/my-program.exe"
-  },
-  "linux-x64": {
-    "program": "linux-x64/my-program"
-  }
-}
-```
-
-The target strings consist of the operating system and architecture. Supported operating systems are `win`,
-`linux`, `freebsd`, and `osx`. Supported architectures are `x86`, `x64`, `arm`, `arm64`, `wasm`, and `s390x`.
-
-## Packaging
-
-To create the Dotnet tool NuGet package:
+Package and install:
 
 ```bash
-nuget pack -Version <x.y.z>
+nuget pack tool.nuspec -Version 1.0.0
+dotnet tool install -g My.Tool.Package
+my-tool --help
 ```
-
-Replace `<x.y.z>` with your desired version number.
 
 ## How It Works
 
@@ -197,7 +135,7 @@ dotnet build --configuration Release
 
 For real-world examples of tools using DotnetToolWrapper, see:
 
-- Check the [GitHub topic](https://github.com/topics/dotnettoolwrapper) for projects using this wrapper
+- Check the [GitHub topic][github-topics] for projects using this wrapper
 
 ## Contributing
 
@@ -215,12 +153,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-- **Issues**: Report bugs or request features via [GitHub Issues](https://github.com/demaconsulting/DotnetToolWrapper/issues)
-- **Discussions**: Ask questions via [GitHub Discussions](https://github.com/demaconsulting/DotnetToolWrapper/discussions)
+- **Issues**: Report bugs or request features via [GitHub Issues][github-issues]
+- **Discussions**: Ask questions via [GitHub Discussions][github-discussions]
 - **Security**: Report vulnerabilities per [SECURITY.md](SECURITY.md)
 
-## Acknowledgments
-
-- Built with [.NET](https://dotnet.microsoft.com/)
-- Distributed via [NuGet](https://www.nuget.org/)
-- CI/CD powered by [GitHub Actions](https://github.com/features/actions)
+[dotnet-tools]: https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools
+[usage]: #usage
+[github-topics]: https://github.com/topics/dotnettoolwrapper
+[github-issues]: https://github.com/demaconsulting/DotnetToolWrapper/issues
+[github-discussions]: https://github.com/demaconsulting/DotnetToolWrapper/discussions
