@@ -30,37 +30,37 @@ The following is the recommended folder structure for a tool. Note that you shou
 target .NET frameworks (net8.0, net9.0, and net10.0) to ensure compatibility:
 
 ```text
-root
-|- tool.nuspec                                                   Nuspec file
-|- README.md                                                     README file
-|- win-x64
-|  |- my-tool.exe                                               Windows x64 executable
-|- linux-x64
-|  |- my-tool                                                   Linux x64 executable
-|- osx-x64
-|  |- my-tool                                                   macOS x64 executable
-|- tools
-   |- net8.0
-   |  |- any
-   |     |- DotnetToolSettings.xml                               Dotnet tool settings
-   |     |- DotnetToolWrapper.json                               DotnetToolWrapper application settings
-   |     |- DemaConsulting.DotnetToolWrapper.deps.json           DotnetToolWrapper dependencies
-   |     |- DemaConsulting.DotnetToolWrapper.dll                 DotnetToolWrapper application
-   |     |- DemaConsulting.DotnetToolWrapper.runtimeconfig.json  DotnetToolWrapper runtime
-   |- net9.0
-   |  |- any
-   |     |- DotnetToolSettings.xml                               Dotnet tool settings
-   |     |- DotnetToolWrapper.json                               DotnetToolWrapper application settings
-   |     |- DemaConsulting.DotnetToolWrapper.deps.json           DotnetToolWrapper dependencies
-   |     |- DemaConsulting.DotnetToolWrapper.dll                 DotnetToolWrapper application
-   |     |- DemaConsulting.DotnetToolWrapper.runtimeconfig.json  DotnetToolWrapper runtime
-   |- net10.0
-      |- any
-         |- DotnetToolSettings.xml                               Dotnet tool settings
-         |- DotnetToolWrapper.json                               DotnetToolWrapper application settings
-         |- DemaConsulting.DotnetToolWrapper.deps.json           DotnetToolWrapper dependencies
-         |- DemaConsulting.DotnetToolWrapper.dll                 DotnetToolWrapper application
-         |- DemaConsulting.DotnetToolWrapper.runtimeconfig.json  DotnetToolWrapper runtime
+root/
+├── tool.nuspec
+├── README.md
+├── win-x64/
+│   └── my-tool.exe
+├── linux-x64/
+│   └── my-tool
+├── osx-x64/
+│   └── my-tool
+└── tools/
+    ├── net8.0/
+    │   └── any/
+    │       ├── DotnetToolSettings.xml
+    │       ├── DotnetToolWrapper.json
+    │       ├── DemaConsulting.DotnetToolWrapper.deps.json
+    │       ├── DemaConsulting.DotnetToolWrapper.dll
+    │       └── DemaConsulting.DotnetToolWrapper.runtimeconfig.json
+    ├── net9.0/
+    │   └── any/
+    │       ├── DotnetToolSettings.xml
+    │       ├── DotnetToolWrapper.json
+    │       ├── DemaConsulting.DotnetToolWrapper.deps.json
+    │       ├── DemaConsulting.DotnetToolWrapper.dll
+    │       └── DemaConsulting.DotnetToolWrapper.runtimeconfig.json
+    └── net10.0/
+        └── any/
+            ├── DotnetToolSettings.xml
+            ├── DotnetToolWrapper.json
+            ├── DemaConsulting.DotnetToolWrapper.deps.json
+            ├── DemaConsulting.DotnetToolWrapper.dll
+            └── DemaConsulting.DotnetToolWrapper.runtimeconfig.json
 ```
 
 **Note**: While the example above shows net8.0, net9.0, and net10.0 folders, you can choose to include only
