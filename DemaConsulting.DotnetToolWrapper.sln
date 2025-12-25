@@ -5,6 +5,8 @@ VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemaConsulting.DotnetToolWrapper", "src\DemaConsulting.DotnetToolWrapper\DemaConsulting.DotnetToolWrapper.csproj", "{9381FBF3-DCAE-4D2E-9F20-341FDDD38537}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemaConsulting.DotnetToolWrapper.Tests", "test\DemaConsulting.DotnetToolWrapper.Tests\DemaConsulting.DotnetToolWrapper.Tests.csproj", "{8E5F3A42-1D5B-4C9E-8F1D-2C3F4D5E6F7A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{9381FBF3-DCAE-4D2E-9F20-341FDDD38537}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9381FBF3-DCAE-4D2E-9F20-341FDDD38537}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9381FBF3-DCAE-4D2E-9F20-341FDDD38537}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E5F3A42-1D5B-4C9E-8F1D-2C3F4D5E6F7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E5F3A42-1D5B-4C9E-8F1D-2C3F4D5E6F7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E5F3A42-1D5B-4C9E-8F1D-2C3F4D5E6F7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E5F3A42-1D5B-4C9E-8F1D-2C3F4D5E6F7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
