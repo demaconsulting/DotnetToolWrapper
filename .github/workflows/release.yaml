@@ -23,6 +23,8 @@ on:
 jobs:
   build:
     name: Build Artifacts
+    permissions:
+      contents: read
     uses: ./.github/workflows/build.yaml
     with:
       semver: ${{ inputs.semver }}
