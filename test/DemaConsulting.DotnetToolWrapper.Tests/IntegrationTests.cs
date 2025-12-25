@@ -93,7 +93,14 @@ public class IntegrationTests
     /// <returns>Shell program name</returns>
     private static string GetShellProgram()
     {
-        return RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "cmd.exe" : "/bin/sh";
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            // Use COMSPEC environment variable to get full path to cmd.exe
+            var comspec = Environment.GetEnvironmentVariable("COMSPEC");
+            return comspec ?? throw new InvalidOperationException("COMSPEC environment variable not found");
+        }
+        
+        return "/bin/sh";
     }
 
     /// <summary>
