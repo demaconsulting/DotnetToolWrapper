@@ -51,7 +51,7 @@ We actively welcome pull requests! To submit a pull request:
 
 ### Prerequisites
 
-- [.NET SDK 8.0 or higher][link1]
+- [.NET SDK 8.0 or higher][dotnet-download]
 - Git
 - A code editor (Visual Studio, Visual Studio Code, Rider, etc.)
 
@@ -232,15 +232,15 @@ See [LICENSE](LICENSE) for details.
 
 ## Additional Resources
 
-- [.NET Tool Documentation][link2]
-- [NuGet Package Documentation][link3]
-- [GitHub Flow][link4]
-- [Writing Good Commit Messages][link5]
+- [.NET Tool Documentation][dotnet-tools]
+- [NuGet Package Documentation][nuget-docs]
+- [GitHub Flow][github-flow]
+- [Writing Good Commit Messages][git-commit-guide]
 
 Thank you for contributing to DotnetToolWrapper! 🎉
 
-[link1]: https://dotnet.microsoft.com/download
-[link2]: https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools
-[link3]: https://learn.microsoft.com/en-us/nuget/
-[link4]: https://guides.github.com/introduction/flow/
-[link5]: https://chris.beams.io/posts/git-commit/
+[dotnet-download]: https://dotnet.microsoft.com/download
+[dotnet-tools]: https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools
+[nuget-docs]: https://learn.microsoft.com/en-us/nuget/
+[github-flow]: https://guides.github.com/introduction/flow/
+[git-commit-guide]: https://chris.beams.io/posts/git-commit/

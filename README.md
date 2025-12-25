@@ -6,7 +6,7 @@
 ![GitHub](https://img.shields.io/github/license/demaconsulting/DotnetToolWrapper?style=plastic)
 
 A .NET console application that enables native executables to be distributed as
-[.NET Tools][link1].
+[.NET Tools][dotnet-tools].
 
 ## Overview
 
@@ -34,7 +34,7 @@ dotnet tool install -g YourTool.Package
 your-tool --help
 ```
 
-Create your own wrapped tool by following the [Usage][link2] section below.
+Create your own wrapped tool by following the [Usage][usage] section below.
 
 ## Usage
 
@@ -135,7 +135,7 @@ dotnet build --configuration Release
 
 For real-world examples of tools using DotnetToolWrapper, see:
 
-- Check the [GitHub topic][link3] for projects using this wrapper
+- Check the [GitHub topic][github-topics] for projects using this wrapper
 
 ## Contributing
 
@@ -153,12 +153,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-- **Issues**: Report bugs or request features via [GitHub Issues][link4]
-- **Discussions**: Ask questions via [GitHub Discussions][link5]
+- **Issues**: Report bugs or request features via [GitHub Issues][github-issues]
+- **Discussions**: Ask questions via [GitHub Discussions][github-discussions]
 - **Security**: Report vulnerabilities per [SECURITY.md](SECURITY.md)
 
-[link1]: https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools
-[link2]: #usage
-[link3]: https://github.com/topics/dotnettoolwrapper
-[link4]: https://github.com/demaconsulting/DotnetToolWrapper/issues
-[link5]: https://github.com/demaconsulting/DotnetToolWrapper/discussions
+[dotnet-tools]: https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools
+[usage]: #usage
+[github-topics]: https://github.com/topics/dotnettoolwrapper
+[github-issues]: https://github.com/demaconsulting/DotnetToolWrapper/issues
+[github-discussions]: https://github.com/demaconsulting/DotnetToolWrapper/discussions

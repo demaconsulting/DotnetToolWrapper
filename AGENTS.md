@@ -5,7 +5,7 @@ This repository contains configuration and instructions for GitHub Copilot agent
 ## Repository Overview
 
 **DotnetToolWrapper** is a .NET 8.0, 9.0, and 10.0 console application that serves as a wrapper for native
-applications packaged as [.NET Tools][link1].
+applications packaged as [.NET Tools][dotnet-tools].
 
 ## Project Structure
 
@@ -131,4 +131,4 @@ Before committing:
 
 For questions or issues, please refer to the repository's issue tracker on GitHub.
 
-[link1]: https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools
+[dotnet-tools]: https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools

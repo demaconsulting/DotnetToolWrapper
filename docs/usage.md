@@ -105,7 +105,7 @@ Create a `.nuspec` file that defines your package metadata:
 - Include `<packageType name="DotnetTool" />` to mark this as a .NET tool
 - Adjust file paths in the `<files>` section to match your structure
 
-Refer to the [.nuspec File Reference][link1] for more details.
+Refer to the [.nuspec File Reference][nuspec-reference] for more details.
 
 ### 2. Create DotnetToolSettings.xml
 
@@ -191,8 +191,8 @@ into your `tools/{framework}/any/` folder:
 
 You can obtain these files by:
 
-1. Downloading from the [releases page][link2]
-2. Building from source (see [Building from Source][link3])
+1. Downloading from the [releases page][releases]
+2. Building from source (see [Building from Source][building-from-source])
 
 ### 5. Add Your Native Executables
 
@@ -392,30 +392,30 @@ dotnet build --configuration Release
 
 For real-world examples of tools using DotnetToolWrapper:
 
-- Browse repositories on GitHub with the [dotnettoolwrapper topic][link4]
+- Browse repositories on GitHub with the [dotnettoolwrapper topic][github-topics]
 - Check the examples in the DotnetToolWrapper repository (if available)
 
 ## Support
 
-- **Issues**: Report bugs or request features via [GitHub Issues][link5]
-- **Discussions**: Ask questions via [GitHub Discussions][link6]
+- **Issues**: Report bugs or request features via [GitHub Issues][github-issues]
+- **Discussions**: Ask questions via [GitHub Discussions][github-discussions]
 - **Documentation**: See [README.md](../README.md) for project overview
 - **Architecture**: See [ARCHITECTURE.md](../ARCHITECTURE.md) for design details
 - **Contributing**: See [CONTRIBUTING.md](../CONTRIBUTING.md) for contribution guidelines
 
 ## Additional Resources
 
-- [.NET Tool Documentation][link7]
-- [.nuspec File Reference][link1]
-- [NuGet Package Creation][link8]
-- [NuGet CLI Reference][link9]
+- [.NET Tool Documentation][dotnet-tools]
+- [.nuspec File Reference][nuspec-reference]
+- [NuGet Package Creation][nuget-package-creation]
+- [NuGet CLI Reference][nuget-cli-reference]
 
-[link1]: https://learn.microsoft.com/en-us/nuget/reference/nuspec
-[link2]: https://github.com/demaconsulting/DotnetToolWrapper/releases
-[link3]: #building-from-source
-[link4]: https://github.com/topics/dotnettoolwrapper
-[link5]: https://github.com/demaconsulting/DotnetToolWrapper/issues
-[link6]: https://github.com/demaconsulting/DotnetToolWrapper/discussions
-[link7]: https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools
-[link8]: https://learn.microsoft.com/en-us/nuget/create-packages/creating-a-package
-[link9]: https://learn.microsoft.com/en-us/nuget/reference/nuget-exe-cli-reference
+[nuspec-reference]: https://learn.microsoft.com/en-us/nuget/reference/nuspec
+[releases]: https://github.com/demaconsulting/DotnetToolWrapper/releases
+[building-from-source]: #building-from-source
+[github-topics]: https://github.com/topics/dotnettoolwrapper
+[github-issues]: https://github.com/demaconsulting/DotnetToolWrapper/issues
+[github-discussions]: https://github.com/demaconsulting/DotnetToolWrapper/discussions
+[dotnet-tools]: https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools
+[nuget-package-creation]: https://learn.microsoft.com/en-us/nuget/create-packages/creating-a-package
+[nuget-cli-reference]: https://learn.microsoft.com/en-us/nuget/reference/nuget-exe-cli-reference
