@@ -31,14 +31,16 @@ internal static class Runner
             startInfo.ArgumentList.Add(argument);
 
         // Start the process
-        var process = Process.Start(startInfo) ??
-                      throw new InvalidOperationException("Failed to start process");
+        using var process = Process.Start(startInfo) ??
+                            throw new InvalidOperationException("Failed to start process");
 
         // Wait for the process to exit
         process.WaitForExit();
 
-        // Save the output and return the exit code
-        output = process.StandardOutput.ReadToEnd();
+        // Save the combined output and return the exit code
+        var stdout = process.StandardOutput.ReadToEnd();
+        var stderr = process.StandardError.ReadToEnd();
+        output = stdout + stderr;
         return process.ExitCode;
     }
 }
