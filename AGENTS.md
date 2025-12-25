@@ -11,19 +11,41 @@ applications packaged as [.NET Tools][dotnet-tools].
 
 ```text
 DotnetToolWrapper/
+├── .config/
+│   └── dotnet-tools.json    # .NET tools configuration (sbom-tool, spdx-tool)
 ├── .github/
+│   ├── ISSUE_TEMPLATE/      # GitHub issue templates
+│   │   ├── bug_report.yml
+│   │   ├── feature_request.yml
+│   │   └── config.yml
+│   ├── dependabot.yml       # Dependabot configuration
 │   └── workflows/           # GitHub Actions workflows
 │       ├── build.yaml       # Reusable build workflow
 │       ├── build_on_push.yaml # Triggered on push events
 │       └── release.yaml     # Release workflow
+├── docs/
+│   └── usage.md             # Detailed usage documentation
 ├── src/
 │   └── DemaConsulting.DotnetToolWrapper/
 │       ├── Program.cs       # Main application logic
 │       └── DemaConsulting.DotnetToolWrapper.csproj
+├── test/
+│   └── DemaConsulting.DotnetToolWrapper.Tests/
+│       ├── IntegrationTests.cs
+│       ├── ProgramTests.cs
+│       ├── Runner.cs
+│       └── DemaConsulting.DotnetToolWrapper.Tests.csproj
 ├── .cspell.json            # Spelling check configuration
+├── .gitignore              # Git ignore patterns
 ├── .markdownlint.json      # Markdown linting configuration
-├── README.md               # Project documentation
+├── AGENTS.md               # This file - Agent instructions
+├── ARCHITECTURE.md         # Architecture documentation
+├── CODE_OF_CONDUCT.md      # Community code of conduct
+├── CONTRIBUTING.md         # Contribution guidelines
+├── DemaConsulting.DotnetToolWrapper.sln
 ├── LICENSE                 # MIT License
+├── README.md               # Project documentation
+├── SECURITY.md             # Security policy
 └── spdx-workflow.yaml      # SBOM enhancement workflow
 ```
 
@@ -31,8 +53,10 @@ DotnetToolWrapper/
 
 - **.NET 8.0, 9.0, 10.0**: Multi-targeted framework versions
 - **C# 12**: Programming language
+- **MSTest**: Testing framework
 - **GitHub Actions**: CI/CD automation
-- **SBOM Tools**: Software Bill of Materials generation
+- **SBOM Tools**: Software Bill of Materials generation (sbom-tool, spdx-tool)
+- **Code Analyzers**: Microsoft.CodeAnalysis.NetAnalyzers 10.0.101, SonarAnalyzer.CSharp 10.17.0.131074
 
 ## Development Guidelines
 
@@ -42,6 +66,22 @@ DotnetToolWrapper/
 dotnet restore
 dotnet build --configuration Release
 ```
+
+### Testing the Project
+
+```bash
+# Run all tests
+dotnet test --configuration Release
+
+# Run tests with detailed output
+dotnet test --configuration Release --logger "console;verbosity=detailed"
+```
+
+The test project uses MSTest and includes:
+
+- **Unit Tests**: `ProgramTests.cs` - Tests for core program logic
+- **Integration Tests**: `IntegrationTests.cs` - End-to-end tests with actual execution
+- **Test Runner**: `Runner.cs` - Helper for running the tool in tests
 
 ### Code Standards
 
@@ -72,6 +112,11 @@ Quality checks are automated through GitHub Actions:
 1. **Multi-targeting**: Always ensure changes are compatible with .NET 8.0, 9.0, and 10.0
 2. **Cross-platform**: The tool must work on Windows, Linux, FreeBSD, and macOS
 3. **Architecture Support**: Support x86, x64, ARM, ARM64, WASM, and S390x architectures
+4. **Testing**: Always run tests after making changes. The CI runs tests on ubuntu-latest,
+   windows-latest, and macos-latest
+5. **Code Quality**: Maintain `TreatWarningsAsErrors` - all warnings must be fixed
+6. **Analyzers**: Keep analyzer packages (Microsoft.CodeAnalysis.NetAnalyzers and
+   SonarAnalyzer.CSharp) at the same version across all projects
 
 ### When Modifying Workflows
 
@@ -98,7 +143,9 @@ Quality checks are automated through GitHub Actions:
 
 ### Adding New Dependencies
 
-Update the `.csproj` file in `src/DemaConsulting.DotnetToolWrapper/`
+1. Update the `.csproj` file in `src/DemaConsulting.DotnetToolWrapper/`
+2. If adding analyzer packages, ensure test project also gets the same version
+3. Dependabot is configured to automatically update NuGet packages in the `nuget-dependencies` group
 
 ### Modifying Build Output
 
@@ -115,8 +162,17 @@ Edit the "Create Drop Folder" step in `.github/workflows/build.yaml`
 Before committing:
 
 1. Build locally: `dotnet build --configuration Release`
-2. Run spelling checks: `npx cspell "**/*.md"`
-3. Run markdown linting: `npx markdownlint "**/*.md"`
+2. Run tests: `dotnet test --configuration Release`
+3. Run spelling checks: `npx cspell "**/*.md"`
+4. Run markdown linting: `npx markdownlint "**/*.md"`
+
+## Issue Templates
+
+The repository includes structured issue templates:
+
+- **Bug Report** (`.github/ISSUE_TEMPLATE/bug_report.yml`) - For reporting bugs with system information
+- **Feature Request** (`.github/ISSUE_TEMPLATE/feature_request.yml`) - For suggesting new features
+- **Config** (`.github/ISSUE_TEMPLATE/config.yml`) - Links to discussions and other resources
 
 ## Related Documentation
 
@@ -125,6 +181,7 @@ Before committing:
 - [CONTRIBUTING.md](CONTRIBUTING.md) - Contribution guidelines and development setup
 - [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) - Community code of conduct
 - [SECURITY.md](SECURITY.md) - Security policy and vulnerability reporting
+- [docs/usage.md](docs/usage.md) - Comprehensive usage guide with examples
 - [LICENSE](LICENSE) - MIT License terms
 
 ## Contact
