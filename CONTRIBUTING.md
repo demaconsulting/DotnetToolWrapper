@@ -78,21 +78,37 @@ Key files and directories:
 
 ```text
 DotnetToolWrapper/
-├── .github/workflows/       # CI/CD workflows
+├── .config/
+│   └── dotnet-tools.json    # .NET tools configuration
+├── .github/
+│   ├── ISSUE_TEMPLATE/      # GitHub issue templates
+│   ├── dependabot.yml       # Dependabot configuration
+│   └── workflows/           # CI/CD workflows
+├── docs/
+│   └── usage.md             # Detailed usage documentation
 ├── src/
 │   └── DemaConsulting.DotnetToolWrapper/
 │       ├── Program.cs       # Main application logic
 │       └── DemaConsulting.DotnetToolWrapper.csproj
+├── test/
+│   └── DemaConsulting.DotnetToolWrapper.Tests/
+│       ├── IntegrationTests.cs
+│       ├── ProgramTests.cs
+│       ├── Runner.cs
+│       └── DemaConsulting.DotnetToolWrapper.Tests.csproj
 ├── .cspell.json             # Spelling check configuration
+├── .editorconfig            # Editor configuration
 ├── .gitignore               # Git ignore patterns
 ├── .markdownlint.json       # Markdown linting rules
 ├── AGENTS.md                # GitHub Copilot agent instructions
 ├── ARCHITECTURE.md          # Architecture documentation
 ├── CODE_OF_CONDUCT.md       # Code of conduct
 ├── CONTRIBUTING.md          # This file
+├── DemaConsulting.DotnetToolWrapper.sln
 ├── LICENSE                  # MIT License
 ├── README.md                # Project overview
-└── SECURITY.md              # Security policy
+├── SECURITY.md              # Security policy
+└── spdx-workflow.yaml       # SBOM enhancement workflow
 ```
 
 ## Code Style and Standards
@@ -104,7 +120,7 @@ DotnetToolWrapper/
 - Enable nullable reference types
 - Use implicit usings where appropriate
 - Write clear, self-documenting code
-- Add XML documentation comments for public APIs
+- Add XML documentation comments for all code (both public and private members)
 
 ### Code Quality
 
@@ -120,6 +136,7 @@ DotnetToolWrapper/
 - Keep documentation in sync with code changes
 - Use clear, concise language
 - Include code examples where helpful
+- Use box-drawing characters (├──, └──, │) for file/folder diagrams rather than pipe-and-dash (|-, |-)
 
 ### Testing Your Changes
 
@@ -195,12 +212,14 @@ Mention this in your pull request, and maintainers can help with cross-platform 
 When testing changes:
 
 - [ ] Builds successfully for all target frameworks
-- [ ] Works on Windows
-- [ ] Works on Linux (if possible)
-- [ ] Works on macOS (if possible)
+- [ ] Works on Windows (tested locally or via CI)
+- [ ] Works on Linux (tested locally or via CI)
+- [ ] Works on macOS (tested locally or via CI)
 - [ ] Handles missing configuration gracefully
 - [ ] Preserves exit codes correctly
 - [ ] Passes command-line arguments correctly
+
+Note: CI automatically tests on Windows, Linux, and macOS platforms.
 
 ## Release Process
 

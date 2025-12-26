@@ -187,8 +187,6 @@ We may update this security policy from time to time. We will notify users of ma
 - Mentioning changes in release notes
 - Creating a GitHub discussion for significant changes
 
-Last updated: December 2024
-
 [github-security]: https://github.com/demaconsulting/DotnetToolWrapper/security
 [microsoft-sdl]: https://www.microsoft.com/en-us/securityengineering/sdl/
 [owasp-secure-coding]: https://owasp.org/www-project-secure-coding-practices-quick-reference-guide/

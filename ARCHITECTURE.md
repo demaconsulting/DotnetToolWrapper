@@ -162,9 +162,10 @@ The project does not currently include automated tests. Testing is performed thr
 The project uses GitHub Actions for CI/CD:
 
 1. **Build Workflow**: Compiles the application for all target frameworks
-2. **SBOM Generation**: Creates Software Bill of Materials for transparency
-3. **Artifact Publishing**: Publishes build artifacts for packaging
-4. **Release Workflow**: Creates releases with versioned artifacts
+2. **Testing**: Runs automated tests on multiple platforms (Windows, Linux, macOS) to ensure cross-platform compatibility
+3. **SBOM Generation**: Creates Software Bill of Materials for transparency
+4. **Artifact Publishing**: Publishes build artifacts for packaging
+5. **Release Workflow**: Creates releases with versioned artifacts
 
 ## Related Documentation
 
