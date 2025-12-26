@@ -52,19 +52,25 @@ For complete step-by-step instructions, detailed examples, and troubleshooting, 
 Here's a minimal folder structure:
 
 ```text
-root
-|- tool.nuspec
-|- win-x64/my-tool.exe
-|- linux-x64/my-tool
-|- osx-arm64/my-tool
-|- tools
-   |- net8.0/any
-   |- net9.0/any
-   |- net10.0/any
-      |- DotnetToolSettings.xml
-      |- DotnetToolWrapper.json
-      |- DemaConsulting.DotnetToolWrapper.dll
-      |- (other wrapper files)
+root/
+├── tool.nuspec
+├── win-x64/
+│   └── my-tool.exe
+├── linux-x64/
+│   └── my-tool
+├── osx-arm64/
+│   └── my-tool
+└── tools/
+    ├── net8.0/
+    │   └── any/
+    ├── net9.0/
+    │   └── any/
+    └── net10.0/
+        └── any/
+            ├── DotnetToolSettings.xml
+            ├── DotnetToolWrapper.json
+            ├── DemaConsulting.DotnetToolWrapper.dll
+            └── (other wrapper files)
 ```
 
 Package and install:

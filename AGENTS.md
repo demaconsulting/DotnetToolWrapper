@@ -91,6 +91,7 @@ The test project uses MSTest and includes:
 - **Implicit Usings**: Enabled
 - **Target Frameworks**: net8.0, net9.0, net10.0
 - **EditorConfig**: Follow the .editorconfig rules for consistent code formatting
+- **XML Documentation**: All code (both public and private members) should include XML documentation comments
 
 ### Workflow Structure
 
@@ -133,6 +134,7 @@ Quality checks are automated through GitHub Actions:
 3. Keep README.md synchronized with actual functionality
 4. Update ARCHITECTURE.md if making architectural changes
 5. Reference appropriate documentation files (README.md, ARCHITECTURE.md, CONTRIBUTING.md, SECURITY.md)
+6. Use box-drawing characters (├──, └──, │) for file/folder diagrams rather than pipe-and-dash (|-, |-)
 
 ### When Addressing Security Issues
 
