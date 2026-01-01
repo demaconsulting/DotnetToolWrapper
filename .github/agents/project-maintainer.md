@@ -166,13 +166,88 @@ The project uses `.github/workflows/release.yaml` for releases:
 
 ### Pre-Release Checklist
 
+Complete this checklist before each release:
+
+#### Code and Build
 - [ ] All tests passing on all platforms (ubuntu, windows, macos)
-- [ ] Documentation updated
-- [ ] Changelog updated
-- [ ] Version numbers updated
-- [ ] Breaking changes documented
-- [ ] Migration guide if needed
-- [ ] Release notes prepared
+- [ ] All frameworks tested (net8.0, net9.0, net10.0)
+- [ ] Zero warnings in build output
+- [ ] All analyzer rules passing
+- [ ] Code review completed for all PRs
+- [ ] No pending security vulnerabilities
+
+#### Documentation
+- [ ] README.md updated with new features
+- [ ] ARCHITECTURE.md updated if design changed
+- [ ] docs/usage.md updated with examples
+- [ ] CHANGELOG.md or release notes created
+- [ ] XML documentation complete
+- [ ] Spelling and markdown linting pass
+
+#### Version Management
+- [ ] Version numbers updated in .csproj files
+- [ ] Semantic versioning rules followed
+- [ ] Breaking changes clearly documented
+- [ ] Migration guide written (if breaking changes)
+- [ ] Deprecation warnings added (if applicable)
+
+#### Testing and Validation
+- [ ] Integration tests pass on all platforms
+- [ ] Manual testing performed on key scenarios
+- [ ] Backward compatibility verified (if applicable)
+- [ ] Performance regression testing (if applicable)
+- [ ] Security testing completed
+
+#### Release Assets
+- [ ] SBOM generated successfully
+- [ ] Artifacts build correctly
+- [ ] NuGet package structure validated
+- [ ] All required frameworks included in package
+- [ ] License file included
+
+#### Communication
+- [ ] Release notes drafted
+- [ ] Breaking changes highlighted
+- [ ] Known issues documented
+- [ ] Contributors acknowledged
+- [ ] Communication plan for major releases
+
+### Post-Release Checklist
+
+After releasing:
+
+- [ ] Git tag created with version number
+- [ ] GitHub release published
+- [ ] NuGet package published (if applicable)
+- [ ] Documentation site updated (if applicable)
+- [ ] Release announcement made
+- [ ] Issues closed with release milestone
+- [ ] Monitor for immediate issues/feedback
+- [ ] Update project boards and trackers
+
+### Release Types and Cadence
+
+**Patch Releases (0.0.X)**
+- Bug fixes and minor improvements
+- Released as needed
+- Minimal testing required
+- Quick turnaround
+
+**Minor Releases (0.X.0)**
+- New features
+- Non-breaking enhancements
+- Released quarterly or as needed
+- Full testing required
+- Documentation updates
+
+**Major Releases (X.0.0)**
+- Breaking changes
+- Major new features
+- Architectural changes
+- Released annually or as needed
+- Comprehensive testing
+- Migration guides
+- Extended beta period
 
 ## Project Health Monitoring
 

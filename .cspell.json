@@ -31,7 +31,18 @@
     "USERPROFILE",
     "LOCALAPPDATA",
     "mytool",
-    "Triaging"
+    "Triaging",
+    "globalconfig",
+    "vbproj",
+    "vcxproj",
+    "shproj",
+    "ruleset",
+    "resx",
+    "vsixmanifest",
+    "vsct",
+    "MSBuild",
+    "cyclomatic",
+    "frontmatter"
   ],
   "ignorePaths": [
     "node_modules",
