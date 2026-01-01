@@ -141,8 +141,8 @@ public class IntegrationTests
 
         // Assert
         Assert.AreEqual(1, exitCode, "Exit code should be 1 for missing config file");
-        Assert.IsTrue(output.Contains("Missing configuration file"), "Output should mention missing config file");
-        Assert.IsTrue(output.Contains("DotnetToolWrapper.json"), "Output should mention config file name");
+        Assert.Contains("Missing configuration file", output, "Output should mention missing config file");
+        Assert.Contains("DotnetToolWrapper.json", output, "Output should mention config file name");
     }
 
     /// <summary>
@@ -202,7 +202,7 @@ public class IntegrationTests
 
         // Assert
         Assert.AreEqual(0, exitCode, "Exit code should be 0");
-        Assert.IsTrue(output.Contains(testText), $"Output should contain '{testText}'");
+        Assert.Contains(testText, output, $"Output should contain '{testText}'");
     }
 
     /// <summary>
@@ -228,7 +228,7 @@ public class IntegrationTests
 
         // Assert
         Assert.AreEqual(1, exitCode, "Exit code should be 1 for unsupported target");
-        Assert.IsTrue(output.Contains("does not support"), "Output should mention unsupported target");
+        Assert.Contains("does not support", output, "Output should mention unsupported target");
     }
 
     /// <summary>
@@ -255,6 +255,6 @@ public class IntegrationTests
 
         // Assert
         Assert.AreEqual(1, exitCode, "Exit code should be 1 for bad configuration");
-        Assert.IsTrue(output.Contains("Bad configuration"), "Output should mention bad configuration");
+        Assert.Contains("Bad configuration", output, "Output should mention bad configuration");
     }
 }
