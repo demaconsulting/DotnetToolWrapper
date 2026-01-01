@@ -131,7 +131,7 @@ public class IntegrationTests
     /// Test that missing configuration file results in expected error
     /// </summary>
     [TestMethod]
-    public void TestMissingConfigFile()
+    public void Main_WhenConfigFileMissing_ReturnsErrorWithMessage()
     {
         // Arrange
         var dllPath = GetDotnetToolWrapperDllPath();
@@ -153,19 +153,13 @@ public class IntegrationTests
     [DataRow(1)]
     [DataRow(42)]
     [DataRow(255)]
-    public void TestExitCodes(int expectedExitCode)
+    public void Main_WithShellExitCode_ReturnsMatchingExitCode(int expectedExitCode)
     {
         // Arrange
         var dllPath = GetDotnetToolWrapperDllPath();
         var shellProgram = GetShellProgram();
-
-        // Create config file pointing to shell
         CreateConfigFile(shellProgram);
-
-        // Get shell arguments to exit with specific code
         var shellArgs = GetExitCodeArgs(expectedExitCode);
-
-        // Prepare arguments for dotnet command
         var args = new List<string> { dllPath };
         args.AddRange(shellArgs);
 
@@ -180,20 +174,14 @@ public class IntegrationTests
     /// Test that arguments are properly passed through
     /// </summary>
     [TestMethod]
-    public void TestArgumentPassing()
+    public void Main_WithShellArguments_PassesArgumentsToProgram()
     {
         // Arrange
         var dllPath = GetDotnetToolWrapperDllPath();
         var shellProgram = GetShellProgram();
         var testText = "HelloWorld";
-
-        // Create config file pointing to shell
         CreateConfigFile(shellProgram);
-
-        // Get shell arguments to echo text
         var shellArgs = GetEchoArgs(testText);
-
-        // Prepare arguments for dotnet command
         var args = new List<string> { dllPath };
         args.AddRange(shellArgs);
 
@@ -209,14 +197,12 @@ public class IntegrationTests
     /// Test that unsupported target results in expected error
     /// </summary>
     [TestMethod]
-    public void TestUnsupportedTarget()
+    public void Main_WithUnsupportedTarget_ReturnsErrorWithMessage()
     {
         // Arrange
         var dllPath = GetDotnetToolWrapperDllPath();
         var dllDirectory = Path.GetDirectoryName(dllPath);
         Assert.IsNotNull(dllDirectory, "DLL directory should not be null");
-
-        // Create config file with fake target
         var json = JsonSerializer.Serialize(new Dictionary<string, object>
         {
             { "fake-target", new { program = "fake" } }
@@ -235,15 +221,13 @@ public class IntegrationTests
     /// Test that bad configuration results in expected error
     /// </summary>
     [TestMethod]
-    public void TestBadConfiguration()
+    public void Main_WithBadConfiguration_ReturnsErrorWithMessage()
     {
         // Arrange
         var dllPath = GetDotnetToolWrapperDllPath();
         var dllDirectory = Path.GetDirectoryName(dllPath);
         Assert.IsNotNull(dllDirectory, "DLL directory should not be null");
         var target = Program.GetTarget();
-
-        // Create config file without program property
         var json = JsonSerializer.Serialize(new Dictionary<string, object>
         {
             { target, new { notprogram = "fake" } }

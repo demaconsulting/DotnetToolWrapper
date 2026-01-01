@@ -1,5 +1,13 @@
 is_global = true
 
+# =================================================================================
+# Testing Standards
+# =================================================================================
+# All tests must follow the AAA (Arrange-Act-Assert) pattern with clear section
+# separation using comments. Test methods must follow the naming convention:
+# TestMethod_Scenario_ExpectedBehavior (e.g., GetOs_WhenCalled_ReturnsValidOsIdentifier)
+# =================================================================================
+
 # CA1014: Mark assemblies with CLSCompliant
 # Disabled: This project does not require CLS compliance
 dotnet_diagnostic.CA1014.severity = none
@@ -13,7 +21,7 @@ dotnet_diagnostic.CA1017.severity = none
 dotnet_diagnostic.CA1303.severity = none
 
 # CA1707: Identifiers should not contain underscores
-# Disabled: Test methods use underscores for readability
+# Disabled: Test methods use underscores for readability per TestMethod_Scenario_ExpectedBehavior convention
 dotnet_diagnostic.CA1707.severity = none
 
 # CA1848: Use the LoggerMessage delegates

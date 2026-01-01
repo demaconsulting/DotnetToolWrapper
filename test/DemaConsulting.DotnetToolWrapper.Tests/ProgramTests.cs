@@ -12,8 +12,11 @@ public class ProgramTests
     /// Test GetOs method returns valid OS identifier
     /// </summary>
     [TestMethod]
-    public void TestGetOs()
+    public void GetOs_WhenCalled_ReturnsValidOsIdentifier()
     {
+        // Arrange
+        // No arrangement needed - testing static method with no input
+
         // Act
         var os = Program.GetOs();
 
@@ -28,8 +31,11 @@ public class ProgramTests
     /// Test GetArchitecture method returns valid architecture identifier
     /// </summary>
     [TestMethod]
-    public void TestGetArchitecture()
+    public void GetArchitecture_WhenCalled_ReturnsValidArchitectureIdentifier()
     {
+        // Arrange
+        // No arrangement needed - testing static method with no input
+
         // Act
         var arch = Program.GetArchitecture();
 
@@ -44,8 +50,11 @@ public class ProgramTests
     /// Test GetTarget method returns valid target string
     /// </summary>
     [TestMethod]
-    public void TestGetTarget()
+    public void GetTarget_WhenCalled_ReturnsValidTargetString()
     {
+        // Arrange
+        // No arrangement needed - testing static method with no input
+
         // Act
         var target = Program.GetTarget();
 
