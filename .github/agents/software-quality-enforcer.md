@@ -31,69 +31,27 @@ The project enforces `TreatWarningsAsErrors` - all warnings must be fixed:
 
 ### Code Analyzers
 
-The project uses multiple analyzer packages with enhanced configuration:
+The project uses two analyzer packages:
 
 1. **Microsoft.CodeAnalysis.NetAnalyzers**
    - Microsoft's recommended code analysis rules
    - Security, performance, and design guidelines
    - Must be same version in src/ and test/ projects
-   - Currently: Version 10.0.101
 
 2. **SonarAnalyzer.CSharp**
    - Additional code quality and security rules
    - Bug detection and code smell identification
    - Must be same version in src/ and test/ projects
-   - Currently: Version 10.17.0.131074
 
-3. **Enhanced Configuration via .globalconfig**
-   - Comprehensive CA rule configuration
-   - Security-focused rules (CA3xxx, CA5xxx) set to warning
-   - Performance rules (CA18xx) enabled
-   - Maintainability rules (CA15xx) track complexity
-   - Design and reliability rules (CA1xxx, CA2xxx) enforced
+### Analyzer Configuration
 
-### Code Metrics and Thresholds
+The project uses `.globalconfig` to configure analyzer rules:
 
-Monitor these key code quality metrics:
-
-**Cyclomatic Complexity**
-- **CA1502**: Avoid excessive complexity
-- **Threshold**: Keep methods under 25 complexity
-- **Target**: Aim for complexity under 10 for most methods
-- **Action**: Refactor complex methods into smaller, focused methods
-
-**Maintainability**
-- **CA1505**: Avoid unmaintainable code
-- **Threshold**: Maintain maintainability index above 20
-- **Target**: Aim for maintainability index above 80
-- **Action**: Simplify code, reduce coupling, improve naming
-
-**Class Coupling**
-- **CA1506**: Avoid excessive class coupling
-- **Threshold**: Keep class coupling under 40
-- **Target**: Aim for coupling under 20
-- **Action**: Use dependency injection, simplify dependencies
-
-**Inheritance Depth**
-- **CA1501**: Avoid excessive inheritance
-- **Threshold**: Keep inheritance depth under 5 levels
-- **Target**: Prefer composition over deep inheritance
-- **Action**: Flatten inheritance hierarchies where possible
-
-**Lines of Code**
-- Keep methods under 50 lines where practical
-- Keep classes focused on single responsibility
-- Split large files into multiple logical units
-
-### Security Analysis
-
-Pay special attention to security rules:
-
-- **CA3xxx Series**: Security vulnerabilities (SQL injection, XSS, etc.)
-- **CA5xxx Series**: Cryptography and security protocols
-- All security rules set to **warning** severity
-- Must address security issues before merging
-- Never disable security warnings without documented justification
+- **Responsibility**: The Software Quality Enforcer agent is responsible for maintaining `.globalconfig`
+- **Philosophy**: Only explicitly configure rules that need to be disabled or have severity adjusted from defaults
+- **Documentation**: Each configured rule should have a comment explaining why it's set to its value
+- **Review**: Periodically review configured rules to ensure they're still necessary
+- **Quality Metrics**: Monitor code quality through analyzer warnings and build output
 
 ### Code Standards
 

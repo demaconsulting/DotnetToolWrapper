@@ -148,25 +148,9 @@ Quality checks are automated through GitHub Actions:
 
 - **Spelling**: Checked using `cspell` against `.cspell.json` configuration
 - **Markdown Linting**: Validated using `markdownlint-cli` against `.markdownlint.json` configuration
-- **Code Analysis**: Microsoft.CodeAnalysis.NetAnalyzers with enhanced rules via `.globalconfig`
-- **Additional Analysis**: SonarAnalyzer.CSharp for code quality and bug detection
+- **Code Analysis**: Microsoft.CodeAnalysis.NetAnalyzers and SonarAnalyzer.CSharp
+- **Analyzer Configuration**: `.globalconfig` file contains explicitly configured rules with explanations
 - **Build Validation**: Zero-warning builds enforced via `TreatWarningsAsErrors`
-
-### Code Analysis Configuration
-
-The project uses `.globalconfig` to configure analyzer rules globally:
-
-- **Comprehensive Rule Set**: All CA (Code Analysis) rules configured with appropriate severity levels
-- **Security Focus**: CA3xxx (security) and CA5xxx (cryptography) rules set to warning
-- **Performance**: CA18xx (performance) rules enabled to catch inefficient patterns
-- **Maintainability**: CA15xx (maintainability) rules track complexity and coupling
-- **Best Practices**: CA1xxx (design) and CA2xxx (reliability) rules enforced
-
-Key severity levels used:
-
-- **warning**: Must be fixed (TreatWarningsAsErrors)
-- **suggestion**: IDE hints, not build-breaking
-- **none**: Rule disabled for this project
 
 ## Agent Instructions
 
@@ -205,29 +189,11 @@ Key severity levels used:
 
 ## Common Tasks
 
-### Project Configuration Philosophy
-
-**Important**: This project prefers managing build properties, targets, and package references directly in individual
-`.csproj` files rather than using centralized files like `Directory.Build.props`, `Directory.Build.targets`, or
-`Directory.Packages.props`. This approach provides:
-
-- Clear visibility of each project's configuration
-- Easier debugging and understanding of project settings
-- Explicit control over each project's dependencies and settings
-- Reduced indirection when troubleshooting build issues
-
-When making changes to project settings:
-
-- Update properties directly in the relevant `.csproj` file
-- Keep common settings synchronized manually between src and test projects
-- Document any deviations between projects when they occur
-
 ### Adding New Dependencies
 
 1. Update the `.csproj` file in `src/DemaConsulting.DotnetToolWrapper/`
 2. If adding analyzer packages, ensure test project also gets the same version
 3. Dependabot is configured to automatically update NuGet packages in the `nuget-dependencies` group
-4. Do NOT use centralized package management (Directory.Packages.props) - manage versions in each .csproj
 
 ### Modifying Build Output
 
@@ -247,91 +213,6 @@ Before committing:
 2. Run tests: `dotnet test --configuration Release`
 3. Run spelling checks: `npx cspell "**/*.md"`
 4. Run markdown linting: `npx markdownlint "**/*.md"`
-
-## Troubleshooting Guide
-
-### Common Build Issues
-
-#### Analyzer Warnings
-
-- **Symptom**: Build fails with CA#### warnings
-- **Solution**: Fix the code issue or adjust rule severity in `.globalconfig`
-- **Note**: Never disable `TreatWarningsAsErrors` to bypass warnings
-
-#### Multi-Framework Targeting Issues
-
-- **Symptom**: Code works on one framework but not others
-- **Solution**: Use `#if NET8_0`, `#if NET9_0`, `#if NET10_0` preprocessor directives for framework-specific code
-- **Alternative**: Use runtime checks with `Environment.Version` when appropriate
-
-#### Cross-Platform Issues
-
-- **Symptom**: Tests pass locally but fail on CI for different OS
-- **Solution**: Avoid OS-specific APIs or use runtime checks with `RuntimeInformation.IsOSPlatform()`
-- **Testing**: Use CI to validate changes on all platforms before merging
-
-### Common Test Issues
-
-#### Integration Test Failures
-
-- **Symptom**: Integration tests fail to find or execute native tools
-- **Solution**: Ensure `CopyLocalLockFileAssemblies` is set to `true` in test project
-- **Check**: Verify test project references have correct configuration
-
-#### Platform-Specific Test Failures
-
-- **Symptom**: Tests fail on specific OS or architecture
-- **Solution**: Use conditional test execution with `[TestMethod]` attributes and runtime checks
-- **Skip Tests**: Use `Assert.Inconclusive()` for platform-specific limitations
-
-### Common CI/CD Issues
-
-#### Workflow Failures
-
-- **Symptom**: GitHub Actions workflow fails
-- **Solution**: Check workflow logs for specific error messages
-- **Tools**: Use `dotnet --info` in workflows to verify SDK versions
-
-#### SBOM Generation Issues
-
-- **Symptom**: SBOM tools fail during artifact generation
-- **Solution**: Verify `.config/dotnet-tools.json` is properly configured
-- **Check**: Ensure `dotnet tool restore` runs successfully before SBOM generation
-
-### Dependency Management Issues
-
-#### Version Conflicts
-
-- **Symptom**: Analyzer package versions differ between projects
-- **Solution**: Manually sync versions in both src and test `.csproj` files
-- **Check**: Search for package name in both files and compare versions
-
-#### Dependabot PR Conflicts
-
-- **Symptom**: Dependabot creates separate PRs for src and test projects
-- **Solution**: This is expected - review and merge both PRs to keep versions synchronized
-- **Prevention**: Dependabot groups related packages but can't enforce cross-project consistency
-
-## Adding New Specialized Agents
-
-When adding a new specialized agent to the project:
-
-1. **Create Agent File**: Add new `.md` file in `.github/agents/` directory
-2. **Follow Structure**: Use YAML frontmatter with `name` and `description` fields
-3. **Document Responsibilities**: Clearly define the agent's role and responsibilities
-4. **Add Guidelines**: Include specific guidelines, best practices, and examples
-5. **Update AGENTS.md**: Add new agent to the "Specialized Agents" section
-6. **Reference Resources**: Link to relevant files, documentation, and configurations
-7. **Provide Examples**: Include code examples and common scenarios
-
-Example frontmatter:
-
-```yaml
----
-name: Agent Name
-description: Brief description of agent's expertise and role
----
-```
 
 ## Issue Templates
 
