@@ -148,6 +148,9 @@ Quality checks are automated through GitHub Actions:
 
 - **Spelling**: Checked using `cspell` against `.cspell.json` configuration
 - **Markdown Linting**: Validated using `markdownlint-cli` against `.markdownlint.json` configuration
+- **Code Analysis**: Microsoft.CodeAnalysis.NetAnalyzers and SonarAnalyzer.CSharp
+- **Analyzer Configuration**: `.globalconfig` file contains explicitly configured rules with explanations
+- **Build Validation**: Zero-warning builds enforced via `TreatWarningsAsErrors`
 
 ## Agent Instructions
 

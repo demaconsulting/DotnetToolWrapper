@@ -1,0 +1,25 @@
+is_global = true
+
+# CA1014: Mark assemblies with CLSCompliant
+# Disabled: This project does not require CLS compliance
+dotnet_diagnostic.CA1014.severity = none
+
+# CA1017: Mark assemblies with ComVisible
+# Disabled: This project does not use COM interop
+dotnet_diagnostic.CA1017.severity = none
+
+# CA1303: Do not pass literals as localized parameters
+# Disabled: This project does not support localization
+dotnet_diagnostic.CA1303.severity = none
+
+# CA1707: Identifiers should not contain underscores
+# Disabled: Test methods use underscores for readability
+dotnet_diagnostic.CA1707.severity = none
+
+# CA1848: Use the LoggerMessage delegates
+# Disabled: This project does not use Microsoft.Extensions.Logging
+dotnet_diagnostic.CA1848.severity = none
+
+# CA2007: Consider calling ConfigureAwait on the awaited task
+# Disabled: Not applicable for console applications
+dotnet_diagnostic.CA2007.severity = none

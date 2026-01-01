@@ -43,6 +43,16 @@ The project uses two analyzer packages:
    - Bug detection and code smell identification
    - Must be same version in src/ and test/ projects
 
+### Analyzer Configuration
+
+The project uses `.globalconfig` to configure analyzer rules:
+
+- **Responsibility**: The Software Quality Enforcer agent is responsible for maintaining `.globalconfig`
+- **Philosophy**: Only explicitly configure rules that need to be disabled or have severity adjusted from defaults
+- **Documentation**: Each configured rule should have a comment explaining why it's set to its value
+- **Review**: Periodically review configured rules to ensure they're still necessary
+- **Quality Metrics**: Monitor code quality through analyzer warnings and build output
+
 ### Code Standards
 
 Follow these C# coding standards:
