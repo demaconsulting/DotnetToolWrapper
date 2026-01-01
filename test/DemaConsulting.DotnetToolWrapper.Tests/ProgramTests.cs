@@ -51,9 +51,9 @@ public class ProgramTests
 
         // Assert
         Assert.IsNotNull(target);
-        Assert.IsTrue(target.Contains('-'), "Target should contain a hyphen");
+        Assert.Contains("-", target, "Target should contain a hyphen");
         
         var parts = target.Split('-');
-        Assert.AreEqual(2, parts.Length, "Target should have exactly two parts");
+        Assert.HasCount(2, parts, "Target should have exactly two parts");
     }
 }
