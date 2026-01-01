@@ -109,7 +109,7 @@ reduces potential compatibility issues.
 
 ### Process Execution Model
 
-The wrapper uses `ProcessStartInfo` with `UseShellExecute = false` to directly execute the native program without
+The wrapper uses `ProcessStartInfo` with `UseShellExecute = false` to directly execute the native executable without
 involving the system shell. This provides better security and more predictable behavior across platforms.
 
 ### Exit Code Propagation
@@ -119,7 +119,7 @@ tools can correctly detect success or failure.
 
 ### Working Directory Preservation
 
-The wrapper executes the native program in the user's current working directory, not in the installation directory.
+The wrapper executes the native executable in the user's current working directory, not in the installation directory.
 This ensures that relative file paths in command-line arguments work as expected.
 
 ## Extension Points
