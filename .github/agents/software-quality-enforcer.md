@@ -28,12 +28,12 @@ The project enforces `TreatWarningsAsErrors` - all warnings must be fixed:
 
 The project uses two analyzer packages:
 
-1. **Microsoft.CodeAnalysis.NetAnalyzers 10.0.101**
+1. **Microsoft.CodeAnalysis.NetAnalyzers**
    - Microsoft's recommended code analysis rules
    - Security, performance, and design guidelines
    - Must be same version in src/ and test/ projects
 
-2. **SonarAnalyzer.CSharp 10.17.0.131074**
+2. **SonarAnalyzer.CSharp**
    - Additional code quality and security rules
    - Bug detection and code smell identification
    - Must be same version in src/ and test/ projects

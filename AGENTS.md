@@ -98,7 +98,7 @@ DotnetToolWrapper/
 - **MSTest**: Testing framework
 - **GitHub Actions**: CI/CD automation
 - **SBOM Tools**: Software Bill of Materials generation (sbom-tool, spdx-tool)
-- **Code Analyzers**: Microsoft.CodeAnalysis.NetAnalyzers 10.0.101, SonarAnalyzer.CSharp 10.17.0.131074
+- **Code Analyzers**: Microsoft.CodeAnalysis.NetAnalyzers, SonarAnalyzer.CSharp
 
 ## Development Guidelines
 
