@@ -170,7 +170,7 @@ The platform identifier format is `{os}-{architecture}`:
 - `x64` - 64-bit Intel/AMD
 - `arm` - 32-bit ARM
 - `arm64` - 64-bit ARM (Apple Silicon, etc.)
-- `wasm` - WebAssembly
+- `wasm` - WebAssembly (architecture detected, but typically requires special runtime handling)
 - `s390x` - IBM System z
 
 **Key points:**

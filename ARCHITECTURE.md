@@ -91,7 +91,9 @@ The configuration file uses a simple JSON structure:
 | linux   | x86, x64, arm, arm64, s390x                      | Linux distributions             |
 | freebsd | x86, x64, arm, arm64                             | FreeBSD platforms               |
 | osx     | x64, arm64                                       | macOS platforms                 |
-| browser | wasm                                             | WebAssembly (experimental)      |
+
+**Note**: WebAssembly (wasm) architecture is detected but typically results in an "unknown" OS unless explicitly
+handled by the runtime environment.
 
 ## Design Decisions
 
@@ -107,7 +109,7 @@ reduces potential compatibility issues.
 
 ### Process Execution Model
 
-The wrapper uses `ProcessStartInfo` with `UseShellExecute = false` to directly execute the native program without
+The wrapper uses `ProcessStartInfo` with `UseShellExecute = false` to directly execute the native executable without
 involving the system shell. This provides better security and more predictable behavior across platforms.
 
 ### Exit Code Propagation
@@ -117,7 +119,7 @@ tools can correctly detect success or failure.
 
 ### Working Directory Preservation
 
-The wrapper executes the native program in the user's current working directory, not in the installation directory.
+The wrapper executes the native executable in the user's current working directory, not in the installation directory.
 This ensures that relative file paths in command-line arguments work as expected.
 
 ## Extension Points
@@ -151,11 +153,12 @@ Potential future extensions could include:
 
 ## Testing Strategy
 
-The project does not currently include automated tests. Testing is performed through:
+The project includes comprehensive automated tests using MSTest:
 
-1. Manual testing on target platforms (Windows, Linux, macOS)
-2. Integration testing with sample .NET tool packages
-3. CI/CD builds that verify compilation for all target frameworks
+1. **Unit Tests** (`ProgramTests.cs`): Tests for core program logic including platform detection and configuration parsing
+2. **Integration Tests** (`IntegrationTests.cs`): End-to-end tests with actual execution scenarios
+3. **Test Infrastructure** (`Runner.cs`): Helper utilities for running the tool in test environments
+4. **CI/CD Testing**: Automated tests run on multiple platforms (Windows, Linux, macOS) to ensure cross-platform compatibility
 
 ## Build and Release Process
 

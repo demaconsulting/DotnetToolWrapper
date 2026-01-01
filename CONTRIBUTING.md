@@ -24,7 +24,7 @@ include as many details as possible:
   - Operating system and version
   - .NET SDK version (`dotnet --version`)
   - DotnetToolWrapper version
-  - Architecture (x86, x64, ARM, ARM64)
+  - Architecture (x86, x64, ARM, ARM64, WASM, S390x)
 
 ### Suggesting Enhancements
 
