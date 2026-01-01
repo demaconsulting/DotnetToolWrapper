@@ -30,7 +30,8 @@
     "appsettings",
     "USERPROFILE",
     "LOCALAPPDATA",
-    "mytool"
+    "mytool",
+    "Triaging"
   ],
   "ignorePaths": [
     "node_modules",

@@ -7,6 +7,43 @@ This repository contains configuration and instructions for GitHub Copilot agent
 **DotnetToolWrapper** is a .NET 8.0, 9.0, and 10.0 console application that serves as a wrapper for native
 applications packaged as [.NET Tools][dotnet-tools].
 
+## Specialized Agents
+
+This repository includes specialized GitHub Copilot agents to assist with specific aspects of the project:
+
+### Documentation Writer
+
+**Location**: `.github/agents/documentation-writer.md`
+
+An expert technical writer specializing in:
+
+- Maintaining README, ARCHITECTURE, and markdown documentation
+- Writing XML documentation comments for APIs (both public and private members)
+- Ensuring documentation accuracy and clarity
+- Following markdown linting and spelling standards
+
+### Project Maintainer
+
+**Location**: `.github/agents/project-maintainer.md`
+
+A project maintenance specialist responsible for:
+
+- Managing dependencies and Dependabot PRs
+- Triaging and organizing issues
+- Identifying improvement opportunities
+- Planning enhancements and releases
+
+### Software Quality Enforcer
+
+**Location**: `.github/agents/software-quality-enforcer.md`
+
+A code quality specialist focused on:
+
+- Enforcing testing standards and code coverage
+- Running static analysis and linting
+- Performing code reviews and quality gates
+- Ensuring zero-warning builds
+
 ## Project Structure
 
 ```text
@@ -14,6 +51,10 @@ DotnetToolWrapper/
 ├── .config/
 │   └── dotnet-tools.json    # .NET tools configuration (sbom-tool, spdx-tool)
 ├── .github/
+│   ├── agents/              # Specialized GitHub Copilot agent configurations
+│   │   ├── documentation-writer.md
+│   │   ├── project-maintainer.md
+│   │   └── software-quality-enforcer.md
 │   ├── ISSUE_TEMPLATE/      # GitHub issue templates
 │   │   ├── bug_report.yml
 │   │   ├── feature_request.yml
