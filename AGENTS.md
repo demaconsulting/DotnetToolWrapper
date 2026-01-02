@@ -48,47 +48,25 @@ A code quality specialist focused on:
 
 ```text
 DotnetToolWrapper/
-├── .config/
-│   └── dotnet-tools.json    # .NET tools configuration (sbom-tool, spdx-tool)
-├── .github/
+├── .config/                 # .NET tools configuration
+├── .github/                 # GitHub configuration
 │   ├── agents/              # Specialized GitHub Copilot agent configurations
-│   │   ├── documentation-writer.md
-│   │   ├── project-maintainer.md
-│   │   └── software-quality-enforcer.md
 │   ├── ISSUE_TEMPLATE/      # GitHub issue templates
-│   │   ├── bug_report.yml
-│   │   ├── feature_request.yml
-│   │   └── config.yml
-│   ├── dependabot.yml       # Dependabot configuration
 │   └── workflows/           # GitHub Actions workflows
-│       ├── build.yaml       # Reusable build workflow
-│       ├── build_on_push.yaml # Triggered on push events
-│       └── release.yaml     # Release workflow
-├── docs/
-│   └── usage.md             # Detailed usage documentation
-├── src/
+├── docs/                    # Additional documentation
+├── src/                     # Source code
 │   └── DemaConsulting.DotnetToolWrapper/
-│       ├── Program.cs       # Main application logic
-│       └── DemaConsulting.DotnetToolWrapper.csproj
-├── test/
+├── test/                    # Test project
 │   └── DemaConsulting.DotnetToolWrapper.Tests/
-│       ├── IntegrationTests.cs
-│       ├── ProgramTests.cs
-│       ├── Runner.cs
-│       └── DemaConsulting.DotnetToolWrapper.Tests.csproj
 ├── .cspell.json            # Spelling check configuration
-├── .editorconfig           # Editor configuration for consistent formatting
-├── .gitignore              # Git ignore patterns
+├── .editorconfig           # Editor configuration
+├── .globalconfig           # Analyzer configuration
 ├── .markdownlint.json      # Markdown linting configuration
-├── AGENTS.md               # This file - Agent instructions
+├── AGENTS.md               # Agent instructions
 ├── ARCHITECTURE.md         # Architecture documentation
-├── CODE_OF_CONDUCT.md      # Community code of conduct
 ├── CONTRIBUTING.md         # Contribution guidelines
-├── DemaConsulting.DotnetToolWrapper.sln
-├── LICENSE                 # MIT License
 ├── README.md               # Project documentation
-├── SECURITY.md             # Security policy
-└── spdx-workflow.yaml      # SBOM enhancement workflow
+└── SECURITY.md             # Security policy
 ```
 
 ## Key Technologies
@@ -97,8 +75,7 @@ DotnetToolWrapper/
 - **C# 12**: Programming language
 - **MSTest**: Testing framework
 - **GitHub Actions**: CI/CD automation
-- **SBOM Tools**: Software Bill of Materials generation (sbom-tool, spdx-tool)
-- **Code Analyzers**: Microsoft.CodeAnalysis.NetAnalyzers, SonarAnalyzer.CSharp
+- **Code Analyzers**: Static analysis with Microsoft and SonarAnalyzer packages
 
 ## Development Guidelines
 
@@ -119,66 +96,54 @@ dotnet test --configuration Release
 dotnet test --configuration Release --logger "console;verbosity=detailed"
 ```
 
-The test project uses MSTest and includes:
-
-- **Unit Tests**: `ProgramTests.cs` - Tests for core program logic
-- **Integration Tests**: `IntegrationTests.cs` - End-to-end tests with actual execution
-- **Test Runner**: `Runner.cs` - Helper for running the tool in tests
-
 ### Code Standards
 
 - **Language Version**: C# 12
 - **Nullable Reference Types**: Enabled
-- **Implicit Usings**: Enabled
 - **Target Frameworks**: net8.0, net9.0, net10.0
-- **EditorConfig**: Follow the .editorconfig rules for consistent code formatting
-- **XML Documentation**: All code (both public and private members) should include XML documentation comments
+- **EditorConfig**: Follow .editorconfig rules for consistent formatting
+- **XML Documentation**: All code should include XML documentation comments
+- **Analyzers**: Keep analyzer packages at the same version across all projects
 
 ### Workflow Structure
 
-The project uses a modular workflow approach:
-
-1. **build_on_push.yaml**: Triggers on every push, calls the reusable build workflow
-2. **build.yaml**: Reusable workflow that performs the actual build, SBOM generation, and artifact upload
-3. **release.yaml**: Handles release-specific tasks
+The project uses GitHub Actions with a modular workflow approach. Workflows are located in `.github/workflows/`
+and include build, test, and release automation.
 
 ### Quality Checks
 
 Quality checks are automated through GitHub Actions:
 
-- **Spelling**: Checked using `cspell` against `.cspell.json` configuration
-- **Markdown Linting**: Validated using `markdownlint-cli` against `.markdownlint.json` configuration
-- **Code Analysis**: Microsoft.CodeAnalysis.NetAnalyzers and SonarAnalyzer.CSharp
-- **Analyzer Configuration**: `.globalconfig` file contains explicitly configured rules with explanations
-- **Build Validation**: Zero-warning builds enforced via `TreatWarningsAsErrors`
+- **Spelling**: Checked using `cspell` with `.cspell.json` configuration
+- **Markdown Linting**: Validated using `markdownlint-cli` with `.markdownlint.json` configuration
+- **Code Analysis**: Enforced via analyzer packages and `.globalconfig` rules
+- **Build Validation**: Zero-warning builds required (`TreatWarningsAsErrors`)
 
 ## Agent Instructions
 
 ### When Working with Code
 
-1. **Multi-targeting**: Always ensure changes are compatible with .NET 8.0, 9.0, and 10.0
+1. **Multi-targeting**: Ensure changes are compatible with .NET 8.0, 9.0, and 10.0
 2. **Cross-platform**: The tool must work on Windows, Linux, FreeBSD, and macOS
-3. **Architecture Support**: Support x86, x64, ARM, ARM64, WASM, and S390x architectures
-4. **Testing**: Always run tests after making changes. The CI runs tests on ubuntu-latest,
-   windows-latest, and macos-latest
+3. **Architecture Support**: Support multiple architectures (x86, x64, ARM, ARM64, WASM, S390x)
+4. **Testing**: Always run tests after changes. CI tests on ubuntu-latest, windows-latest, and macos-latest
 5. **Code Quality**: Maintain `TreatWarningsAsErrors` - all warnings must be fixed
-6. **Analyzers**: Keep analyzer packages (Microsoft.CodeAnalysis.NetAnalyzers and
-   SonarAnalyzer.CSharp) at the same version across all projects
+6. **Analyzers**: Keep analyzer packages at consistent versions across projects
 
 ### When Modifying Workflows
 
 1. Preserve the reusable workflow pattern
-2. Update both `build.yaml` and `build_on_push.yaml` if needed
-3. Ensure SBOM generation continues to work
+2. Ensure build, test, and release automation continues to work
+3. Maintain SBOM generation if present
 
 ### When Updating Documentation
 
-1. Follow the markdown linting rules in `.markdownlint.json`
-2. Check spelling against `.cspell.json` dictionary
-3. Keep README.md synchronized with actual functionality
-4. Update ARCHITECTURE.md if making architectural changes
-5. Reference appropriate documentation files (README.md, ARCHITECTURE.md, CONTRIBUTING.md, SECURITY.md)
-6. Use box-drawing characters (├──, └──, │) for file/folder diagrams rather than pipe-and-dash (|-, |-)
+1. Follow markdown linting rules in `.markdownlint.json`
+2. Check spelling with `.cspell.json` dictionary
+3. Keep README.md synchronized with functionality
+4. Update ARCHITECTURE.md for architectural changes
+5. Reference appropriate documentation files
+6. Use box-drawing characters (├──, └──, │) for file/folder diagrams
 
 ### When Addressing Security Issues
 
@@ -191,19 +156,15 @@ Quality checks are automated through GitHub Actions:
 
 ### Adding New Dependencies
 
-1. Update the `.csproj` file in `src/DemaConsulting.DotnetToolWrapper/`
-2. If adding analyzer packages, ensure test project also gets the same version
-3. Dependabot is configured to automatically update NuGet packages in the `nuget-dependencies` group
-
-### Modifying Build Output
-
-Edit the "Create Drop Folder" step in `.github/workflows/build.yaml`
+1. Update the `.csproj` file in the appropriate project folder
+2. Ensure analyzer packages use consistent versions across projects
+3. Dependabot automatically updates NuGet packages in the `nuget-dependencies` group
 
 ### Updating Supported Frameworks
 
-1. Modify `<TargetFrameworks>` in the `.csproj` file
-2. Update workflow files to include new framework versions
-3. Update the "Create Drop Folder" step to copy artifacts for new frameworks
+1. Modify `<TargetFrameworks>` in `.csproj` files
+2. Update workflows if needed to accommodate new framework versions
+3. Test on all target platforms
 
 ## Testing Changes
 
@@ -216,21 +177,18 @@ Before committing:
 
 ## Issue Templates
 
-The repository includes structured issue templates:
-
-- **Bug Report** (`.github/ISSUE_TEMPLATE/bug_report.yml`) - For reporting bugs with system information
-- **Feature Request** (`.github/ISSUE_TEMPLATE/feature_request.yml`) - For suggesting new features
-- **Config** (`.github/ISSUE_TEMPLATE/config.yml`) - Links to discussions and other resources
+The repository includes structured issue templates in `.github/ISSUE_TEMPLATE/` for bug reports, feature requests,
+and other items.
 
 ## Related Documentation
 
-- [README.md](README.md) - Project overview and quick start guide
-- [ARCHITECTURE.md](ARCHITECTURE.md) - Detailed architecture and design documentation
-- [CONTRIBUTING.md](CONTRIBUTING.md) - Contribution guidelines and development setup
-- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) - Community code of conduct
-- [SECURITY.md](SECURITY.md) - Security policy and vulnerability reporting
-- [docs/usage.md](docs/usage.md) - Comprehensive usage guide with examples
-- [LICENSE](LICENSE) - MIT License terms
+- <a>README.md</a> - Project overview and quick start guide
+- <a>ARCHITECTURE.md</a> - Detailed architecture and design documentation
+- <a>CONTRIBUTING.md</a> - Contribution guidelines and development setup
+- <a>CODE_OF_CONDUCT.md</a> - Community code of conduct
+- <a>SECURITY.md</a> - Security policy and vulnerability reporting
+- <a>docs/usage.md</a> - Comprehensive usage guide with examples
+- <a>LICENSE</a> - MIT License terms
 
 ## Contact
 
