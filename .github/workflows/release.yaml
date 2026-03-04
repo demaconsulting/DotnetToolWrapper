@@ -45,7 +45,7 @@ jobs:
     - uses: actions/checkout@v6
 
     - name: Download Artifacts
-      uses: actions/download-artifact@v7
+      uses: actions/download-artifact@v8
       with:
         name: build-artifacts
         path: build-artifacts
@@ -63,7 +63,7 @@ jobs:
         zip -r ../DotnetToolWrapper.zip *
 
     - name: Upload Artifacts
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: release-artifacts
         path: |
