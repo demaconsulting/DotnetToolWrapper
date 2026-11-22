@@ -59,5 +59,8 @@ Aim for pull requests that each merge one complete, useful change that could be 
   requirements, and docs, builds and passes alone, and leaves no stubs or dead code for a later part.
 - Deliver parts in order: start the next part from main only after the previous one merges.
 - Review fixes, lint fixes, and follow-ups go into the open pull request they belong to, not a new one.
-- Sub-agents work on the agreed branch and do not open pull requests; you decide when it is complete.
+- Sub-agents work on the agreed branch, commit locally, and never push or open pull requests; you decide when
+  it is complete.
+- Push only when the pull request's work is complete and validated locally: each push to an open pull request
+  triggers CI and automated reviews.
 - Keep mechanical churn (formatting, renames, generated files) in its own commit so reviewers can skip it.
