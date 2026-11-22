@@ -20,3 +20,4 @@ sections:
             tests:
               - WeasyPrint_UserGuidePdf
               - WeasyPrint_DesignPdf
+              - WeasyPrint_VerificationPdf

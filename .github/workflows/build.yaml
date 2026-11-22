@@ -214,15 +214,15 @@ jobs:
           name: artifacts-build-validation
           path: artifacts/
 
-  # Builds the release documents (Software Design Document, User Guide, Requirements Document,
-  # and Trace Matrix) as PDFs. It runs on Windows because the WeasyPrint tool package ships only a
-  # win-x64 build. SysML2Tools renders the design diagrams from the architecture model. Each
-  # document section converts Markdown to HTML with Pandoc, renders the PDF with WeasyPrint, and
-  # checks both with FileAssert; the FileAssert results and the tool self-validations are OTS
-  # evidence. ReqStream traces every requirement to the TRX evidence that all jobs uploaded as
-  # 'artifacts-*' and fails the build with --enforce when a requirement is not satisfied. The
-  # PDFs are uploaded as the 'documents' artifact that the release workflow attaches to the
-  # GitHub release.
+  # Builds the release documents (Software Design Document, Software Verification Design Document,
+  # User Guide, Requirements Document, and Trace Matrix) as PDFs. It runs on Windows because the
+  # WeasyPrint tool package ships only a win-x64 build. SysML2Tools renders the design diagrams
+  # from the architecture model. Each document section converts Markdown to HTML with Pandoc,
+  # renders the PDF with WeasyPrint, and checks both with FileAssert; the FileAssert results and
+  # the tool self-validations are OTS evidence. ReqStream traces every requirement to the TRX
+  # evidence that all jobs uploaded as 'artifacts-*' and fails the build with --enforce when a
+  # requirement is not satisfied. The PDFs are uploaded as the 'documents' artifact that the
+  # release workflow attaches to the GitHub release.
   build-docs:
     name: Build Documents
     needs: [quality-checks, test, build]
@@ -266,8 +266,8 @@ jobs:
         run: mkdir -p docs/generated
 
       # Later stages add their document sections here (Build Notes, Code Quality, and Code Review
-      # before the Design section, Verification after it), before the FileAssert self-validation,
-      # so their FileAssert results are OTS evidence for ReqStream.
+      # before the Design section), before the FileAssert self-validation, so their FileAssert
+      # results are OTS evidence for ReqStream.
 
       # === COMPILE DESIGN DOCUMENT ===
       # SysML2Tools renders the views of the architecture model in docs/sysml2/ to SVG, Pandoc
@@ -316,6 +316,36 @@ jobs:
           dotnet fileassert
           --results artifacts/fileassert-design.trx
           design
+
+      # === COMPILE VERIFICATION DOCUMENT ===
+      # Pandoc converts the verification design documentation to HTML, WeasyPrint renders the PDF,
+      # and FileAssert checks both. These FileAssert results are OTS evidence for ReqStream.
+
+      - name: Create verification output directory
+        shell: bash
+        run: mkdir -p docs/verification/generated
+
+      - name: Generate Verification HTML with Pandoc
+        shell: bash
+        run: >
+          dotnet pandoc
+          --defaults docs/verification/definition.yaml
+          --metadata version="${{ inputs.semver }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/verification/generated/verification.html
+
+      - name: Generate Verification PDF with WeasyPrint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/verification/generated/verification.html
+          "docs/generated/DotnetToolWrapper Software Verification Design Document.pdf"
+
+      - name: Assert Verification Documents with FileAssert
+        run: >
+          dotnet fileassert
+          --results artifacts/fileassert-verification.trx
+          verification
 
       # === COMPILE USER GUIDE ===
       # Pandoc converts the user guide to HTML, with the CanvasNet filter drawing its diagram,

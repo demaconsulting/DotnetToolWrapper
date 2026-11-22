@@ -64,6 +64,7 @@ parts of the system, because none of them is shipped with the wrapper.
   - **reqstream/** - requirements files, traced to tests by ReqStream
   - **sysml2/** - SysML2 architecture model (common metadata, model, and design views)
   - **user_guide/** - DotnetToolWrapper User Guide
+  - **verification/** - Software Verification Design Document
 
 ## Companion Artifact Structure
 

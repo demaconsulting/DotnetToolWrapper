@@ -14,6 +14,7 @@ package DotnetToolWrapper {
         metadata info : SoftwareInfo {
             testFiles = ("test/DemaConsulting.DotnetToolWrapper.Tests/DotnetToolWrapperTests.cs");
             designFiles = ("docs/design/dotnet-tool-wrapper.md");
+            verificationFiles = ("docs/verification/dotnet-tool-wrapper.md");
             requirementFiles = (
                 "docs/reqstream/dotnet-tool-wrapper.yaml",
                 "docs/reqstream/dotnet-tool-wrapper/platform-requirements.yaml"

@@ -92,7 +92,8 @@ DotnetToolWrapper/
 │   ├── requirements_report/ # Trace Matrix (Pandoc collection)
 │   ├── sysml2/              # SysML2 architecture model (SysML2Tools)
 │   ├── template/            # Pandoc HTML template
-│   └── user_guide/          # User Guide (Pandoc collection)
+│   ├── user_guide/          # User Guide (Pandoc collection)
+│   └── verification/        # Software Verification Design Document (Pandoc collection)
 ├── src/
 │   └── DemaConsulting.DotnetToolWrapper/
 │       ├── Program.cs       # Main application logic
@@ -154,10 +155,11 @@ DotnetToolWrapper/
 - Include code examples where helpful
 - Use box-drawing characters (├──, └──, │) for file/folder diagrams rather than pipe-and-dash (|-, |-)
 - Update the User Guide in `docs/user_guide/` when user-visible behavior changes. It is a Pandoc collection that CI
-  builds to PDF together with the Software Design Document, the Requirements Document, and the Trace Matrix (the
+  builds to PDF together with the other release documents (the
   document job runs on Windows, because the WeasyPrint tool ships only for Windows x64)
 - Update the Software Design Document in `docs/design/` and the SysML2 architecture model in `docs/sysml2/` when the
   structure or the behavior of the code changes
+- Update the Software Verification Design Document in `docs/verification/` when tests are added, removed, or changed
 
 ### Testing Your Changes
 
@@ -251,7 +253,7 @@ Releases are managed by project maintainers using GitHub Actions:
 2. The workflow builds, tests, and packages the wrapper, and builds the release documents
 3. When publishing, it creates the tag `{semver}` and a GitHub release with generated release notes
 4. The release includes `DotnetToolWrapper.zip`, the SPDX SBOM, and the User Guide, Software Design Document,
-   Requirements Document, and Trace Matrix PDFs
+   Software Verification Design Document, Requirements Document, and Trace Matrix PDFs
 
 ## Getting Help
 

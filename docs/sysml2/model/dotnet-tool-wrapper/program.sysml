@@ -13,6 +13,7 @@ package DotnetToolWrapper_Program {
             sourceFiles = ("src/DemaConsulting.DotnetToolWrapper/Program.cs");
             testFiles = ("test/DemaConsulting.DotnetToolWrapper.Tests/ProgramTests.cs");
             designFiles = ("docs/design/dotnet-tool-wrapper/program.md");
+            verificationFiles = ("docs/verification/dotnet-tool-wrapper/program.md");
             requirementFiles = ("docs/reqstream/dotnet-tool-wrapper/program.yaml");
         }
     }

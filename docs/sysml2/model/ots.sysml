@@ -12,6 +12,7 @@ package OtsDependencies {
 
         metadata info : SoftwareInfo {
             designFiles = ("docs/design/ots/canvasnet.md");
+            verificationFiles = ("docs/verification/ots/canvasnet.md");
             requirementFiles = ("docs/reqstream/ots/canvasnet.yaml");
         }
     }
@@ -21,6 +22,7 @@ package OtsDependencies {
 
         metadata info : SoftwareInfo {
             designFiles = ("docs/design/ots/fileassert.md");
+            verificationFiles = ("docs/verification/ots/fileassert.md");
             requirementFiles = ("docs/reqstream/ots/fileassert.yaml");
         }
     }
@@ -30,6 +32,7 @@ package OtsDependencies {
 
         metadata info : SoftwareInfo {
             designFiles = ("docs/design/ots/lintmark.md");
+            verificationFiles = ("docs/verification/ots/lintmark.md");
             requirementFiles = ("docs/reqstream/ots/lintmark.yaml");
         }
     }
@@ -39,6 +42,7 @@ package OtsDependencies {
 
         metadata info : SoftwareInfo {
             designFiles = ("docs/design/ots/pandoc.md");
+            verificationFiles = ("docs/verification/ots/pandoc.md");
             requirementFiles = ("docs/reqstream/ots/pandoc.yaml");
         }
     }
@@ -48,6 +52,7 @@ package OtsDependencies {
 
         metadata info : SoftwareInfo {
             designFiles = ("docs/design/ots/reqstream.md");
+            verificationFiles = ("docs/verification/ots/reqstream.md");
             requirementFiles = ("docs/reqstream/ots/reqstream.yaml");
         }
     }
@@ -57,6 +62,7 @@ package OtsDependencies {
 
         metadata info : SoftwareInfo {
             designFiles = ("docs/design/ots/spdx-tool.md");
+            verificationFiles = ("docs/verification/ots/spdx-tool.md");
             requirementFiles = ("docs/reqstream/ots/spdx-tool.yaml");
         }
     }
@@ -66,6 +72,7 @@ package OtsDependencies {
 
         metadata info : SoftwareInfo {
             designFiles = ("docs/design/ots/sysml2tools.md");
+            verificationFiles = ("docs/verification/ots/sysml2tools.md");
             requirementFiles = ("docs/reqstream/ots/sysml2tools.yaml");
         }
     }
@@ -75,6 +82,7 @@ package OtsDependencies {
 
         metadata info : SoftwareInfo {
             designFiles = ("docs/design/ots/textlint.md");
+            verificationFiles = ("docs/verification/ots/textlint.md");
             requirementFiles = ("docs/reqstream/ots/textlint.yaml");
         }
     }
@@ -84,6 +92,7 @@ package OtsDependencies {
 
         metadata info : SoftwareInfo {
             designFiles = ("docs/design/ots/weasyprint.md");
+            verificationFiles = ("docs/verification/ots/weasyprint.md");
             requirementFiles = ("docs/reqstream/ots/weasyprint.yaml");
         }
     }
@@ -93,6 +102,7 @@ package OtsDependencies {
 
         metadata info : SoftwareInfo {
             designFiles = ("docs/design/ots/xunit.md");
+            verificationFiles = ("docs/verification/ots/xunit.md");
             requirementFiles = ("docs/reqstream/ots/xunit.yaml");
         }
     }

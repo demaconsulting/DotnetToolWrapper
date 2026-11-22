@@ -19,3 +19,4 @@ sections:
             tests:
               - Pandoc_UserGuideHtml
               - Pandoc_DesignHtml
+              - Pandoc_VerificationHtml

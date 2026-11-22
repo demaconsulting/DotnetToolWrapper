@@ -54,8 +54,8 @@ sections:
       - id: DotnetToolWrapper-Quality-ReleaseDocuments
         title: Every build shall generate the release documents as PDF documents and check that each contains its expected content.
         justification: |
-          The software design document, the user guide, the requirements document, and the trace
-          matrix ship with each release as user documentation and compliance evidence, so they must
+          The software design document, the software verification design document, the user guide,
+          the requirements document, and the trace matrix ship with each release as user documentation and compliance evidence, so they must
           be generated from the repository sources on every build, and a missing, broken, or empty
           document must fail the build.
         tags: [quality]
