@@ -57,6 +57,16 @@ package OtsDependencies {
         }
     }
 
+    part def ReviewMark {
+        doc /* OTS: ReviewMark - checks the review configuration and generates the review plan and review report. */
+
+        metadata info : SoftwareInfo {
+            designFiles = ("docs/design/ots/reviewmark.md");
+            verificationFiles = ("docs/verification/ots/reviewmark.md");
+            requirementFiles = ("docs/reqstream/ots/reviewmark.yaml");
+        }
+    }
+
     part def SpdxTool {
         doc /* OTS: SpdxTool - enhances, validates, and summarizes the software bill of materials. */
 

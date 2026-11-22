@@ -31,6 +31,7 @@ The following OTS items are described in the sections that follow:
 - **LintMark** - self-validation.
 - **Pandoc** - FileAssert checks of the generated HTML.
 - **ReqStream** - self-validation.
+- **ReviewMark** - self-validation.
 - **SpdxTool** - self-validation.
 - **SysML2Tools** - self-validation and FileAssert checks of the rendered diagrams.
 - **TextLint** - self-validation.

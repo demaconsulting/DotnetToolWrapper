@@ -31,11 +31,11 @@ All OTS items except xUnit are .NET local tools, restored with `dotnet tool rest
 `dotnet {command}` from the repository scripts and the CI workflow:
 
 - `build.ps1` builds the solution and runs the xUnit tests;
-- `lint.ps1` runs TextLint, LintMark, ReqStream, and SysML2Tools as quality checks, and `fix.ps1` runs the
-  LintMark fixer;
+- `lint.ps1` runs TextLint, LintMark, ReqStream, ReviewMark, and SysML2Tools as quality checks, and `fix.ps1`
+  runs the LintMark fixer;
 - the CI build job runs SpdxTool on the software bill of materials;
-- the CI documents job runs SysML2Tools, Pandoc, CanvasNet, WeasyPrint, FileAssert, and ReqStream to build and
-  check the release documents.
+- the CI documents job runs ReviewMark, SysML2Tools, Pandoc, CanvasNet, WeasyPrint, FileAssert, and ReqStream to
+  build and check the release documents.
 
 xUnit is a NuGet test framework referenced by the test project. Each tool runs as a separate process with its
 configuration in a checked-in file or on its command line; none needs initialization or disposal beyond that
@@ -66,6 +66,7 @@ The following OTS items are described in the sections that follow:
 - **LintMark** - checks and fixes the Markdown formatting.
 - **Pandoc** - converts the Markdown sources of each document to HTML.
 - **ReqStream** - checks the requirements and traces them to test evidence.
+- **ReviewMark** - checks the review configuration and generates the review plan and report.
 - **SpdxTool** - enhances, validates, and summarizes the software bill of materials.
 - **SysML2Tools** - lints, queries, and renders the SysML2 architecture model.
 - **TextLint** - checks the spelling of the repository text.

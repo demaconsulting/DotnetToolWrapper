@@ -12,6 +12,8 @@ ReqStream, so their results are the evidence for the WeasyPrint requirement.
 
 - **WeasyPrint_DesignPdf**: the Software Design Document PDF has its metadata, at least 20 pages, and the expected
   text.
+- **WeasyPrint_ReviewPlanPdf** and **WeasyPrint_ReviewReportPdf**: the Review Plan and Review Report PDFs have
+  their metadata, at least 2 pages, and the expected text.
 - **WeasyPrint_VerificationPdf**: the Software Verification Design Document PDF has its metadata, at least 10
   pages, and the expected text.
 - **WeasyPrint_UserGuidePdf**: the User Guide PDF has its metadata, at least 10 pages, and the expected text.

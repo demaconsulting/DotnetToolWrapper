@@ -30,7 +30,8 @@ with the .NET command-line tools they already have.
 - Has no dependencies beyond the .NET runtime
 - Reports configuration errors with a clear message and exit code 1
 - Traces its requirements to passing tests on every build, and ships a User Guide, a Software Design Document,
-  a Software Verification Design Document, a Requirements Document, and a Trace Matrix with each release
+  a Software Verification Design Document, a Requirements Document, a Trace Matrix, a Review Plan, and a Review
+  Report with each release
 
 ## Installation
 

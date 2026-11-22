@@ -12,6 +12,8 @@ results are the evidence for the Pandoc requirement.
 
 - **Pandoc_DesignHtml**: the Software Design Document HTML has a title, embeds the three SysML2 diagrams, and
   contains `Software Design Document`.
+- **Pandoc_ReviewPlanHtml** and **Pandoc_ReviewReportHtml**: the Review Plan and Review Report HTML have a title
+  and contain the document name and the review-set identifiers.
 - **Pandoc_VerificationHtml**: the Software Verification Design Document HTML has a title and contains
   `Verification`.
 - **Pandoc_UserGuideHtml**: the User Guide HTML has a title, embeds its flowchart, and contains `User Guide`.

@@ -20,3 +20,5 @@ sections:
               - Pandoc_UserGuideHtml
               - Pandoc_DesignHtml
               - Pandoc_VerificationHtml
+              - Pandoc_ReviewPlanHtml
+              - Pandoc_ReviewReportHtml

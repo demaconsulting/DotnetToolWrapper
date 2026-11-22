@@ -30,6 +30,7 @@ OTS items:
 - **LintMark**: integration and usage design.
 - **Pandoc**: integration and usage design.
 - **ReqStream**: integration and usage design.
+- **ReviewMark**: integration and usage design.
 - **SpdxTool**: integration and usage design.
 - **SysML2Tools**: integration and usage design.
 - **TextLint**: integration and usage design.
