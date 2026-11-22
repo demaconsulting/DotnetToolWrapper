@@ -31,6 +31,7 @@ sections:
         tests:
           - DotnetToolWrapper_Arguments_Provided_PassesArgumentsToProgram
           - DotnetToolWrapper_ExitCode_ProgramExits_ReturnsProgramExitCode
+          - DotnetToolWrapper_Target_MultipleTargets_RunsHostTargetProgram
 
       - id: DotnetToolWrapper-System-PassArguments
         title: The DotnetToolWrapper shall pass its command-line arguments to the configured program.
@@ -40,6 +41,7 @@ sections:
         tags: [system]
         tests:
           - DotnetToolWrapper_Arguments_Provided_PassesArgumentsToProgram
+          - DotnetToolWrapper_Arguments_SpecialCharacters_PassesEachArgumentExactly
 
       - id: DotnetToolWrapper-System-ExitCode
         title: The DotnetToolWrapper shall exit with the exit code of the configured program.

@@ -8,59 +8,53 @@ namespace DemaConsulting.DotnetToolWrapper.Tests;
 public class ProgramTests
 {
     /// <summary>
-    /// Test GetOs method returns valid OS identifier
+    /// Test GetOs names the operating system of the current host
     /// </summary>
     [Fact]
-    public void Program_GetOs_CurrentHost_ReturnsKnownOsIdentifier()
+    public void Program_GetOs_CurrentHost_ReturnsHostOsName()
     {
-        // Arrange: (none - GetOs inspects the current host)
+        // Arrange: name the host operating system independently with the OperatingSystem checks
+        var expected = HostTarget.ExpectedOs();
 
-        // Act: get the OS identifier of the current host
+        // Act: get the OS name of the current host
         var os = Program.GetOs();
 
-        // Assert: identifier is one of the values the wrapper can produce
-        Assert.NotNull(os);
-        Assert.True(
-            os is "win" or "linux" or "freebsd" or "osx" or "unknown",
-            $"OS should be one of the known values, got: {os}");
+        // Assert: the supported host is named, and with the independently derived name
+        Assert.NotEqual("unknown", os);
+        Assert.Equal(expected, os);
     }
 
     /// <summary>
-    /// Test GetArchitecture method returns valid architecture identifier
+    /// Test GetArchitecture names the architecture of the current host
     /// </summary>
     [Fact]
-    public void Program_GetArchitecture_CurrentHost_ReturnsKnownArchitectureIdentifier()
+    public void Program_GetArchitecture_CurrentHost_ReturnsHostArchitectureName()
     {
-        // Arrange: (none - GetArchitecture inspects the current host)
+        // Arrange: name the host architecture independently from the lower-case OSArchitecture name
+        var expected = HostTarget.ExpectedArchitecture();
 
-        // Act: get the architecture identifier of the current host
+        // Act: get the architecture name of the current host
         var arch = Program.GetArchitecture();
 
-        // Assert: identifier is one of the values the wrapper can produce
-        Assert.NotNull(arch);
-        Assert.True(
-            arch is "x86" or "x64" or "arm" or "arm64" or "wasm" or "s390x" or "unknown",
-            $"Architecture should be one of the known values, got: {arch}");
+        // Assert: the supported host is named, and with the independently derived name
+        Assert.NotEqual("unknown", arch);
+        Assert.Equal(expected, arch);
     }
 
     /// <summary>
-    /// Test GetTarget method returns valid target string
+    /// Test GetTarget names the target of the current host
     /// </summary>
     [Fact]
-    public void Program_GetTarget_CurrentHost_ReturnsOsAndArchitectureTarget()
+    public void Program_GetTarget_CurrentHost_ReturnsHostTarget()
     {
-        // Arrange: (none - GetTarget inspects the current host)
+        // Arrange: build the host target independently of the Program class
+        var expected = HostTarget.ExpectedTarget();
 
         // Act: get the target string of the current host
         var target = Program.GetTarget();
 
-        // Assert: target is two hyphen-separated parts
-        Assert.NotNull(target);
-        Assert.Contains("-", target);
-
-        var parts = target.Split('-');
-        Assert.Equal(2, parts.Length);
-        Assert.Equal($"{Program.GetOs()}-{Program.GetArchitecture()}", target);
+        // Assert: target is the independently derived "{os}-{architecture}" of the host
+        Assert.Equal(expected, target);
     }
 
     /// <summary>

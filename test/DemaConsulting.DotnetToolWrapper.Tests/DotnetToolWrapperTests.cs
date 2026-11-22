@@ -98,7 +98,8 @@ public sealed class DotnetToolWrapperTests : IDisposable
             Assert.NotNull(directory);
         }
 
-        var target = Program.GetTarget();
+        // Key the entry by the host target derived independently of the wrapper
+        var target = HostTarget.ExpectedTarget();
 
         var json = JsonSerializer.Serialize(new Dictionary<string, object>
         {
@@ -106,6 +107,47 @@ public sealed class DotnetToolWrapperTests : IDisposable
         });
 
         File.WriteAllText(Path.Combine(directory, "DotnetToolWrapper.json"), json);
+    }
+
+    /// <summary>
+    /// Write a DotnetToolWrapper.json configuration file beside the wrapper DLL from raw entries
+    /// </summary>
+    /// <param name="entries">Configuration entries keyed by target name, in file order</param>
+    private static void WriteConfigEntries(IEnumerable<KeyValuePair<string, object>> entries)
+    {
+        var dllDirectory = Path.GetDirectoryName(GetDotnetToolWrapperDllPath());
+        Assert.NotNull(dllDirectory);
+        var json = JsonSerializer.Serialize(new Dictionary<string, object>(entries));
+        File.WriteAllText(Path.Combine(dllDirectory, "DotnetToolWrapper.json"), json);
+    }
+
+    /// <summary>
+    /// Get the path to the dotnet host that runs the tests
+    /// </summary>
+    /// <remarks>
+    /// The runtime directory is {dotnet-root}/shared/Microsoft.NETCore.App/{version}/, so the host is three
+    /// folders above it.
+    /// </remarks>
+    /// <returns>Full path to the dotnet executable</returns>
+    private static string GetDotnetHostPath()
+    {
+        var dotnetRoot = Path.GetFullPath(Path.Combine(RuntimeEnvironment.GetRuntimeDirectory(), "..", "..", ".."));
+        var dotnetHost = Path.Combine(dotnetRoot, OperatingSystem.IsWindows() ? "dotnet.exe" : "dotnet");
+        Assert.True(File.Exists(dotnetHost), $"dotnet host not found at {dotnetHost}");
+        return dotnetHost;
+    }
+
+    /// <summary>
+    /// Get the path to the argument echo helper DLL copied beside the test assembly
+    /// </summary>
+    /// <returns>Path to the helper DLL</returns>
+    private static string GetEchoArgsDllPath()
+    {
+        var assemblyLocation = Path.GetDirectoryName(typeof(DotnetToolWrapperTests).Assembly.Location);
+        Assert.NotNull(assemblyLocation);
+        var echoArgsDll = Path.Combine(assemblyLocation, "DemaConsulting.DotnetToolWrapper.EchoArgs.dll");
+        Assert.True(File.Exists(echoArgsDll), $"Echo helper not found at {echoArgsDll}");
+        return echoArgsDll;
     }
 
     /// <summary>
@@ -250,6 +292,40 @@ public sealed class DotnetToolWrapperTests : IDisposable
     }
 
     /// <summary>
+    /// Test that each argument reaches the program exactly, without splitting, joining, or unquoting
+    /// </summary>
+    [Fact]
+    public void DotnetToolWrapper_Arguments_SpecialCharacters_PassesEachArgumentExactly()
+    {
+        // Arrange: configure the wrapper to run the echo helper through the dotnet host, with arguments that a
+        // careless pass-through would split, drop, or unquote
+        var dllPath = GetDotnetToolWrapperDllPath();
+        CreateConfigFile(GetDotnetHostPath());
+        string[] testArgs =
+        [
+            "plain",
+            "with space",
+            string.Empty,
+            "quote\"inside",
+            "\"quoted\"",
+            "back\\slash\\",
+            " leading and trailing "
+        ];
+        var args = new List<string> { dllPath, GetEchoArgsDllPath() };
+        args.AddRange(testArgs);
+
+        // Act: run the wrapper with the helper and the test arguments
+        var exitCode = Runner.Run(out var output, "dotnet", args.ToArray());
+
+        // Assert: the helper printed the same number of arguments, each one unchanged and in order
+        Assert.Equal(0, exitCode);
+        var expectedLines = new List<string> { $"count={testArgs.Length}" };
+        expectedLines.AddRange(testArgs.Select(arg => $"[{arg}]"));
+        var actualLines = output.ReplaceLineEndings("\n").TrimEnd('\n').Split('\n');
+        Assert.Equal(expectedLines, actualLines);
+    }
+
+    /// <summary>
     /// Test that unsupported target results in expected error
     /// </summary>
     [Fact]
@@ -257,20 +333,45 @@ public sealed class DotnetToolWrapperTests : IDisposable
     {
         // Arrange: write a configuration that only contains a target that does not exist
         var dllPath = GetDotnetToolWrapperDllPath();
-        var dllDirectory = Path.GetDirectoryName(dllPath);
-        Assert.NotNull(dllDirectory);
-        var json = JsonSerializer.Serialize(new Dictionary<string, object>
-        {
-            { "fake-target", new { program = "fake" } }
-        });
-        File.WriteAllText(Path.Combine(dllDirectory, "DotnetToolWrapper.json"), json);
+        WriteConfigEntries([new("fake-target", new { program = "fake" })]);
 
         // Act: run the wrapper with no arguments
         var exitCode = Runner.Run(out var output, "dotnet", dllPath);
 
-        // Assert: wrapper reports the unsupported target and exits with 1
+        // Assert: wrapper reports the unsupported host target by name and exits with 1
         Assert.Equal(1, exitCode);
         Assert.Contains("does not support", output);
+        Assert.Contains(HostTarget.ExpectedTarget(), output);
+    }
+
+    /// <summary>
+    /// Test that the program of the host target is run when the configuration holds other targets too
+    /// </summary>
+    [Fact]
+    public void DotnetToolWrapper_Target_MultipleTargets_RunsHostTargetProgram()
+    {
+        // Arrange: configure decoy targets (before and after the host entry) whose program does not exist, and the
+        // host target with a script that prints a marker
+        var dllPath = GetDotnetToolWrapperDllPath();
+        var hostTarget = HostTarget.ExpectedTarget();
+        var marker = "HostTargetProgramRan";
+        var scriptName = CreateEchoScript(_programDirectory, marker);
+        var decoyProgram = new { program = "missing-decoy-program" };
+        var decoyTargets = new[] { "win-x64", "linux-x64", "osx-arm64", "freebsd-x64", "linux-arm64" }
+            .Where(target => target != hostTarget)
+            .ToArray();
+        var entries = new List<KeyValuePair<string, object>>();
+        entries.AddRange(decoyTargets.Take(2).Select(target => new KeyValuePair<string, object>(target, decoyProgram)));
+        entries.Add(new(hostTarget, new { program = $"{Path.GetFileName(_programDirectory)}/{scriptName}" }));
+        entries.AddRange(decoyTargets.Skip(2).Select(target => new KeyValuePair<string, object>(target, decoyProgram)));
+        WriteConfigEntries(entries);
+
+        // Act: run the wrapper with no arguments
+        var exitCode = Runner.Run(out var output, "dotnet", dllPath);
+
+        // Assert: the host target's script ran, not a decoy program
+        Assert.Equal(0, exitCode);
+        Assert.Contains(marker, output);
     }
 
     /// <summary>
@@ -279,16 +380,9 @@ public sealed class DotnetToolWrapperTests : IDisposable
     [Fact]
     public void DotnetToolWrapper_Configuration_ProgramMissing_ReportsErrorAndExitsWithOne()
     {
-        // Arrange: write a configuration for the current target that has no program entry
+        // Arrange: write a configuration for the host target that has no program entry
         var dllPath = GetDotnetToolWrapperDllPath();
-        var dllDirectory = Path.GetDirectoryName(dllPath);
-        Assert.NotNull(dllDirectory);
-        var target = Program.GetTarget();
-        var json = JsonSerializer.Serialize(new Dictionary<string, object>
-        {
-            { target, new { notProgram = "fake" } }
-        });
-        File.WriteAllText(Path.Combine(dllDirectory, "DotnetToolWrapper.json"), json);
+        WriteConfigEntries([new(HostTarget.ExpectedTarget(), new { notProgram = "fake" })]);
 
         // Act: run the wrapper with no arguments
         var exitCode = Runner.Run(out var output, "dotnet", dllPath);

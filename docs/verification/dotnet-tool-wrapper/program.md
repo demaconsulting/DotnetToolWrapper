@@ -55,7 +55,10 @@ architecture and expect `x86`, `x64`, `arm`, `arm64`, `wasm`, and `s390x`.
 and `Program_GetTarget_UnknownPlatformAndArchitecture_ReturnsUnknownUnknown` expect `win-x64`, `linux-arm64`, and
 `unknown-unknown`.
 
-**Current host**: `Program_GetOs_CurrentHost_ReturnsKnownOsIdentifier`,
-`Program_GetArchitecture_CurrentHost_ReturnsKnownArchitectureIdentifier`, and
-`Program_GetTarget_CurrentHost_ReturnsOsAndArchitectureTarget` call the public methods on the build machine and
-expect a documented name and a two-part target equal to `{GetOs()}-{GetArchitecture()}`.
+**Current host**: `Program_GetOs_CurrentHost_ReturnsHostOsName`,
+`Program_GetArchitecture_CurrentHost_ReturnsHostArchitectureName`, and
+`Program_GetTarget_CurrentHost_ReturnsHostTarget` call the public methods on the build machine and compare the
+result with names derived independently of Program: the `OperatingSystem` checks for the operating system and the
+lower-case name of `RuntimeInformation.OSArchitecture` for the architecture. They also expect neither name to be
+`unknown`, because every CI runner is a supported host. Run on each CI runner, they verify the wiring of the public
+methods to the .NET runtime for Windows, Linux, macOS, x64, and arm64.

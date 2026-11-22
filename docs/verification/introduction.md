@@ -50,6 +50,9 @@ The following topics are out of scope:
     - **ProgramTests.cs** - unit tests of the Program unit
     - **Runner.cs** - helper that starts a process and captures its output and exit code
     - **AssemblyInfo.cs** - the `Sequential` test collection that keeps the system tests from running in parallel
+    - **HostTarget.cs** - helper that names the host target independently of the Program unit
+  - **DemaConsulting.DotnetToolWrapper.EchoArgs/** - console helper that prints each argument it receives, run by
+    the exact argument pass-through system test
 
 ## Companion Artifact Structure
 

@@ -22,7 +22,7 @@ sections:
               - Program_GetTarget_WindowsX64_ReturnsWinX64
               - Program_GetTarget_LinuxArm64_ReturnsLinuxArm64
               - Program_GetTarget_UnknownPlatformAndArchitecture_ReturnsUnknownUnknown
-              - Program_GetTarget_CurrentHost_ReturnsOsAndArchitectureTarget
+              - Program_GetTarget_CurrentHost_ReturnsHostTarget
 
           - id: DotnetToolWrapper-Program-OsWindows
             title: Program shall name the Windows operating system win.
@@ -30,6 +30,7 @@ sections:
               Tool packages configure Windows executables under targets that start with win.
             tests:
               - Program_GetOs_WindowsPlatform_ReturnsWin
+              - windows@Program_GetOs_CurrentHost_ReturnsHostOsName
 
           - id: DotnetToolWrapper-Program-OsLinux
             title: Program shall name the Linux operating system linux.
@@ -37,6 +38,7 @@ sections:
               Tool packages configure Linux executables under targets that start with linux.
             tests:
               - Program_GetOs_LinuxPlatform_ReturnsLinux
+              - linux@Program_GetOs_CurrentHost_ReturnsHostOsName
 
           - id: DotnetToolWrapper-Program-OsFreeBsd
             title: Program shall name the FreeBSD operating system freebsd.
@@ -51,6 +53,7 @@ sections:
               Tool packages configure macOS executables under targets that start with osx.
             tests:
               - Program_GetOs_OsxPlatform_ReturnsOsx
+              - macos@Program_GetOs_CurrentHost_ReturnsHostOsName
 
           - id: DotnetToolWrapper-Program-OsUnknown
             title: Program shall name any other operating system unknown.
@@ -73,6 +76,7 @@ sections:
               Tool packages configure 64-bit Intel and AMD executables under targets that end with x64.
             tests:
               - Program_GetArchitecture_X64_ReturnsX64
+              - x64@Program_GetArchitecture_CurrentHost_ReturnsHostArchitectureName
 
           - id: DotnetToolWrapper-Program-ArchArm
             title: Program shall name the 32-bit Arm architecture arm.
@@ -87,6 +91,7 @@ sections:
               Tool packages configure 64-bit Arm executables under targets that end with arm64.
             tests:
               - Program_GetArchitecture_Arm64_ReturnsArm64
+              - arm64@Program_GetArchitecture_CurrentHost_ReturnsHostArchitectureName
 
           - id: DotnetToolWrapper-Program-ArchWasm
             title: Program shall name the WebAssembly architecture wasm.

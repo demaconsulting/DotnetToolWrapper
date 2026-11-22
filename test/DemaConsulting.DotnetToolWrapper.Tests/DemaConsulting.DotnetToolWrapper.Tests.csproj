@@ -67,6 +67,8 @@
     <ProjectReference Include="..\..\src\DemaConsulting.DotnetToolWrapper\DemaConsulting.DotnetToolWrapper.csproj">
       <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     </ProjectReference>
+    <!-- Argument echo helper run by the wrapper in the argument pass-through system test -->
+    <ProjectReference Include="..\DemaConsulting.DotnetToolWrapper.EchoArgs\DemaConsulting.DotnetToolWrapper.EchoArgs.csproj" />
   </ItemGroup>
 
 </Project>

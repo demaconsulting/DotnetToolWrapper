@@ -67,6 +67,8 @@ reviews:
       - test/**/DotnetToolWrapperTests.cs
       - test/**/Runner.cs
       - test/**/AssemblyInfo.cs
+      - test/**/HostTarget.cs
+      - test/**/EchoArgs.cs
 
   - id: DotnetToolWrapper-Design
     title: Review that DotnetToolWrapper Design is Consistent and Complete
@@ -103,6 +105,7 @@ reviews:
     context:
       - docs/design/dotnet-tool-wrapper.md
       - docs/reqstream/dotnet-tool-wrapper.yaml
+      - test/**/HostTarget.cs
     paths:
       - docs/reqstream/dotnet-tool-wrapper/program.yaml
       - docs/design/dotnet-tool-wrapper/program.md

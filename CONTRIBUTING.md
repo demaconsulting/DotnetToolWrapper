@@ -103,9 +103,13 @@ DotnetToolWrapper/
 │       ├── Program.cs       # Main application logic
 │       └── DemaConsulting.DotnetToolWrapper.csproj
 ├── test/
+│   ├── DemaConsulting.DotnetToolWrapper.EchoArgs/
+│   │   ├── EchoArgs.cs      # Argument echo helper for the system tests
+│   │   └── DemaConsulting.DotnetToolWrapper.EchoArgs.csproj
 │   └── DemaConsulting.DotnetToolWrapper.Tests/
 │       ├── AssemblyInfo.cs
 │       ├── DotnetToolWrapperTests.cs
+│       ├── HostTarget.cs
 │       ├── ProgramTests.cs
 │       ├── Runner.cs
 │       └── DemaConsulting.DotnetToolWrapper.Tests.csproj
