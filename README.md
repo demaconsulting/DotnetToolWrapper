@@ -18,7 +18,7 @@ to distribute cross-platform command-line tools through NuGet.
 
 - 🌍 **Multi-Platform Support** - Works on Windows, Linux, FreeBSD, and macOS
 - 🏗️ **Multi-Architecture** - Supports x86, x64, ARM, ARM64, WASM, and S390x
-- 🎯 **Multi-Framework** - Targets .NET 8.0, 9.0, and 10.0
+- 🎯 **Multi-Framework** - Targets .NET 8.0, 9.0, 10.0, and 11.0
 - 📦 **Zero Dependencies** - No external dependencies beyond .NET runtime
 - ⚙️ **Simple Configuration** - JSON-based configuration for platform-to-executable mapping
 - 🔄 **Transparent Execution** - Passes arguments and exit codes through seamlessly
@@ -65,7 +65,9 @@ root/
     │   └── any/
     ├── net9.0/
     │   └── any/
-    └── net10.0/
+    ├── net10.0/
+    │   └── any/
+    └── net11.0/
         └── any/
             ├── DotnetToolSettings.xml
             ├── DotnetToolWrapper.json
@@ -113,6 +115,7 @@ my-tool --help
 - .NET 8.0
 - .NET 9.0
 - .NET 10.0
+- .NET 11.0
 
 ## Documentation
 

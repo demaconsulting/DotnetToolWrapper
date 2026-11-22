@@ -9,7 +9,7 @@ and installable via the `dotnet tool install` command. This guide walks you thro
 
 ## Prerequisites
 
-- .NET SDK 8.0, 9.0, or 10.0
+- .NET SDK 8.0, 9.0, 10.0, or 11.0
 - NuGet CLI or dotnet pack command
 - Your native executable(s) for target platforms
 
@@ -27,7 +27,7 @@ To create a .NET tool for an existing application, follow these steps:
 ## Folder Structure
 
 The following is the recommended folder structure for a tool. Note that you should include folders for all
-target .NET frameworks (net8.0, net9.0, and net10.0) to ensure compatibility:
+target .NET frameworks (net8.0, net9.0, net10.0, and net11.0) to ensure compatibility:
 
 ```text
 root/
@@ -54,7 +54,14 @@ root/
     │       ├── DemaConsulting.DotnetToolWrapper.deps.json
     │       ├── DemaConsulting.DotnetToolWrapper.dll
     │       └── DemaConsulting.DotnetToolWrapper.runtimeconfig.json
-    └── net10.0/
+    ├── net10.0/
+    │   └── any/
+    │       ├── DotnetToolSettings.xml
+    │       ├── DotnetToolWrapper.json
+    │       ├── DemaConsulting.DotnetToolWrapper.deps.json
+    │       ├── DemaConsulting.DotnetToolWrapper.dll
+    │       └── DemaConsulting.DotnetToolWrapper.runtimeconfig.json
+    └── net11.0/
         └── any/
             ├── DotnetToolSettings.xml
             ├── DotnetToolWrapper.json
@@ -63,8 +70,8 @@ root/
             └── DemaConsulting.DotnetToolWrapper.runtimeconfig.json
 ```
 
-**Note**: While the example above shows net8.0, net9.0, and net10.0 folders, you can choose to include only
-the framework versions you want to support. However, including all three ensures maximum compatibility across
+**Note**: While the example above shows net8.0, net9.0, net10.0, and net11.0 folders, you can choose to include only
+the framework versions you want to support. However, including all four ensures maximum compatibility across
 different .NET SDK versions that users might have installed.
 
 ## Step-by-Step Guide
@@ -284,7 +291,7 @@ This is useful when your tool needs to be installed in a user-specific location.
 
 If you want to support multiple .NET framework versions:
 
-1. Create separate folders for each framework: `net8.0`, `net9.0`, `net10.0`
+1. Create separate folders for each framework: `net8.0`, `net9.0`, `net10.0`, `net11.0`
 2. Copy the appropriate DotnetToolWrapper binaries for each framework
 3. Place your native executables at the root of the package (they are shared across all frameworks)
 4. Update your .nuspec to include all framework folders
@@ -328,6 +335,7 @@ dotnet build --configuration Release
 # src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/
 # src/DemaConsulting.DotnetToolWrapper/bin/Release/net9.0/
 # src/DemaConsulting.DotnetToolWrapper/bin/Release/net10.0/
+# src/DemaConsulting.DotnetToolWrapper/bin/Release/net11.0/
 ```
 
 ## Troubleshooting

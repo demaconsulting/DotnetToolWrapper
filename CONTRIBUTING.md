@@ -51,7 +51,7 @@ We actively welcome pull requests! To submit a pull request:
 
 ### Prerequisites
 
-- [.NET SDK 8.0 or higher][dotnet-download]
+- [.NET SDK 11.0 or higher][dotnet-download] (with .NET 8.0, 9.0, and 10.0 runtimes to run all tests)
 - Git
 - A code editor (Visual Studio, Visual Studio Code, Rider, etc.)
 
@@ -125,7 +125,7 @@ DotnetToolWrapper/
 ### Code Quality
 
 - Ensure code compiles without warnings
-- Maintain compatibility with .NET 8.0, 9.0, and 10.0
+- Maintain compatibility with .NET 8.0, 9.0, 10.0, and 11.0
 - Keep the codebase simple and maintainable
 - Avoid external dependencies unless absolutely necessary
 
@@ -205,7 +205,7 @@ Mention this in your pull request, and maintainers can help with cross-platform 
 
 - **Operating Systems**: Windows, Linux, FreeBSD, macOS
 - **Architectures**: x86, x64, ARM, ARM64, WASM, S390x
-- **Frameworks**: .NET 8.0, 9.0, 10.0
+- **Frameworks**: .NET 8.0, 9.0, 10.0, 11.0
 
 ### Testing Checklist
 
