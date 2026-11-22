@@ -6,7 +6,7 @@
 - **description**: A .NET 8.0, 9.0, 10.0, and 11.0 console application that serves as a wrapper for native
   applications packaged as .NET Tools. It must work on Windows, Linux, FreeBSD, and macOS.
 - **languages**: C#
-- **technologies**: .NET, MSTest, GitHub Actions
+- **technologies**: .NET, xUnit v3, GitHub Actions
 
 # Project Structure
 
