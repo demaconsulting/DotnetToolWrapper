@@ -230,7 +230,7 @@ public class IntegrationTests
         var target = Program.GetTarget();
         var json = JsonSerializer.Serialize(new Dictionary<string, object>
         {
-            { target, new { notprogram = "fake" } }
+            { target, new { notProgram = "fake" } }
         });
         File.WriteAllText(Path.Combine(dllDirectory, "DotnetToolWrapper.json"), json);
 
