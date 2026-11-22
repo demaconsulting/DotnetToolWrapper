@@ -1,0 +1,42 @@
+---
+config:
+  theme: base
+  themeVariables:
+    primaryColor: "#eef4fb"
+    primaryBorderColor: "#2f6db5"
+    primaryTextColor: "#1b3a5c"
+    lineColor: "#5b6b7a"
+    edgeLabelBackground: "#ffffff"
+    fontSize: "15px"
+  flowchart:
+    nodeSpacing: 30
+    rankSpacing: 30
+    wrappingWidth: 340
+---
+flowchart TD
+    start([User runs the tool command]):::step
+    target[Detect the os-arch target]:::step
+    config{{DotnetToolWrapper.json<br>found?}}:::check
+    entry{{Entry for the target?}}:::check
+    program{{Entry has a program?}}:::check
+    resolve[Expand %NAME% variables,<br>resolve against the<br>wrapper folder]:::step
+    run[Start the program with<br>the same arguments in<br>the current directory]:::step
+    done([Exit with the<br>program's exit code]):::step
+    e1[Missing<br>configuration file]:::stop
+    e2[This tool does not<br>support the target]:::stop
+    e3[Bad configuration<br>for the target]:::stop
+    fail([Exit code 1]):::stop
+
+    start --> target --> config
+    config -- yes --> entry
+    config -- no --> e1
+    entry -- yes --> program
+    entry -- no --> e2
+    program -- yes --> resolve
+    program -- no --> e3
+    resolve --> run --> done
+    e1 & e2 & e3 --> fail
+
+    classDef step fill:#eef4fb,stroke:#2f6db5,color:#1b3a5c
+    classDef check fill:#fff8e1,stroke:#b7860b,color:#5c4300
+    classDef stop fill:#fdecea,stroke:#c62828,color:#8e1c1c

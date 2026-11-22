@@ -1,0 +1,21 @@
+---
+# WeasyPrint OTS requirements
+#
+# DemaConsulting.WeasyPrintTool renders the HTML of each document collection to a PDF/A document
+# in the CI documents job. The FileAssert checks of the generated PDFs are the evidence.
+sections:
+  - title: OTS Software Requirements
+    sections:
+      - title: WeasyPrint Requirements
+        requirements:
+          - id: DotnetToolWrapper-OTS-WeasyPrint
+            title: WeasyPrint shall render an HTML document to a PDF/A document.
+            justification: |
+              The CI documents job renders each HTML document to a PDF/A-3u document with
+              WeasyPrint, and the PDFs are attached to each release. FileAssert checks that the
+              generated PDF exists, carries the expected title, author, and subject metadata, has
+              the expected number of pages, and contains the expected text. Later document
+              collections add their own FileAssert tests.
+            tags: [ots]
+            tests:
+              - WeasyPrint_UserGuidePdf

@@ -17,3 +17,7 @@ includes:
   - docs/reqstream/ots/textlint.yaml
   - docs/reqstream/ots/lintmark.yaml
   - docs/reqstream/ots/spdx-tool.yaml
+  - docs/reqstream/ots/pandoc.yaml
+  - docs/reqstream/ots/weasyprint.yaml
+  - docs/reqstream/ots/fileassert.yaml
+  - docs/reqstream/ots/canvasnet.yaml

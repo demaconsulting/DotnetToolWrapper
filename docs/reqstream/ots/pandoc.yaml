@@ -1,0 +1,20 @@
+---
+# Pandoc OTS requirements
+#
+# DemaConsulting.PandocTool converts the Markdown sources of each document collection to HTML in
+# the CI documents job. The FileAssert checks of the generated HTML are the evidence.
+sections:
+  - title: OTS Software Requirements
+    sections:
+      - title: Pandoc Requirements
+        requirements:
+          - id: DotnetToolWrapper-OTS-Pandoc
+            title: Pandoc shall convert the Markdown sources of a document collection into one HTML document.
+            justification: |
+              The CI documents job converts each document collection to HTML with Pandoc before
+              WeasyPrint renders it to PDF. FileAssert checks that the generated HTML exists, has a
+              title element, embeds its diagram, and contains the expected content, which proves
+              that Pandoc ran correctly. Later document collections add their own FileAssert tests.
+            tags: [ots]
+            tests:
+              - Pandoc_UserGuideHtml

@@ -1,0 +1,13 @@
+---
+title: "DotnetToolWrapper User Guide"
+subtitle: "Run native applications as .NET Tools"
+author: "DEMA Consulting"
+description: "User Guide for DotnetToolWrapper"
+lang: en-US
+keywords:
+  - User Guide
+  - DotnetToolWrapper
+  - .NET Tool
+  - NuGet
+  - Native Executable
+---

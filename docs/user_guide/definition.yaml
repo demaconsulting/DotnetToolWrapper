@@ -1,0 +1,22 @@
+---
+resource-path:
+  - docs/user_guide
+  - docs/template
+  - docs/images
+  # The CanvasNet filter writes picture links relative to the HTML output folder; this entry
+  # lets Pandoc find and embed the drawn diagrams.
+  - docs/user_guide/generated
+embed-resources: true
+input-files:
+  - docs/user_guide/title.txt
+  - docs/user_guide/introduction.md
+  - docs/user_guide/how-it-works.md
+  - docs/user_guide/packaging.md
+  - docs/user_guide/configuration.md
+  - docs/user_guide/installing-and-running.md
+  - docs/user_guide/troubleshooting.md
+template: template.html
+table-of-contents: true
+number-sections: true
+filters:
+  - docs/filters/canvasnet.lua

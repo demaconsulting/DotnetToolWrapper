@@ -45,7 +45,8 @@ To create a .NET tool using DotnetToolWrapper, you'll need to:
 3. Copy DotnetToolWrapper files and your native executables
 4. Package as a NuGet package
 
-For complete step-by-step instructions, detailed examples, and troubleshooting, see the [Usage Guide](docs/usage.md).
+For complete step-by-step instructions, detailed examples, and troubleshooting, see the User Guide on the
+[releases page](https://github.com/demaconsulting/DotnetToolWrapper/releases).
 
 ## Quick Example
 

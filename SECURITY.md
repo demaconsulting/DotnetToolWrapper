@@ -72,7 +72,7 @@ file must be trusted:
 
 ### Environment Variable Expansion
 
-- Configuration paths support environment variable expansion
+- Configuration paths expand environment variable references written as `%NAME%`
 - Malicious environment variables could redirect execution to unintended programs
 - Use caution when running in environments with untrusted environment variables
 

@@ -214,13 +214,14 @@ jobs:
           name: artifacts-build-validation
           path: artifacts/
 
-  # Builds the release documents (Requirements Document and Trace Matrix) as PDFs. It runs on
-  # Windows because the WeasyPrint tool package ships only a win-x64 build. Each document section
-  # converts Markdown to HTML with Pandoc, renders the PDF with WeasyPrint, and checks both with
-  # FileAssert; the FileAssert results and the tool self-validations are OTS evidence. ReqStream
-  # traces every requirement to the TRX evidence that all jobs uploaded as 'artifacts-*' and
-  # fails the build with --enforce when a requirement is not satisfied. The PDFs are uploaded as
-  # the 'documents' artifact that the release workflow attaches to the GitHub release.
+  # Builds the release documents (User Guide, Requirements Document, and Trace Matrix) as PDFs.
+  # It runs on Windows because the WeasyPrint tool package ships only a win-x64 build. Each
+  # document section converts Markdown to HTML with Pandoc, renders the PDF with WeasyPrint, and
+  # checks both with FileAssert; the FileAssert results and the tool self-validations are OTS
+  # evidence. ReqStream traces every requirement to the TRX evidence that all jobs uploaded as
+  # 'artifacts-*' and fails the build with --enforce when a requirement is not satisfied. The
+  # PDFs are uploaded as the 'documents' artifact that the release workflow attaches to the
+  # GitHub release.
   build-docs:
     name: Build Documents
     needs: [quality-checks, test, build]
@@ -266,6 +267,43 @@ jobs:
       # Later stages add their document sections here (Build Notes, Code Quality, Code Review,
       # Design, Verification), before the FileAssert self-validation, so their FileAssert
       # results are OTS evidence for ReqStream.
+
+      # === COMPILE USER GUIDE ===
+      # Pandoc converts the user guide to HTML, with the CanvasNet filter drawing its diagram,
+      # WeasyPrint renders the PDF, and FileAssert checks both. CanvasNet self-validation runs
+      # here to co-locate its evidence with the first document that depends on it.
+
+      - name: Create user guide output directory
+        shell: bash
+        run: mkdir -p docs/user_guide/generated
+
+      - name: Run CanvasNet self-validation
+        run: >
+          dotnet canvasnet
+          --validate
+          --results artifacts/canvasnet-self-validation.trx
+
+      - name: Generate User Guide HTML with Pandoc
+        shell: bash
+        run: >
+          dotnet pandoc
+          --defaults docs/user_guide/definition.yaml
+          --metadata version="${{ inputs.semver }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/user_guide/generated/user_guide.html
+
+      - name: Generate User Guide PDF with WeasyPrint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/user_guide/generated/user_guide.html
+          "docs/generated/DotnetToolWrapper User Guide.pdf"
+
+      - name: Assert User Guide Documents with FileAssert
+        run: >
+          dotnet fileassert
+          --results artifacts/fileassert-user-guide.trx
+          user-guide
 
       # === FILEASSERT SELF-VALIDATION ===
       # FileAssert self-validation confirms the assertion tool itself is operational.
