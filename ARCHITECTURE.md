@@ -99,8 +99,8 @@ handled by the runtime environment.
 
 ### Multi-Framework Targeting
 
-The application targets .NET 8.0, 9.0, and 10.0 to ensure broad compatibility across different .NET installations.
-This allows the tool to work with both current and recent .NET SDK versions.
+The application targets .NET 8.0, 9.0, 10.0, and 11.0 to ensure broad compatibility across different .NET
+installations. This allows the tool to work with both current and recent .NET SDK versions.
 
 ### Minimal Dependencies
 

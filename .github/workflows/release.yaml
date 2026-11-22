@@ -56,9 +56,11 @@ jobs:
         mkdir -p dist/net8.0
         mkdir -p dist/net9.0
         mkdir -p dist/net10.0
+        mkdir -p dist/net11.0
         cp build-artifacts/net8.0/*.* dist/net8.0
         cp build-artifacts/net9.0/*.* dist/net9.0
         cp build-artifacts/net10.0/*.* dist/net10.0
+        cp build-artifacts/net11.0/*.* dist/net11.0
         cd dist
         zip -r ../DotnetToolWrapper.zip *
 

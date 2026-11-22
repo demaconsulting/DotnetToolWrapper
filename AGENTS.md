@@ -4,7 +4,7 @@ This repository contains configuration and instructions for GitHub Copilot agent
 
 ## Repository Overview
 
-**DotnetToolWrapper** is a .NET 8.0, 9.0, and 10.0 console application that serves as a wrapper for native
+**DotnetToolWrapper** is a .NET 8.0, 9.0, 10.0, and 11.0 console application that serves as a wrapper for native
 applications packaged as [.NET Tools][dotnet-tools].
 
 ## Specialized Agents
@@ -71,7 +71,7 @@ DotnetToolWrapper/
 
 ## Key Technologies
 
-- **.NET 8.0, 9.0, 10.0**: Multi-targeted framework versions
+- **.NET 8.0, 9.0, 10.0, 11.0**: Multi-targeted framework versions
 - **C# 12**: Programming language
 - **MSTest**: Testing framework
 - **GitHub Actions**: CI/CD automation
@@ -100,7 +100,7 @@ dotnet test --configuration Release --logger "console;verbosity=detailed"
 
 - **Language Version**: C# 12
 - **Nullable Reference Types**: Enabled
-- **Target Frameworks**: net8.0, net9.0, net10.0
+- **Target Frameworks**: net8.0, net9.0, net10.0, net11.0
 - **EditorConfig**: Follow .editorconfig rules for consistent formatting
 - **XML Documentation**: All code should include XML documentation comments
 - **Analyzers**: Keep analyzer packages at the same version across all projects
@@ -123,7 +123,7 @@ Quality checks are automated through GitHub Actions:
 
 ### When Working with Code
 
-1. **Multi-targeting**: Ensure changes are compatible with .NET 8.0, 9.0, and 10.0
+1. **Multi-targeting**: Ensure changes are compatible with .NET 8.0, 9.0, 10.0, and 11.0
 2. **Cross-platform**: The tool must work on Windows, Linux, FreeBSD, and macOS
 3. **Architecture Support**: Support multiple architectures (x86, x64, ARM, ARM64, WASM, S390x)
 4. **Testing**: Always run tests after changes. CI tests on ubuntu-latest, windows-latest, and macos-latest
