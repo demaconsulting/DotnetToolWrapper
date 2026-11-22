@@ -154,8 +154,8 @@ DotnetToolWrapper/
 - Include code examples where helpful
 - Use box-drawing characters (├──, └──, │) for file/folder diagrams rather than pipe-and-dash (|-, |-)
 - Update the User Guide in `docs/user_guide/` when user-visible behavior changes. It is a Pandoc collection that CI
-  builds to PDF together with the Requirements Document and the Trace Matrix (the document job runs on Windows,
-  because the WeasyPrint tool ships only for Windows x64)
+  builds to PDF together with the Software Design Document, the Requirements Document, and the Trace Matrix (the
+  document job runs on Windows, because the WeasyPrint tool ships only for Windows x64)
 - Update the Software Design Document in `docs/design/` and the SysML2 architecture model in `docs/sysml2/` when the
   structure or the behavior of the code changes
 
@@ -250,8 +250,8 @@ Releases are managed by project maintainers using GitHub Actions:
    (for example `1.2.3.0`), and the `publish` choice
 2. The workflow builds, tests, and packages the wrapper, and builds the release documents
 3. When publishing, it creates the tag `{semver}` and a GitHub release with generated release notes
-4. The release includes `DotnetToolWrapper.zip`, the SPDX SBOM, and the User Guide, Requirements Document, and
-   Trace Matrix PDFs
+4. The release includes `DotnetToolWrapper.zip`, the SPDX SBOM, and the User Guide, Software Design Document,
+   Requirements Document, and Trace Matrix PDFs
 
 ## Getting Help
 

@@ -214,8 +214,9 @@ jobs:
           name: artifacts-build-validation
           path: artifacts/
 
-  # Builds the release documents (User Guide, Requirements Document, and Trace Matrix) as PDFs.
-  # It runs on Windows because the WeasyPrint tool package ships only a win-x64 build. Each
+  # Builds the release documents (Software Design Document, User Guide, Requirements Document,
+  # and Trace Matrix) as PDFs. It runs on Windows because the WeasyPrint tool package ships only a
+  # win-x64 build. SysML2Tools renders the design diagrams from the architecture model. Each
   # document section converts Markdown to HTML with Pandoc, renders the PDF with WeasyPrint, and
   # checks both with FileAssert; the FileAssert results and the tool self-validations are OTS
   # evidence. ReqStream traces every requirement to the TRX evidence that all jobs uploaded as
@@ -264,9 +265,57 @@ jobs:
         shell: bash
         run: mkdir -p docs/generated
 
-      # Later stages add their document sections here (Build Notes, Code Quality, Code Review,
-      # Design, Verification), before the FileAssert self-validation, so their FileAssert
-      # results are OTS evidence for ReqStream.
+      # Later stages add their document sections here (Build Notes, Code Quality, and Code Review
+      # before the Design section, Verification after it), before the FileAssert self-validation,
+      # so their FileAssert results are OTS evidence for ReqStream.
+
+      # === COMPILE DESIGN DOCUMENT ===
+      # SysML2Tools renders the views of the architecture model in docs/sysml2/ to SVG, Pandoc
+      # converts the design documentation to HTML, WeasyPrint renders the PDF, and FileAssert
+      # checks the diagrams, the HTML, and the PDF. The SysML2Tools self-validation and these
+      # FileAssert results are OTS evidence for ReqStream. lint.ps1 lints the model itself.
+
+      - name: Create design output directory
+        shell: bash
+        run: mkdir -p docs/design/generated
+
+      - name: Run SysML2Tools self-validation
+        run: >
+          dotnet sysml2tools
+          --validate
+          --results artifacts/sysml2tools-self-validation.trx
+
+      - name: Render design diagrams with SysML2Tools
+        shell: pwsh
+        run: >
+          dotnet sysml2tools render
+          --output docs/design/generated
+          --format svg
+          'docs/sysml2/common/**/*.sysml'
+          'docs/sysml2/model/**/*.sysml'
+          'docs/sysml2/views/design-views.sysml'
+
+      - name: Generate Design HTML with Pandoc
+        shell: bash
+        run: >
+          dotnet pandoc
+          --defaults docs/design/definition.yaml
+          --metadata version="${{ inputs.semver }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/design/generated/design.html
+
+      - name: Generate Design PDF with WeasyPrint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/design/generated/design.html
+          "docs/generated/DotnetToolWrapper Software Design Document.pdf"
+
+      - name: Assert Design Documents with FileAssert
+        run: >
+          dotnet fileassert
+          --results artifacts/fileassert-design.trx
+          design
 
       # === COMPILE USER GUIDE ===
       # Pandoc converts the user guide to HTML, with the CanvasNet filter drawing its diagram,

@@ -29,8 +29,8 @@ with the .NET command-line tools they already have.
 - Runs on .NET 8.0, 9.0, 10.0, and 11.0
 - Has no dependencies beyond the .NET runtime
 - Reports configuration errors with a clear message and exit code 1
-- Traces its requirements to passing tests on every build, and ships a User Guide, a Requirements Document,
-  and a Trace Matrix with each release
+- Traces its requirements to passing tests on every build, and ships a User Guide, a Software Design Document,
+  a Requirements Document, and a Trace Matrix with each release
 
 ## Installation
 

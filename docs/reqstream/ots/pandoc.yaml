@@ -18,3 +18,4 @@ sections:
             tags: [ots]
             tests:
               - Pandoc_UserGuideHtml
+              - Pandoc_DesignHtml

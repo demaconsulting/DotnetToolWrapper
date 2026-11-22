@@ -19,3 +19,4 @@ sections:
             tags: [ots]
             tests:
               - WeasyPrint_UserGuidePdf
+              - WeasyPrint_DesignPdf

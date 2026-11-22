@@ -1,0 +1,32 @@
+---
+# SysML2Tools OTS requirements
+#
+# DemaConsulting.SysML2Tools.Tool lints the SysML2 architecture model in lint.ps1 and renders its
+# views to the design diagrams in the CI documents job. Its self-validation results and the
+# FileAssert checks of the rendered diagrams are the evidence.
+sections:
+  - title: OTS Software Requirements
+    sections:
+      - title: SysML2Tools Requirements
+        requirements:
+          - id: DotnetToolWrapper-OTS-SysML2Tools-Lint
+            title: SysML2Tools shall report syntax errors and unresolved references in the SysML2 model.
+            justification: |
+              lint.ps1 runs SysML2Tools lint with --strict-unresolved on every SysML2 file, which
+              fails the quality checks when the architecture model has a syntax error or a reference
+              that does not resolve. The self-validation proves that the lint reports such errors.
+            tags: [ots]
+            tests:
+              - SysML2Tools_LintSelfTest
+
+          - id: DotnetToolWrapper-OTS-SysML2Tools-Render
+            title: SysML2Tools shall render each view declared in the SysML2 model to an SVG diagram.
+            justification: |
+              The CI documents job renders the views of the architecture model to the SVG diagrams
+              embedded in the Software Design Document. A missing diagram does not fail the PDF
+              build, so FileAssert checks that each expected SVG exists and is well-formed, in
+              addition to the self-validation of SVG rendering.
+            tags: [ots]
+            tests:
+              - SysML2Tools_RenderSvgSelfTest
+              - SysML2Tools_DesignDiagramsSvg
