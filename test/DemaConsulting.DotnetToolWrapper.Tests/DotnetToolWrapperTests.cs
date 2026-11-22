@@ -1,25 +1,23 @@
 using System.Runtime.InteropServices;
 using System.Text.Json;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DemaConsulting.DotnetToolWrapper.Tests;
 
 /// <summary>
-/// Integration tests for the DotnetToolWrapper application
+/// System-level integration tests that run the DotnetToolWrapper application via dotnet
 /// </summary>
-[TestClass]
-public class IntegrationTests
+[Collection("Sequential")]
+public sealed class DotnetToolWrapperTests : IDisposable
 {
     /// <summary>
     /// Test setup directory
     /// </summary>
-    private string _testDirectory = string.Empty;
+    private readonly string _testDirectory;
 
     /// <summary>
     /// Initialize test
     /// </summary>
-    [TestInitialize]
-    public void TestInitialize()
+    public DotnetToolWrapperTests()
     {
         // Create a unique test directory
         _testDirectory = Path.Combine(Path.GetTempPath(), $"DotnetToolWrapperTests_{Guid.NewGuid()}");
@@ -29,8 +27,7 @@ public class IntegrationTests
     /// <summary>
     /// Cleanup test
     /// </summary>
-    [TestCleanup]
-    public void TestCleanup()
+    public void Dispose()
     {
         // Clean up test directory
         if (Directory.Exists(_testDirectory))
@@ -57,8 +54,8 @@ public class IntegrationTests
     /// <returns>Path to DLL</returns>
     private static string GetDotnetToolWrapperDllPath()
     {
-        var assemblyLocation = Path.GetDirectoryName(typeof(IntegrationTests).Assembly.Location);
-        Assert.IsNotNull(assemblyLocation, "Assembly location should not be null");
+        var assemblyLocation = Path.GetDirectoryName(typeof(DotnetToolWrapperTests).Assembly.Location);
+        Assert.NotNull(assemblyLocation);
         return Path.Combine(assemblyLocation, "DemaConsulting.DotnetToolWrapper.dll");
     }
 
@@ -74,7 +71,7 @@ public class IntegrationTests
         {
             var dllPath = GetDotnetToolWrapperDllPath();
             directory = Path.GetDirectoryName(dllPath);
-            Assert.IsNotNull(directory, "DLL directory should not be null");
+            Assert.NotNull(directory);
         }
 
         var target = Program.GetTarget();
@@ -130,32 +127,32 @@ public class IntegrationTests
     /// <summary>
     /// Test that missing configuration file results in expected error
     /// </summary>
-    [TestMethod]
-    public void Main_WhenConfigFileMissing_ReturnsErrorWithMessage()
+    [Fact]
+    public void DotnetToolWrapper_Configuration_FileMissing_ReportsErrorAndExitsWithOne()
     {
-        // Arrange
+        // Arrange: locate the wrapper DLL with no DotnetToolWrapper.json beside it
         var dllPath = GetDotnetToolWrapperDllPath();
 
-        // Act
+        // Act: run the wrapper with no arguments
         var exitCode = Runner.Run(out var output, "dotnet", dllPath);
 
-        // Assert
-        Assert.AreEqual(1, exitCode, "Exit code should be 1 for missing config file");
-        Assert.Contains("Missing configuration file", output, "Output should mention missing config file");
-        Assert.Contains("DotnetToolWrapper.json", output, "Output should mention config file name");
+        // Assert: wrapper reports the missing configuration file and exits with 1
+        Assert.Equal(1, exitCode);
+        Assert.Contains("Missing configuration file", output);
+        Assert.Contains("DotnetToolWrapper.json", output);
     }
 
     /// <summary>
     /// Test that exit codes are properly passed through
     /// </summary>
-    [TestMethod]
-    [DataRow(0)]
-    [DataRow(1)]
-    [DataRow(42)]
-    [DataRow(255)]
-    public void Main_WithShellExitCode_ReturnsMatchingExitCode(int expectedExitCode)
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(42)]
+    [InlineData(255)]
+    public void DotnetToolWrapper_ExitCode_ProgramExits_ReturnsProgramExitCode(int expectedExitCode)
     {
-        // Arrange
+        // Arrange: configure the wrapper to run the shell, which exits with the requested code
         var dllPath = GetDotnetToolWrapperDllPath();
         var shellProgram = GetShellProgram();
         CreateConfigFile(shellProgram);
@@ -163,20 +160,20 @@ public class IntegrationTests
         var args = new List<string> { dllPath };
         args.AddRange(shellArgs);
 
-        // Act
+        // Act: run the wrapper with the shell exit arguments
         var exitCode = Runner.Run(out _, "dotnet", args.ToArray());
 
-        // Assert
-        Assert.AreEqual(expectedExitCode, exitCode, $"Exit code should be {expectedExitCode}");
+        // Assert: wrapper exits with the exit code of the wrapped program
+        Assert.Equal(expectedExitCode, exitCode);
     }
 
     /// <summary>
     /// Test that arguments are properly passed through
     /// </summary>
-    [TestMethod]
-    public void Main_WithShellArguments_PassesArgumentsToProgram()
+    [Fact]
+    public void DotnetToolWrapper_Arguments_Provided_PassesArgumentsToProgram()
     {
-        // Arrange
+        // Arrange: configure the wrapper to run the shell, which echoes a known text
         var dllPath = GetDotnetToolWrapperDllPath();
         var shellProgram = GetShellProgram();
         var testText = "HelloWorld";
@@ -185,48 +182,48 @@ public class IntegrationTests
         var args = new List<string> { dllPath };
         args.AddRange(shellArgs);
 
-        // Act
+        // Act: run the wrapper with the shell echo arguments
         var exitCode = Runner.Run(out var output, "dotnet", args.ToArray());
 
-        // Assert
-        Assert.AreEqual(0, exitCode, "Exit code should be 0");
-        Assert.Contains(testText, output, $"Output should contain '{testText}'");
+        // Assert: wrapped program received the arguments and printed the text
+        Assert.Equal(0, exitCode);
+        Assert.Contains(testText, output);
     }
 
     /// <summary>
     /// Test that unsupported target results in expected error
     /// </summary>
-    [TestMethod]
-    public void Main_WithUnsupportedTarget_ReturnsErrorWithMessage()
+    [Fact]
+    public void DotnetToolWrapper_Target_NotInConfiguration_ReportsErrorAndExitsWithOne()
     {
-        // Arrange
+        // Arrange: write a configuration that only contains a target that does not exist
         var dllPath = GetDotnetToolWrapperDllPath();
         var dllDirectory = Path.GetDirectoryName(dllPath);
-        Assert.IsNotNull(dllDirectory, "DLL directory should not be null");
+        Assert.NotNull(dllDirectory);
         var json = JsonSerializer.Serialize(new Dictionary<string, object>
         {
             { "fake-target", new { program = "fake" } }
         });
         File.WriteAllText(Path.Combine(dllDirectory, "DotnetToolWrapper.json"), json);
 
-        // Act
+        // Act: run the wrapper with no arguments
         var exitCode = Runner.Run(out var output, "dotnet", dllPath);
 
-        // Assert
-        Assert.AreEqual(1, exitCode, "Exit code should be 1 for unsupported target");
-        Assert.Contains("does not support", output, "Output should mention unsupported target");
+        // Assert: wrapper reports the unsupported target and exits with 1
+        Assert.Equal(1, exitCode);
+        Assert.Contains("does not support", output);
     }
 
     /// <summary>
     /// Test that bad configuration results in expected error
     /// </summary>
-    [TestMethod]
-    public void Main_WithBadConfiguration_ReturnsErrorWithMessage()
+    [Fact]
+    public void DotnetToolWrapper_Configuration_ProgramMissing_ReportsErrorAndExitsWithOne()
     {
-        // Arrange
+        // Arrange: write a configuration for the current target that has no program entry
         var dllPath = GetDotnetToolWrapperDllPath();
         var dllDirectory = Path.GetDirectoryName(dllPath);
-        Assert.IsNotNull(dllDirectory, "DLL directory should not be null");
+        Assert.NotNull(dllDirectory);
         var target = Program.GetTarget();
         var json = JsonSerializer.Serialize(new Dictionary<string, object>
         {
@@ -234,11 +231,11 @@ public class IntegrationTests
         });
         File.WriteAllText(Path.Combine(dllDirectory, "DotnetToolWrapper.json"), json);
 
-        // Act
+        // Act: run the wrapper with no arguments
         var exitCode = Runner.Run(out var output, "dotnet", dllPath);
 
-        // Assert
-        Assert.AreEqual(1, exitCode, "Exit code should be 1 for bad configuration");
-        Assert.Contains("Bad configuration", output, "Output should mention bad configuration");
+        // Assert: wrapper reports the bad configuration and exits with 1
+        Assert.Equal(1, exitCode);
+        Assert.Contains("Bad configuration", output);
     }
 }
