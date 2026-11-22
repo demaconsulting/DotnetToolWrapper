@@ -23,7 +23,8 @@ the test project. A build therefore always uses the same tool versions, on a dev
 Upgrades are proposed by Dependabot or made by a maintainer, and go through the normal pull request review and
 CI checks; an upgrade that changes the behavior a tool is relied on for also requires an update of its
 integration design and requirements. Version numbers are recorded in the software bill of materials, not in this
-document.
+document. The manifest also pins DocDown, which development agents use to read PDF and Office documents; it plays no
+part in building, testing, checking, or documenting the wrapper, so it is not an OTS item.
 
 ## General Integration Approach
 
