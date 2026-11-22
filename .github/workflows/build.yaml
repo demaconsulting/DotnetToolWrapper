@@ -1,3 +1,4 @@
+---
 on:
   workflow_call:
     inputs:
@@ -9,8 +10,51 @@ on:
         type: string
 
 jobs:
+  # Performs quick quality checks for project formatting consistency including
+  # markdown linting, spell checking, YAML validation, and dotnet format, all
+  # run by lint.ps1.
+  quality-checks:
+    name: Quality Checks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      # === INSTALL DEPENDENCIES ===
+      # This section installs all required dependencies and tools for quality checks.
+
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: |
+            8.x
+            9.x
+            10.x
+            11.x
+
+      - name: Restore Tools
+        run: >
+          dotnet tool restore
+
+      - name: Setup Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.14'
+
+      # === RUN QUALITY CHECKS ===
+      # This section runs the linting and quality checks for the project.
+
+      - name: Run linters
+        shell: pwsh
+        run: ./lint.ps1
+
+  # Builds and tests the wrapper on every supported operating system using
+  # build.ps1, which runs the tests on net8.0, net9.0, net10.0, and net11.0.
   test:
     name: Test (${{ matrix.os }})
+    needs: quality-checks
     runs-on: ${{ matrix.os }}
     permissions:
       contents: read
@@ -19,31 +63,32 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
 
-    - uses: actions/checkout@v7
+      - name: Checkout
+        uses: actions/checkout@v7
 
-    - name: Setup dotnet
-      uses: actions/setup-dotnet@v6
-      with:
-        dotnet-version: |
-          8.x          
-          9.x
-          10.x
-          11.x
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: |
+            8.x
+            9.x
+            10.x
+            11.x
 
-    - name: Build
-      run: >
-        dotnet build
-        --configuration Release
-        --property:Version=${{ inputs.semver }}
-        --property:InformationalVersion=${{ inputs.semver }}
-        --property:AssemblyVersion=${{ inputs.winver }}
+      - name: Build and Test
+        shell: pwsh
+        run: ./build.ps1
 
-    - name: Test
-      run: >
-        dotnet test
-        --configuration Release
-        --no-build
+      - name: Upload test results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-results-${{ matrix.os }}
+          path: artifacts/tests/
 
+  # Builds the versioned wrapper, collects the per-framework drop folders, and
+  # generates the SBOM. The 'build-artifacts' artifact is consumed by the
+  # release workflow to assemble DotnetToolWrapper.zip.
   build:
     name: Build Artifacts
     needs: test
@@ -52,71 +97,73 @@ jobs:
       contents: read
     steps:
 
-    - uses: actions/checkout@v7
+      - name: Checkout
+        uses: actions/checkout@v7
 
-    - name: Setup dotnet
-      uses: actions/setup-dotnet@v6
-      with:
-        dotnet-version: |
-          8.x          
-          9.x
-          10.x
-          11.x
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: |
+            8.x
+            9.x
+            10.x
+            11.x
 
-    - name: Restore Tools
-      run: >
-        dotnet tool restore
+      - name: Restore Tools
+        run: >
+          dotnet tool restore
 
-    - name: Build
-      run: >
-        dotnet build
-        --configuration Release
-        --property:Version=${{ inputs.semver }}
-        --property:InformationalVersion=${{ inputs.semver }}
-        --property:AssemblyVersion=${{ inputs.winver }}
+      - name: Build
+        run: >
+          dotnet build
+          DemaConsulting.DotnetToolWrapper.slnx
+          --configuration Release
+          --property:Version=${{ inputs.semver }}
+          --property:InformationalVersion=${{ inputs.semver }}
+          --property:AssemblyVersion=${{ inputs.winver }}
 
-    - name: Create Drop Folder
-      shell: bash
-      run: |
-        mkdir -p drop/net8.0
-        mkdir -p drop/net9.0
-        mkdir -p drop/net10.0
-        mkdir -p drop/net11.0
-        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.dll drop/net8.0
-        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.runtimeconfig.json drop/net8.0
-        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.deps.json drop/net8.0
-        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net9.0/*.dll drop/net9.0
-        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net9.0/*.runtimeconfig.json drop/net9.0
-        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net9.0/*.deps.json drop/net9.0
-        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net10.0/*.dll drop/net10.0
-        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net10.0/*.runtimeconfig.json drop/net10.0
-        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net10.0/*.deps.json drop/net10.0
-        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net11.0/*.dll drop/net11.0
-        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net11.0/*.runtimeconfig.json drop/net11.0
-        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net11.0/*.deps.json drop/net11.0
+      - name: Create Drop Folder
+        shell: bash
+        run: |
+          mkdir -p drop/net8.0
+          mkdir -p drop/net9.0
+          mkdir -p drop/net10.0
+          mkdir -p drop/net11.0
+          cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.dll drop/net8.0
+          cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.runtimeconfig.json drop/net8.0
+          cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.deps.json drop/net8.0
+          cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net9.0/*.dll drop/net9.0
+          cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net9.0/*.runtimeconfig.json drop/net9.0
+          cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net9.0/*.deps.json drop/net9.0
+          cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net10.0/*.dll drop/net10.0
+          cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net10.0/*.runtimeconfig.json drop/net10.0
+          cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net10.0/*.deps.json drop/net10.0
+          cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net11.0/*.dll drop/net11.0
+          cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net11.0/*.runtimeconfig.json drop/net11.0
+          cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net11.0/*.deps.json drop/net11.0
 
-    - name: Generate SBOM
-      run: >
-        dotnet sbom-tool generate
-        -b drop
-        -bc src/DemaConsulting.DotnetToolWrapper
-        -pn DemaConsulting.DotnetToolWrapper
-        -pv ${{ inputs.semver }}
-        -ps DemaConsulting
-        -nsb https://DemaConsulting.com/DotnetToolWrapper
+      - name: Generate SBOM
+        run: >
+          dotnet sbom-tool generate
+          -b drop
+          -bc src/DemaConsulting.DotnetToolWrapper
+          -pn DemaConsulting.DotnetToolWrapper
+          -pv ${{ inputs.semver }}
+          -ps DemaConsulting
+          -nsb https://DemaConsulting.com/DotnetToolWrapper
 
-    - name: Enhance SBOM
-      run: >
-        dotnet spdx-tool
-        run-workflow spdx-workflow.yaml
+      - name: Enhance SBOM
+        run: >
+          dotnet spdx-tool
+          run-workflow spdx-workflow.yaml
 
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v7
-      with:
-        name: build-artifacts
-        path: |
-          drop/_manifest/spdx_2.2/*.*
-          drop/net8.0/*.*
-          drop/net9.0/*.*
-          drop/net10.0/*.*
-          drop/net11.0/*.*
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: build-artifacts
+          path: |
+            drop/_manifest/spdx_2.2/*.*
+            drop/net8.0/*.*
+            drop/net9.0/*.*
+            drop/net10.0/*.*
+            drop/net11.0/*.*

@@ -1,3 +1,4 @@
+---
 name: Release
 
 on:
@@ -17,10 +18,12 @@ on:
         default: 'release'
         type: choice
         options:
-        - none
-        - release
+          - none
+          - release
 
 jobs:
+  # Calls the reusable build workflow to lint, build, test, and package the
+  # wrapper for the release version.
   build:
     name: Build Artifacts
     permissions:
@@ -30,6 +33,8 @@ jobs:
       semver: ${{ inputs.semver }}
       winver: ${{ inputs.winver }}
 
+  # Assembles DotnetToolWrapper.zip (one folder per target framework) and,
+  # when requested, creates the GitHub release with the zip and the SBOM.
   release:
     name: Release Artifacts
     permissions:
@@ -37,44 +42,44 @@ jobs:
       packages: write
 
     runs-on: ubuntu-latest
-    
+
     needs: build
 
     steps:
-    
-    - uses: actions/checkout@v7
 
-    - name: Download Artifacts
-      uses: actions/download-artifact@v8
-      with:
-        name: build-artifacts
-        path: build-artifacts
+      - uses: actions/checkout@v7
 
-    - name: Assemble
-      shell: bash
-      run: |
-        mkdir -p dist/net8.0
-        mkdir -p dist/net9.0
-        mkdir -p dist/net10.0
-        mkdir -p dist/net11.0
-        cp build-artifacts/net8.0/*.* dist/net8.0
-        cp build-artifacts/net9.0/*.* dist/net9.0
-        cp build-artifacts/net10.0/*.* dist/net10.0
-        cp build-artifacts/net11.0/*.* dist/net11.0
-        cd dist
-        zip -r ../DotnetToolWrapper.zip *
+      - name: Download Artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: build-artifacts
+          path: build-artifacts
 
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v7
-      with:
-        name: release-artifacts
-        path: |
-          DotnetToolWrapper.zip
+      - name: Assemble
+        shell: bash
+        run: |
+          mkdir -p dist/net8.0
+          mkdir -p dist/net9.0
+          mkdir -p dist/net10.0
+          mkdir -p dist/net11.0
+          cp build-artifacts/net8.0/*.* dist/net8.0
+          cp build-artifacts/net9.0/*.* dist/net9.0
+          cp build-artifacts/net10.0/*.* dist/net10.0
+          cp build-artifacts/net11.0/*.* dist/net11.0
+          cd dist
+          zip -r ../DotnetToolWrapper.zip *
 
-    - name: Create release
-      if: ${{ inputs.publish == 'release' }}
-      uses: ncipollo/release-action@v1
-      with:
-        artifacts: "DotnetToolWrapper.zip,build-artifacts/_manifest/spdx_2.2/*.*"
-        generateReleaseNotes: true
-        tag: ${{ inputs.semver }}
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: release-artifacts
+          path: |
+            DotnetToolWrapper.zip
+
+      - name: Create release
+        if: ${{ inputs.publish == 'release' }}
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "DotnetToolWrapper.zip,build-artifacts/_manifest/spdx_2.2/*.*"
+          generateReleaseNotes: true
+          tag: ${{ inputs.semver }}
