@@ -2,7 +2,7 @@
 
 - **project-name**: DotnetToolWrapper
 - **organization**: DEMA Consulting
-- **project-tagline**: Wrapper for native .NET Tools
+- **project-tagline**: Run native applications as .NET Tools
 - **description**: A .NET 8.0, 9.0, 10.0, and 11.0 console application that serves as a wrapper for native
   applications packaged as .NET Tools. It must work on Windows, Linux, FreeBSD, and macOS.
 - **languages**: C#

@@ -34,7 +34,8 @@ jobs:
       winver: ${{ inputs.winver }}
 
   # Assembles DotnetToolWrapper.zip (one folder per target framework) and,
-  # when requested, creates the GitHub release with the zip and the SBOM.
+  # when requested, creates the GitHub release with the zip, the SBOM, and
+  # the release documents (PDFs) built by the build workflow.
   release:
     name: Release Artifacts
     permissions:
@@ -54,6 +55,12 @@ jobs:
         with:
           name: build-artifacts
           path: build-artifacts
+
+      - name: Download Documents
+        uses: actions/download-artifact@v8
+        with:
+          name: documents
+          path: documents
 
       - name: Assemble
         shell: bash
@@ -80,6 +87,6 @@ jobs:
         if: ${{ inputs.publish == 'release' }}
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "DotnetToolWrapper.zip,build-artifacts/_manifest/spdx_2.2/*.*"
+          artifacts: "DotnetToolWrapper.zip,build-artifacts/_manifest/spdx_2.2/*.*,documents/*.pdf"
           generateReleaseNotes: true
           tag: ${{ inputs.semver }}

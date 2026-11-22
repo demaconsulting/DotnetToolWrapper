@@ -13,7 +13,7 @@ sections:
               ReqStream shall fail when a requirement is not satisfied by passing tests in the test-result files or
               is not reachable from a root requirement.
             justification: |
-              The CI requirements job runs ReqStream with --enforce on the collected TRX files, so a
+              The CI documents job runs ReqStream with --enforce on the collected TRX files, so a
               requirement without passing evidence or an orphaned requirement breaks the build.
               The self-validation covers requirement processing, trace-matrix and report export,
               tag filtering, enforcement, and orphan detection.

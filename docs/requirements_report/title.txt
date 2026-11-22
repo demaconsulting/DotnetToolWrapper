@@ -1,0 +1,11 @@
+---
+title: "DotnetToolWrapper Trace Matrix"
+subtitle: "Run native applications as .NET Tools"
+author: "DEMA Consulting"
+description: "Trace Matrix for DotnetToolWrapper"
+lang: en-US
+keywords:
+  - Requirements
+  - Trace Matrix
+  - DotnetToolWrapper
+---

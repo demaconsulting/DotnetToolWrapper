@@ -34,6 +34,34 @@
         "lintmark"
       ],
       "rollForward": false
+    },
+    "demaconsulting.pandoctool": {
+      "version": "3.12.1",
+      "commands": [
+        "pandoc"
+      ],
+      "rollForward": false
+    },
+    "demaconsulting.weasyprinttool": {
+      "version": "70.0.0",
+      "commands": [
+        "weasyprint"
+      ],
+      "rollForward": false
+    },
+    "demaconsulting.fileassert": {
+      "version": "0.5.1",
+      "commands": [
+        "fileassert"
+      ],
+      "rollForward": false
+    },
+    "demaconsulting.canvasnet.tool": {
+      "version": "0.2.0-beta.13",
+      "commands": [
+        "canvasnet"
+      ],
+      "rollForward": false
     }
   }
 }

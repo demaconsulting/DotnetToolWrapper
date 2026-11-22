@@ -45,7 +45,7 @@ jobs:
 
       # === CAPTURE OTS SELF-VALIDATION RESULTS ===
       # This section captures the self-validation results of the lint tools as OTS evidence
-      # for the requirements job. The tools do not create the results folder themselves.
+      # for the build-docs job. The tools do not create the results folder themselves.
 
       - name: Create artifacts directory
         shell: bash
@@ -214,18 +214,23 @@ jobs:
           name: artifacts-build-validation
           path: artifacts/
 
-  # Traces every requirement to passing test evidence. ReqStream reads the TRX files that
-  # the other jobs uploaded as 'artifacts-*' (the per-platform test results and the OTS
-  # self-validation results) and fails the build with --enforce when a requirement is not
-  # satisfied. The generated requirements, justifications, and trace matrix are uploaded
-  # as the 'requirements' artifact.
-  requirements:
-    name: Requirements Traceability
+  # Builds the release documents (Requirements Document and Trace Matrix) as PDFs. It runs on
+  # Windows because the WeasyPrint tool package ships only a win-x64 build. Each document section
+  # converts Markdown to HTML with Pandoc, renders the PDF with WeasyPrint, and checks both with
+  # FileAssert; the FileAssert results and the tool self-validations are OTS evidence. ReqStream
+  # traces every requirement to the TRX evidence that all jobs uploaded as 'artifacts-*' and
+  # fails the build with --enforce when a requirement is not satisfied. The PDFs are uploaded as
+  # the 'documents' artifact that the release workflow attaches to the GitHub release.
+  build-docs:
+    name: Build Documents
     needs: [quality-checks, test, build]
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     permissions:
       contents: read
     steps:
+      # === CHECKOUT AND DOWNLOAD ARTIFACTS ===
+      # The artifacts are not merged: each one keeps its own folder so the unique TRX file
+      # names stay intact for the ReqStream source filters.
 
       - name: Checkout
         uses: actions/checkout@v7
@@ -235,6 +240,8 @@ jobs:
         with:
           path: artifacts
           pattern: 'artifacts-*'
+
+      # === INSTALL DEPENDENCIES ===
 
       - name: Setup dotnet
         uses: actions/setup-dotnet@v6
@@ -248,6 +255,32 @@ jobs:
       - name: Restore Tools
         run: >
           dotnet tool restore
+
+      # === PREPARE DOCUMENT OUTPUT ===
+      # Creates the shared docs/generated/ folder that all document sections write PDFs into.
+
+      - name: Create documents output directory
+        shell: bash
+        run: mkdir -p docs/generated
+
+      # Later stages add their document sections here (Build Notes, Code Quality, Code Review,
+      # Design, Verification), before the FileAssert self-validation, so their FileAssert
+      # results are OTS evidence for ReqStream.
+
+      # === FILEASSERT SELF-VALIDATION ===
+      # FileAssert self-validation confirms the assertion tool itself is operational.
+
+      - name: Run FileAssert self-validation
+        run: >
+          dotnet fileassert
+          --validate
+          --results artifacts/fileassert-self-validation.trx
+
+      # === COMPILE REQUIREMENTS AND TRACE MATRIX ===
+      # ReqStream --enforce consumes all previously generated TRX evidence. Pandoc and
+      # WeasyPrint then compile the final documents, and FileAssert checks their outputs.
+      # These final assertions confirm the requirements pipeline produced well-formed
+      # documents but do not contribute to OTS evidence.
 
       - name: Create requirements output directories
         shell: bash
@@ -269,11 +302,50 @@ jobs:
           --matrix docs/requirements_report/generated/trace_matrix.md
           --enforce
 
-      - name: Upload requirements documents
-        if: ${{ !cancelled() }}
+      - name: Generate Requirements HTML with Pandoc
+        shell: bash
+        run: >
+          dotnet pandoc
+          --defaults docs/requirements_doc/definition.yaml
+          --metadata version="${{ inputs.semver }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/requirements_doc/generated/requirements.html
+
+      - name: Generate Requirements PDF with WeasyPrint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/requirements_doc/generated/requirements.html
+          "docs/generated/DotnetToolWrapper Requirements Document.pdf"
+
+      - name: Generate Trace Matrix HTML with Pandoc
+        shell: bash
+        run: >
+          dotnet pandoc
+          --defaults docs/requirements_report/definition.yaml
+          --metadata version="${{ inputs.semver }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/requirements_report/generated/trace_matrix.html
+
+      - name: Generate Trace Matrix PDF with WeasyPrint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/requirements_report/generated/trace_matrix.html
+          "docs/generated/DotnetToolWrapper Trace Matrix.pdf"
+
+      - name: Assert Requirements Documents with FileAssert
+        run: >
+          dotnet fileassert
+          --results artifacts/fileassert-requirements.trx
+          requirements
+
+      # === UPLOAD ARTIFACTS ===
+      # Only the PDFs are uploaded, so the docs/generated/canvasnet/ diagram cache stays out of
+      # the artifact and the release.
+
+      - name: Upload documents
         uses: actions/upload-artifact@v7
         with:
-          name: requirements
-          path: |-
-            docs/requirements_doc/generated/
-            docs/requirements_report/generated/
+          name: documents
+          path: docs/generated/*.pdf
