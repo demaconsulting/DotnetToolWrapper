@@ -13,8 +13,12 @@ sections:
             justification: |
               The CI documents job converts each document collection to HTML with Pandoc before
               WeasyPrint renders it to PDF. FileAssert checks that the generated HTML exists, has a
-              title element, embeds its diagram, and contains the expected content, which proves
-              that Pandoc ran correctly. Later document collections add their own FileAssert tests.
+              title element, embeds its pictures where the document has any, and contains the expected
+              content, which proves that Pandoc ran correctly. The listed tests cover the seven
+              collections built before ReqStream runs (Build Notes, Code Quality Report, Review Plan,
+              Review Report, Software Design Document, Software Verification Design Document, and User
+              Guide). The Requirements Document and Trace Matrix are built from the ReqStream output, so
+              their FileAssert checks run after ReqStream and are not evidence for this requirement.
             tags: [ots]
             tests:
               - Pandoc_UserGuideHtml

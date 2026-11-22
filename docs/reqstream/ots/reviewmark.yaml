@@ -1,9 +1,9 @@
 ---
 # ReviewMark OTS requirements
 #
-# DemaConsulting.ReviewMark checks .reviewmark.yaml in lint.ps1, generates the Review Plan and
-# the Review Report in the CI documents job, and elaborates review-sets for the formal-review
-# agent. Its self-validation results are the evidence.
+# DemaConsulting.ReviewMark checks .reviewmark.yaml and the review-set coverage in lint.ps1, and
+# generates the Review Plan and the Review Report in the CI documents job. Its self-validation
+# results are the evidence.
 sections:
   - title: OTS Software Requirements
     sections:
@@ -32,11 +32,15 @@ sections:
             tests:
               - ReviewMark_Lint
 
-          - id: DotnetToolWrapper-OTS-ReviewMark-Elaborate
-            title: ReviewMark shall list the files and the context of a named review-set.
+          - id: DotnetToolWrapper-OTS-ReviewMark-Enforce
+            title: >-
+              ReviewMark shall exit with a non-zero code when run with --enforce and the generated review document
+              has issues.
             justification: |
-              The formal-review agent runs ReviewMark with --elaborate to get the files of a
-              review-set and their fingerprint, instead of resolving the glob patterns itself.
+              lint.ps1 and the CI documents job generate the review plan with --enforce, so a file that
+              needs review but is not covered by any review-set fails the build. The review report is not
+              generated with --enforce until review evidence is published, because every review-set is
+              reported without current evidence until then. The self-validation proves the enforcement.
             tags: [ots]
             tests:
-              - ReviewMark_Elaborate
+              - ReviewMark_Enforce

@@ -20,6 +20,7 @@ input-files:
   - docs/design/ots/pandoc.md
   - docs/design/ots/reqstream.md
   - docs/design/ots/reviewmark.md
+  - docs/design/ots/sbom-tool.md
   - docs/design/ots/spdx-tool.md
   - docs/design/ots/sysml2tools.md
   - docs/design/ots/textlint.md

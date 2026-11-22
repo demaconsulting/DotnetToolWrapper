@@ -79,9 +79,11 @@ sections:
               - x64@Program_GetArchitecture_CurrentHost_ReturnsHostArchitectureName
 
           - id: DotnetToolWrapper-Program-ArchArm
-            title: Program shall name the 32-bit Arm architecture arm.
+            title: Program shall name the .NET Architecture.Arm (32-bit Armv7) architecture arm.
             justification: |
-              Tool packages configure 32-bit Arm executables under targets that end with arm.
+              Tool packages configure 32-bit Armv7 executables under targets that end with arm. .NET reports
+              Armv6 processors as the separate Architecture.Armv6 value, which has no target name and is named
+              unknown (see DotnetToolWrapper-Program-ArchUnknown).
             tests:
               - Program_GetArchitecture_Arm_ReturnsArm
 

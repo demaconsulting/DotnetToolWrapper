@@ -28,7 +28,8 @@ with the .NET command-line tools they already have.
 - Uses one JSON file for configuration, with paths relative to the file and `%NAME%` environment variables
 - Runs on .NET 8.0, 9.0, 10.0, and 11.0
 - Has no dependencies beyond the .NET runtime
-- Reports configuration errors with a clear message and exit code 1
+- Reports a missing configuration file, a missing entry for the host target, and an entry without a `program`
+  property with a clear message and exit code 1
 - Traces its requirements to passing tests on every build, and ships a User Guide, a Software Design Document,
   a Software Verification Design Document, a Requirements Document, a Trace Matrix, a Review Plan, a Review Report,
   Build Notes, and a Code Quality Report with each release

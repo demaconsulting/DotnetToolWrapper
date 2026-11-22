@@ -14,16 +14,17 @@ plan and review report from that configuration and the review evidence, without 
 - **Configuration lint** - `--lint` checks `.reviewmark.yaml` for structural problems.
 - **Review plan** - `--plan` writes the Markdown list of review-sets and the files each one covers.
 - **Review report** - `--report` writes the Markdown status of each review-set against the review evidence.
-- **Elaboration** - `--elaborate {review-set}` lists the files, context, and fingerprint of one review-set for the
-  formal-review agent.
+- **Enforcement** - `--enforce` exits with a non-zero code when a generated document has issues; with `--plan`,
+  when a file needing review is not covered by any review-set.
 - **Self-validation** - `--validate --results {file}` writes a TRX file of the built-in tests.
 
 ### Integration Pattern
 
 ReviewMark is restored from the local tool manifest and started as `dotnet reviewmark`. `lint.ps1` runs
-`dotnet reviewmark --lint`, which fails the quality checks on a configuration problem. The CI documents job runs the
-self-validation, then `dotnet reviewmark --plan docs/code_review_plan/generated/plan.md --report
-docs/code_review_report/generated/report.md`, and Pandoc and WeasyPrint build the Review Plan and Review Report from
-the generated Markdown. The configuration names no evidence source yet (`type: none`), so the report shows every
-review-set without current evidence and the build does not run `--enforce`. Each run is a single process with no
-state.
+`dotnet reviewmark --lint`, which fails the quality checks on a configuration problem, and generates a discarded
+review plan with `--enforce`, which fails them when a file needing review is not covered by a review-set. The CI
+documents job runs the self-validation, then `dotnet reviewmark --plan docs/code_review_plan/generated/plan.md
+--enforce` and `dotnet reviewmark --report docs/code_review_report/generated/report.md`, and Pandoc and WeasyPrint
+build the Review Plan and Review Report from the generated Markdown. The configuration names no evidence source yet
+(`type: none`), so the report shows every review-set without current evidence and is generated without
+`--enforce`; enforcing the review evidence follows once it is published. Each run is a single process with no state.

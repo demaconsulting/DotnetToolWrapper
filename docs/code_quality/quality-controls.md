@@ -27,7 +27,7 @@ The CI quality-checks job runs `lint.ps1`, which fails the build when any of the
 - LintMark checks the Markdown formatting;
 - yamllint checks the YAML files;
 - ReqStream, ReviewMark, VersionMark, and SysML2Tools check the requirements, review, version, and architecture
-  model configuration.
+  model configuration; ReviewMark also fails the checks when a file requiring review is not covered by a review-set.
 
 ## CodeQL Code Scanning
 

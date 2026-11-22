@@ -10,8 +10,8 @@ Each OTS item is verified only for the behavior this project relies on, as state
 
 - **Self-validation**: the tool's `--validate` option runs its built-in tests and writes a TRX test-result file in
   the CI job that uses the tool.
-- **Output checks**: FileAssert checks the files a tool generates (diagrams, HTML, and PDF documents) for tools that
-  have no self-validation of the behavior used.
+- **Output checks**: FileAssert checks the files a tool generates (diagrams, HTML and PDF documents, and the SPDX
+  document) for tools that have no self-validation of the behavior used.
 - **Project tests**: the passing tests of the project are the evidence for the xUnit test framework.
 
 ReqStream traces every OTS requirement to these results and fails the build with `--enforce` when one is not
@@ -33,6 +33,7 @@ The following OTS items are described in the sections that follow:
 - **Pandoc** - FileAssert checks of the generated HTML.
 - **ReqStream** - self-validation.
 - **ReviewMark** - self-validation.
+- **SbomTool** - FileAssert check of the generated SPDX document.
 - **SpdxTool** - self-validation.
 - **SysML2Tools** - self-validation and FileAssert checks of the rendered diagrams.
 - **TextLint** - self-validation.

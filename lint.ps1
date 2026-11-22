@@ -87,6 +87,12 @@ if (-not $skipDotnetTools) {
     dotnet reviewmark --lint
     if ($LASTEXITCODE -ne 0) { $lintError = $true }
 
+    # Fail when a file needing review is not covered by any review-set; the generated plan is discarded
+    $reviewPlan = Join-Path ([System.IO.Path]::GetTempPath()) "reviewmark-coverage-$PID.md"
+    dotnet reviewmark --plan $reviewPlan --enforce
+    if ($LASTEXITCODE -ne 0) { $lintError = $true }
+    Remove-Item $reviewPlan -ErrorAction SilentlyContinue
+
     dotnet versionmark --lint
     if ($LASTEXITCODE -ne 0) { $lintError = $true }
 

@@ -35,7 +35,8 @@ All OTS items except xUnit are .NET local tools, restored with `dotnet tool rest
 - `lint.ps1` runs TextLint, LintMark, ReqStream, ReviewMark, VersionMark, and SysML2Tools as quality checks, and
   `fix.ps1` runs the LintMark fixer;
 - every CI job runs VersionMark to capture the versions of the tools it uses;
-- the CI build job runs SpdxTool on the software bill of materials;
+- the CI build job runs the Microsoft SBOM tool to generate the software bill of materials, FileAssert to check it,
+  and SpdxTool to enhance and validate it;
 - the CI documents job runs BuildMark, VersionMark, ReviewMark, SysML2Tools, Pandoc, CanvasNet, WeasyPrint,
   FileAssert, and ReqStream to build and check the release documents.
 
@@ -51,7 +52,7 @@ evidence for those requirements is:
 - the self-validation of the tool (`--validate`), which writes a TRX test-result file in the CI job that uses
   the tool;
 - the FileAssert checks of the files a tool generates, for tools without a self-validation of the used
-  behavior (Pandoc and WeasyPrint) and for the rendered design diagrams;
+  behavior (Pandoc, WeasyPrint, and the Microsoft SBOM tool) and for the rendered design diagrams;
 - the passing test suite for xUnit.
 
 ReqStream traces every OTS requirement to these results and fails the build with `--enforce` when one is not
@@ -70,6 +71,7 @@ The following OTS items are described in the sections that follow:
 - **Pandoc** - converts the Markdown sources of each document to HTML.
 - **ReqStream** - checks the requirements and traces them to test evidence.
 - **ReviewMark** - checks the review configuration and generates the review plan and report.
+- **SbomTool** - generates the software bill of materials (Microsoft SBOM tool).
 - **SpdxTool** - enhances, validates, and summarizes the software bill of materials.
 - **SysML2Tools** - lints, queries, and renders the SysML2 architecture model.
 - **TextLint** - checks the spelling of the repository text.

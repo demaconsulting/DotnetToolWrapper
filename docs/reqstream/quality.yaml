@@ -49,6 +49,7 @@ sections:
           against the NTIA minimum elements.
         tags: [quality]
         children:
+          - DotnetToolWrapper-OTS-SbomTool
           - DotnetToolWrapper-OTS-SpdxTool
 
       - id: DotnetToolWrapper-Quality-ReleaseDocuments
@@ -69,17 +70,19 @@ sections:
 
       - id: DotnetToolWrapper-Quality-ReviewCoverage
         title: >-
-          Every build shall check the review configuration and publish a review plan and a review report of the files
-          needing formal review.
+          Every build shall check the review configuration, fail when a file needing formal review is not covered by a
+          review-set, and publish a review plan and a review report of the files needing formal review.
         justification: |
           Continuous Compliance requires evidence that every file that defines, implements, or
           verifies the wrapper is covered by a formal review-set, and that the status of each
-          review is visible for each release.
+          review is visible for each release. Coverage is enforced on every build now. Failing the
+          build on missing or outdated review evidence follows once review evidence is published;
+          until then the review report shows the status of each review-set without failing the build.
         tags: [quality]
         children:
           - DotnetToolWrapper-OTS-ReviewMark-Documents
           - DotnetToolWrapper-OTS-ReviewMark-Lint
-          - DotnetToolWrapper-OTS-ReviewMark-Elaborate
+          - DotnetToolWrapper-OTS-ReviewMark-Enforce
 
       - id: DotnetToolWrapper-Quality-BuildRecords
         title: >-

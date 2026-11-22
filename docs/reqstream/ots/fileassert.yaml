@@ -1,8 +1,8 @@
 ---
 # FileAssert OTS requirements
 #
-# DemaConsulting.FileAssert checks the generated documents in the CI documents job. Its
-# self-validation results are the evidence.
+# DemaConsulting.FileAssert checks the generated documents in the CI documents job and the software
+# bill of materials in the CI build job. Its self-validation results are the evidence.
 sections:
   - title: OTS Software Requirements
     sections:
@@ -10,14 +10,14 @@ sections:
         requirements:
           - id: DotnetToolWrapper-OTS-FileAssert
             title: >-
-              FileAssert shall fail when a generated diagram or document is missing or lacks the expected HTML, XML,
-              PDF, or text content.
+              FileAssert shall fail when a generated diagram, document, or software bill of materials is missing or
+              lacks the expected HTML, XML, JSON, PDF, or text content.
             justification: |
               FileAssert checks every diagram, HTML, and PDF document produced by the CI documents
-              job and fails the build when one is missing or lacks its expected content. Its results
-              are the evidence for the SysML2Tools rendering, Pandoc, and WeasyPrint requirements, so
-              the self-validation proves that the tool records results and checks files, text, HTML,
-              XML, and PDF content.
+              job, and the SPDX document produced by the CI build job, and fails the build when one is
+              missing or lacks its expected content. Its results are the evidence for the SysML2Tools
+              rendering, Pandoc, WeasyPrint, and Microsoft SBOM tool requirements, so the self-validation
+              proves that the tool records results and checks files, text, HTML, XML, JSON, and PDF content.
             tags: [ots]
             tests:
               - FileAssert_Results
@@ -25,4 +25,5 @@ sections:
               - FileAssert_Text
               - FileAssert_Html
               - FileAssert_Xml
+              - FileAssert_Json
               - FileAssert_Pdf

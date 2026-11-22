@@ -19,8 +19,9 @@ The review plan covers the files selected by the `needs-review` patterns of `.re
 
 ## Generation Source
 
-ReviewMark generates the plan on every build from the `.reviewmark.yaml` configuration. Each review-set groups the
-files that answer one review question, from the user-facing purpose down to the Program unit and each OTS item.
+ReviewMark generates the plan on every build from the `.reviewmark.yaml` configuration, and the build fails when a
+file requiring review is not covered by any review-set. Each review-set groups the files that answer one review
+question, from the user-facing purpose down to the Program unit and each OTS item.
 
 ## Audience
 

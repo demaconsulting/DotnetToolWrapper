@@ -14,8 +14,11 @@ sections:
               The CI documents job renders each HTML document to a PDF/A-3u document with
               WeasyPrint, and the PDFs are attached to each release. FileAssert checks that the
               generated PDF exists, carries the expected title, author, and subject metadata, has
-              the expected number of pages, and contains the expected text. Later document
-              collections add their own FileAssert tests.
+              the expected number of pages, and contains the expected text. The listed tests cover the
+              seven documents built before ReqStream runs (Build Notes, Code Quality Report, Review Plan,
+              Review Report, Software Design Document, Software Verification Design Document, and User
+              Guide). The Requirements Document and Trace Matrix are built from the ReqStream output, so
+              their FileAssert checks run after ReqStream and are not evidence for this requirement.
             tags: [ots]
             tests:
               - WeasyPrint_UserGuidePdf

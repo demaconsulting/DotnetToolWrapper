@@ -162,6 +162,13 @@ reviews:
       - docs/design/ots/reviewmark.md
       - docs/verification/ots/reviewmark.md
 
+  - id: OTS-SbomTool
+    title: Review that SbomTool Provides Required Functionality
+    paths:
+      - docs/reqstream/ots/sbom-tool.yaml
+      - docs/design/ots/sbom-tool.md
+      - docs/verification/ots/sbom-tool.md
+
   - id: OTS-SpdxTool
     title: Review that SpdxTool Provides Required Functionality
     paths:

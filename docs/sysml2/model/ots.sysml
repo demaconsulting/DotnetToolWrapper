@@ -77,6 +77,16 @@ package OtsDependencies {
         }
     }
 
+    part def SbomTool {
+        doc /* OTS: Microsoft SBOM tool - generates the SPDX software bill of materials of the wrapper drop folder. */
+
+        metadata info : SoftwareInfo {
+            designFiles = ("docs/design/ots/sbom-tool.md");
+            verificationFiles = ("docs/verification/ots/sbom-tool.md");
+            requirementFiles = ("docs/reqstream/ots/sbom-tool.yaml");
+        }
+    }
+
     part def SpdxTool {
         doc /* OTS: SpdxTool - enhances, validates, and summarizes the software bill of materials. */
 

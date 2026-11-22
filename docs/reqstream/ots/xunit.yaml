@@ -23,10 +23,15 @@ sections:
               - DotnetToolWrapper_ExitCode_ProgramExits_ReturnsProgramExitCode
 
           - id: DotnetToolWrapper-OTS-XUnit-Report
-            title: xUnit shall record the outcome of each executed test in a TRX test-result file.
+            title: >-
+              The Microsoft.Testing.Extensions.TrxReport extension shall record the outcome of each test executed by
+              xUnit in a TRX test-result file.
             justification: |
-              Requirements traceability reads the TRX files that the test run writes. The listed
-              tests appear in those files with their outcomes, which shows that reporting works.
+              Requirements traceability reads the TRX files that the test run writes. xUnit does not
+              write them itself: the TRX report extension of Microsoft.Testing.Platform, referenced by
+              the test project as Microsoft.Testing.Extensions.TrxReport and enabled with --report-trx,
+              records the results that xUnit reports. The listed tests appear in those files with their
+              outcomes, which shows that reporting works.
             tags: [ots]
             tests:
               - Program_GetOs_WindowsPlatform_ReturnsWin

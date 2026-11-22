@@ -113,10 +113,11 @@ sections:
       - id: DotnetToolWrapper-System-InvalidTargetConfiguration
         title: >-
           The DotnetToolWrapper shall report a bad configuration and exit with code 1 when the entry for the host
-          target does not name a program.
+          target has no `program` property.
         justification: |
-          A malformed configuration entry is a packaging error that must be reported clearly
-          rather than causing an unhandled failure.
+          A target entry without a `program` property is a packaging error that must be reported
+          clearly rather than causing an unhandled failure. Other malformed configurations, such as invalid
+          JSON or a target entry that is not a JSON object, end with the .NET exception that describes them.
         tags: [system]
         tests:
           - DotnetToolWrapper_Configuration_ProgramMissing_ReportsErrorAndExitsWithOne

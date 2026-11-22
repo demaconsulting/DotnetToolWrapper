@@ -175,7 +175,7 @@ jobs:
         run: |
           dotnet versionmark --capture --job-id "build" \
             --output "artifacts/versionmark-build.json" -- \
-            dotnet git versionmark sbom-tool spdx-tool
+            dotnet git versionmark sbom-tool fileassert spdx-tool
 
       - name: Run SpdxTool self-validation
         run: >
@@ -221,6 +221,14 @@ jobs:
           -pv ${{ inputs.semver }}
           -ps DemaConsulting
           -nsb https://DemaConsulting.com/DotnetToolWrapper
+
+      # The Microsoft SBOM tool has no self-validation; this check of its output, run before SpdxTool
+      # changes the document, is its OTS evidence for ReqStream.
+      - name: Assert SBOM with FileAssert
+        run: >
+          dotnet fileassert
+          --results artifacts/fileassert-sbom.trx
+          sbom
 
       - name: Enhance SBOM
         run: >
@@ -409,7 +417,9 @@ jobs:
       # ReviewMark generates the Review Plan and the Review Report from .reviewmark.yaml and the
       # review evidence; its self-validation runs here, next to the documents that depend on it.
       # Pandoc converts each to HTML, WeasyPrint renders the PDFs, and FileAssert checks both.
-      # --enforce is not used until review evidence is published (evidence-source type 'none').
+      # The plan is generated with --enforce, so a file needing review that no review-set covers fails
+      # the build. The report is generated without --enforce until review evidence is published
+      # (evidence-source type 'none'), because every review-set lacks current evidence until then.
 
       - name: Create code review output directories
         shell: bash
@@ -421,11 +431,16 @@ jobs:
           --validate
           --results artifacts/reviewmark-self-validation.trx
 
-      - name: Generate Review Plan and Review Report with ReviewMark
+      - name: Generate Review Plan with ReviewMark
         run: >
           dotnet reviewmark
           --plan docs/code_review_plan/generated/plan.md
           --plan-depth 1
+          --enforce
+
+      - name: Generate Review Report with ReviewMark
+        run: >
+          dotnet reviewmark
           --report docs/code_review_report/generated/report.md
           --report-depth 1
 

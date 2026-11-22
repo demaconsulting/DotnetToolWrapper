@@ -3,10 +3,11 @@
 ### Verification Approach
 
 xUnit is verified by the project's own tests. `build.ps1` runs the test project with `dotnet test` on
-Microsoft.Testing.Platform, which discovers and runs the xUnit v3 tests on each target framework and writes one TRX
-test-result file per framework. The xUnit requirements list a fact and a theory from each test class; their passing
-results in the TRX files show that xUnit discovered, executed, and recorded both kinds of tests. Any failure of
-xUnit itself fails `build.ps1` and the CI test job.
+Microsoft.Testing.Platform, which discovers and runs the xUnit v3 tests on each target framework; the
+`Microsoft.Testing.Extensions.TrxReport` extension, enabled with `--report-trx`, writes one TRX test-result file per
+framework. The xUnit requirements list a fact and a theory from each test class; their passing results in the TRX
+files show that xUnit discovered and executed both kinds of tests and that the TRX report extension recorded them.
+Any failure of xUnit or of the extension fails `build.ps1` and the CI test job.
 
 ### Test Scenarios
 

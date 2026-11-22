@@ -1,7 +1,9 @@
 ## xUnit
 
 xUnit v3 (`xunit.v3`, with `xunit.runner.visualstudio`) is the test framework of the test project, running on
-Microsoft.Testing.Platform.
+Microsoft.Testing.Platform. The Microsoft.Testing.Platform TRX report extension
+(`Microsoft.Testing.Extensions.TrxReport`), referenced beside it, writes the test results; it is integrated and
+qualified as part of this OTS item.
 
 ### Purpose
 
