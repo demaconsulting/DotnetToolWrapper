@@ -47,3 +47,6 @@ Thumbs.db
 *.nupkg
 *.snupkg
 .nuget/
+
+# Agent logs
+.agent-logs/

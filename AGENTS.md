@@ -1,197 +1,180 @@
-# GitHub Copilot Agents Configuration
+# Project Overview
 
-This repository contains configuration and instructions for GitHub Copilot agents to assist with development tasks.
+- **project-name**: DotnetToolWrapper
+- **organization**: DEMA Consulting
+- **project-tagline**: Wrapper for native .NET Tools
+- **description**: A .NET 8.0, 9.0, 10.0, and 11.0 console application that serves as a wrapper for native
+  applications packaged as .NET Tools. It must work on Windows, Linux, FreeBSD, and macOS.
+- **languages**: C#
+- **technologies**: .NET, MSTest, GitHub Actions
 
-## Repository Overview
-
-**DotnetToolWrapper** is a .NET 8.0, 9.0, 10.0, and 11.0 console application that serves as a wrapper for native
-applications packaged as [.NET Tools][dotnet-tools].
-
-## Specialized Agents
-
-This repository includes specialized GitHub Copilot agents to assist with specific aspects of the project:
-
-### Documentation Writer
-
-**Location**: `.github/agents/documentation-writer.md`
-
-An expert technical writer specializing in:
-
-- Maintaining README, ARCHITECTURE, and markdown documentation
-- Writing XML documentation comments for APIs (both public and private members)
-- Ensuring documentation accuracy and clarity
-- Following markdown linting and spelling standards
-
-### Project Maintainer
-
-**Location**: `.github/agents/project-maintainer.md`
-
-A project maintenance specialist responsible for:
-
-- Managing dependencies and Dependabot PRs
-- Triaging and organizing issues
-- Identifying improvement opportunities
-- Planning enhancements and releases
-
-### Software Quality Enforcer
-
-**Location**: `.github/agents/software-quality-enforcer.md`
-
-A code quality specialist focused on:
-
-- Enforcing testing standards and code coverage
-- Running static analysis and linting
-- Performing code reviews and quality gates
-- Ensuring zero-warning builds
-
-## Project Structure
+# Project Structure
 
 ```text
-DotnetToolWrapper/
-├── .config/                 # .NET tools configuration
-├── .github/                 # GitHub configuration
-│   ├── agents/              # Specialized GitHub Copilot agent configurations
-│   ├── ISSUE_TEMPLATE/      # GitHub issue templates
-│   └── workflows/           # GitHub Actions workflows
-├── docs/                    # Additional documentation
-├── src/                     # Source code
+├── docs/
+│   ├── build_notes/
+│   ├── code_quality/
+│   ├── code_review_plan/
+│   ├── code_review_report/
+│   ├── design/
+│   ├── requirements_doc/
+│   ├── requirements_report/
+│   ├── reqstream/
+│   ├── sysml2/
+│   ├── user_guide/
+│   └── verification/
+├── src/
 │   └── DemaConsulting.DotnetToolWrapper/
-├── test/                    # Test project
-│   └── DemaConsulting.DotnetToolWrapper.Tests/
-├── .cspell.json            # Spelling check configuration
-├── .editorconfig           # Editor configuration
-├── .globalconfig           # Analyzer configuration
-├── .markdownlint.json      # Markdown linting configuration
-├── AGENTS.md               # Agent instructions
-├── ARCHITECTURE.md         # Architecture documentation
-├── CONTRIBUTING.md         # Contribution guidelines
-├── README.md               # Project documentation
-└── SECURITY.md             # Security policy
+└── test/
+    └── DemaConsulting.DotnetToolWrapper.Tests/
 ```
 
-## Key Technologies
+# Language and Spelling (ALL Agents)
 
-- **.NET 8.0, 9.0, 10.0, 11.0**: Multi-targeted framework versions
-- **C# 12**: Programming language
-- **MSTest**: Testing framework
-- **GitHub Actions**: CI/CD automation
-- **Code Analyzers**: Static analysis with Microsoft and SonarAnalyzer packages
+Always use **US English** spelling in all output (code, comments, documentation,
+commit messages, and reports).
 
-## Development Guidelines
+# Reference Template
 
-### Building the Project
+This repository follows a reference template for structure and file conventions.
 
-```bash
-dotnet restore
-dotnet build --configuration Release
+- **template-url**: `https://github.com/demaconsulting/Agents/raw/refs/heads/template`
+- **Repository map**: `{template-url}/repository-map.md`
+- **Template files**: `{template-url}/{file-path}` for files described in the map
+
+# Codebase Navigation (ALL Agents)
+
+When working with source code, design, or requirements artifacts, query the SysML2
+architecture model under `docs/sysml2/` first (see the `sysml2tools-query` skill) to
+understand software structure, purpose, and relationships. Fall back to
+`docs/design/introduction.md` for the human-facing narrative, folder layout, and
+companion artifact locations, and use it as the primary map when the model doesn't
+yet cover something.
+
+# Key Configuration Files
+
+- **`.config/dotnet-tools.json`** - Local tool manifest for Continuous Compliance tools
+- **`.editorconfig`** - Code formatting rules
+- **`.clang-format`** - C/C++ formatting (if applicable)
+- **`.textlint.yaml`** - Spell-check configuration and technical term dictionary (TextLint)
+- **`.lintmark.yaml`** - Markdown formatting rules (LintMark)
+- **`.yamllint.yaml`** - YAML formatting configuration
+- **`.reviewmark.yaml`** - File review definitions and tracking
+- **`nuget.config`** - NuGet package sources (if .NET)
+- **`requirements.yaml`** - Root requirements file with includes
+- **`pip-requirements.txt`** - Python dependencies for yamllint and yamlfix
+- **`docs/sysml2/`** - SysML2 architecture model; authoritative source for software structure
+- **`fix.ps1`** - Applies all auto-fixers silently (dotnet format, LintMark, YAML). Always exits 0.
+- **`build.ps1`** - Builds the solution and runs all tests.
+
+# Standards Application (ALL Agents Must Follow)
+
+Before performing any work, agents must read and apply the relevant standards
+from `.github/standards/`. Use this matrix to determine which to load:
+
+- **Any code**: `coding-principles.md`
+- **C# code**: `coding-principles.md`, `csharp-language.md`
+- **C++ code**: `coding-principles.md`, `cpp-language.md`
+- **Any tests**: `testing-principles.md`
+- **C# tests**: `testing-principles.md`, `csharp-testing.md`
+- **C++ tests**: `testing-principles.md`, `cpp-testing.md`
+- **Requirements**: `requirements-principles.md`, `software-items.md`, `reqstream-usage.md`
+- **Design docs**: `software-items.md`, `design-documentation.md`, `technical-documentation.md`
+- **Verification docs**: `software-items.md`, `verification-documentation.md`, `technical-documentation.md`
+- **Review configuration**: `software-items.md`, `reviewmark-usage.md`
+- **Software structure**: `sysml2-modeling.md`
+- **Any documentation**: `technical-documentation.md`
+- **Diagrams in documentation**: `diagram-documentation.md` (and the `canvasnet` skill for tooling)
+- **Reading PDF or Office documents**: the `docdown` skill
+
+Load only the standards relevant to your specific task scope.
+
+# Agent Delegation Guidelines
+
+The default agent should handle simple, straightforward tasks directly.
+Delegate to specialized agents only for specific scenarios:
+
+- **Pre-PR lint cleanup** (fix all lint issues before pull request) → Call the lint-fix agent
+- **Scoped fixes with no new user-visible behavior** (PR review comments, doc
+  corrections, known bug fixes with defined root cause) → Call the developer agent
+- **Light quality checking** (basic validation) → Call the quality agent
+- **Any change introducing new user-visible behavior** (features, enhancements,
+  new commands or options) → Call the implementation agent
+- **Formal bug resolution** (complex debugging, unknown root cause) → Call the implementation agent
+- **Formal reviews** (compliance verification, detailed analysis) → Call the formal-review agent
+- **Structural audit**: (repository layout vs. template) → Call the template-sync agent
+- **Implementation planning only** (review a plan before committing to implementation) → Call the planning agent
+
+# Agent Reporting (Specialized Agents Must Follow)
+
+Specialized agents MUST generate a completion report:
+
+1. Save to `.agent-logs/{agent-name}-{subject}-{unique-id}.md`
+   where `{subject}` is a kebab-case task summary (max 5 words) and
+   `{unique-id}` is a short unique suffix (e.g., 8-char hex or timestamp)
+2. Start with `**Result**: (SUCCEEDED|FAILED|INCOMPLETE)` as the first metadata field
+3. Include the agent-specific report sections defined in each agent's prompt
+4. Return the summary to the caller
+
+Result semantics for orchestrator decision-making:
+
+- **SUCCEEDED**: Work completed and all quality gates applicable to that agent's scope met
+- **FAILED**: Work could not be completed or quality gates not met
+- **INCOMPLETE**: Work cannot proceed without information only the user can
+  provide (implementation, planning, and template-sync agents)
+
+# Formatting (After Making Changes)
+
+After making changes, run the auto-fix pass. This applies all available fixers
+silently and **always exits 0** - agents do not need to respond to its output.
+
+```pwsh
+pwsh ./fix.ps1
 ```
 
-### Testing the Project
+This automatically handles: `dotnet format`, Markdown formatting (LintMark), and YAML
+formatting. Full lint compliance is a **pre-PR responsibility**, not an agent
+responsibility - invoke the lint-fix agent once before submitting a pull request.
 
-```bash
-# Run all tests
-dotnet test --configuration Release
+## CI Quality Tools
 
-# Run tests with detailed output
-dotnet test --configuration Release --logger "console;verbosity=detailed"
-```
+CI runs `lint.ps1` which checks: lintmark, textlint, yamllint, dotnet format,
+reqstream, versionmark, reviewmark, and sysml2tools.
 
-### Code Standards
+# Scope Discipline (ALL Agents Must Follow)
 
-- **Language Version**: C# 12
-- **Nullable Reference Types**: Enabled
-- **Target Frameworks**: net8.0, net9.0, net10.0, net11.0
-- **EditorConfig**: Follow .editorconfig rules for consistent formatting
-- **XML Documentation**: All code should include XML documentation comments
-- **Analyzers**: Keep analyzer packages at the same version across all projects
+- **No generated file access**: Files inside any `generated/` folder are build
+  outputs - do not read, lint, or modify them
+- **Minimum necessary changes**: Only modify files directly required by the task
+- **No speculative refactoring**: Do not refactor code adjacent to the change
+  unless the task explicitly requests it
+- **No drive-by fixes**: If you discover pre-existing issues in files you are
+  reading but not modifying, document them in the report but do not fix them
+- **Declare scope upfront**: Before making changes, determine which files will be
+  modified. Any file outside this scope requires explicit justification.
 
-### Workflow Structure
+# Protected Configuration Files
 
-The project uses GitHub Actions with a modular workflow approach. Workflows are located in `.github/workflows/`
-and include build, test, and release automation.
+These files contain carefully designed configuration with documented intent
+in header comments. Agents MUST NOT modify them unless the task explicitly
+requires it and the modification preserves the documented design intent:
 
-### Quality Checks
+- `.reviewmark.yaml`, `.textlint.yaml`, `.editorconfig`
+- `.lintmark.yaml`, `.yamllint.yaml`
+- `requirements.yaml`
 
-Quality checks are automated through GitHub Actions:
+# Project Scripts
 
-- **Spelling**: Checked using `cspell` with `.cspell.json` configuration
-- **Markdown Linting**: Validated using `markdownlint-cli` with `.markdownlint.json` configuration
-- **Code Analysis**: Enforced via analyzer packages and `.globalconfig` rules
-- **Build Validation**: Zero-warning builds required (`TreatWarningsAsErrors`)
+`build.ps1`, `lint.ps1`, and `fix.ps1` belong to the project: extend them as it grows. Add project-specific
+steps, update tool versions, and add optional parameters that focus a run (for example one library in a
+multi-library repository, or headless tests without GUI automation). Two rules keep them trustworthy:
 
-## Agent Instructions
+- Run with no arguments, each script still does its full job (CI and the agents rely on that); slow or
+  environment-dependent test tiers may be opt-in switches of `build.ps1`.
+- Never remove or weaken a check to make lint or tests pass.
 
-### When Working with Code
+# Continuous Compliance Overview
 
-1. **Multi-targeting**: Ensure changes are compatible with .NET 8.0, 9.0, 10.0, and 11.0
-2. **Cross-platform**: The tool must work on Windows, Linux, FreeBSD, and macOS
-3. **Architecture Support**: Support multiple architectures (x86, x64, ARM, ARM64, WASM, S390x)
-4. **Testing**: Always run tests after changes. CI tests on ubuntu-latest, windows-latest, and macos-latest
-5. **Code Quality**: Maintain `TreatWarningsAsErrors` - all warnings must be fixed
-6. **Analyzers**: Keep analyzer packages at consistent versions across projects
-
-### When Modifying Workflows
-
-1. Preserve the reusable workflow pattern
-2. Ensure build, test, and release automation continues to work
-3. Maintain SBOM generation if present
-
-### When Updating Documentation
-
-1. Follow markdown linting rules in `.markdownlint.json`
-2. Check spelling with `.cspell.json` dictionary
-3. Keep README.md synchronized with functionality
-4. Update ARCHITECTURE.md for architectural changes
-5. Reference appropriate documentation files
-6. Use box-drawing characters (├──, └──, │) for file/folder diagrams
-
-### When Addressing Security Issues
-
-1. Follow the security policy outlined in `SECURITY.md`
-2. Never commit sensitive information
-3. Consider all supported platforms when evaluating security impact
-4. Update security documentation if introducing new security considerations
-
-## Common Tasks
-
-### Adding New Dependencies
-
-1. Update the `.csproj` file in the appropriate project folder
-2. Ensure analyzer packages use consistent versions across projects
-3. Dependabot automatically updates NuGet packages in the `nuget-dependencies` group
-
-### Updating Supported Frameworks
-
-1. Modify `<TargetFrameworks>` in `.csproj` files
-2. Update workflows if needed to accommodate new framework versions
-3. Test on all target platforms
-
-## Testing Changes
-
-Before committing:
-
-1. Build locally: `dotnet build --configuration Release`
-2. Run tests: `dotnet test --configuration Release`
-3. Run spelling checks: `npx cspell "**/*.md"`
-4. Run markdown linting: `npx markdownlint "**/*.md"`
-
-## Issue Templates
-
-The repository includes structured issue templates in `.github/ISSUE_TEMPLATE/` for bug reports, feature requests,
-and other items.
-
-## Related Documentation
-
-- <a>README.md</a> - Project overview and quick start guide
-- <a>ARCHITECTURE.md</a> - Detailed architecture and design documentation
-- <a>CONTRIBUTING.md</a> - Contribution guidelines and development setup
-- <a>CODE_OF_CONDUCT.md</a> - Community code of conduct
-- <a>SECURITY.md</a> - Security policy and vulnerability reporting
-- <a>docs/usage.md</a> - Comprehensive usage guide with examples
-- <a>LICENSE</a> - MIT License terms
-
-## Contact
-
-For questions or issues, please refer to the repository's issue tracker on GitHub.
-
-[dotnet-tools]: https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools
+This repository follows the [Continuous Compliance](https://github.com/demaconsulting/ContinuousCompliance)
+approach. Tools: **ReqStream** (requirements traceability), **ReviewMark** (file review enforcement),
+**BuildMark** (tool versions), **VersionMark** (version tracking).
