@@ -89,6 +89,7 @@ DotnetToolWrapper/
 │   ├── reqstream/           # Requirements files (ReqStream)
 │   ├── requirements_doc/    # Requirements Document (Pandoc collection)
 │   ├── requirements_report/ # Trace Matrix (Pandoc collection)
+│   ├── sysml2/              # SysML2 architecture model (SysML2Tools)
 │   ├── template/            # Pandoc HTML template
 │   └── user_guide/          # User Guide (Pandoc collection)
 ├── src/
@@ -162,7 +163,7 @@ DotnetToolWrapper/
 # Apply all auto-fixers (dotnet format, LintMark, yamlfix); always exits 0
 pwsh ./fix.ps1
 
-# Run all lint checks (yamllint, TextLint, LintMark, dotnet format); CI runs the same script
+# Run all lint checks (yamllint, TextLint, LintMark, ReqStream, SysML2Tools, dotnet format); CI runs the same script
 pwsh ./lint.ps1
 
 # Build all target frameworks and run the tests

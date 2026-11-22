@@ -79,12 +79,17 @@ if (-not $skipDotnetTools) {
 # [PROJECT-SPECIFIC] Add additional lint checks here.
 
 # --- Compliance Tools ---
-# The template's VersionMark, ReviewMark, and SysML2Tools lint steps are added here as their
-# configuration (.versionmark.yaml, .reviewmark.yaml, docs/sysml2/) is adopted by the project.
+# The template's VersionMark and ReviewMark lint steps are added here as their configuration
+# (.versionmark.yaml, .reviewmark.yaml) is adopted by the project.
 Write-Host "Linting: compliance tools..."
 if (-not $skipDotnetTools) {
     dotnet reqstream --lint --enforce --requirements requirements.yaml
     if ($LASTEXITCODE -ne 0) { $lintError = $true }
+
+    if (Test-Path docs/sysml2) {
+        dotnet sysml2tools lint --strict-unresolved 'docs/sysml2/**/*.sysml'
+        if ($LASTEXITCODE -ne 0) { $lintError = $true }
+    }
 }
 
 # [PROJECT-SPECIFIC] Add additional dotnet tool checks here.
