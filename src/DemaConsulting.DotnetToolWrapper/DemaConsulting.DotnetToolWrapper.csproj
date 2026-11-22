@@ -49,4 +49,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <!-- Test Access: the tests drive the internal platform-mapping overloads with simulated platforms -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="DemaConsulting.DotnetToolWrapper.Tests" />
+  </ItemGroup>
+
 </Project>

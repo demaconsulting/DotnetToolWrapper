@@ -15,22 +15,49 @@ public static class Program
     /// <returns>Operating system name</returns>
     public static string GetOs()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        return GetOs(RuntimeInformation.IsOSPlatform);
+    }
+
+    /// <summary>
+    /// Get the operating system name using the supplied platform check
+    /// </summary>
+    /// <remarks>
+    /// This overload exists so the operating-system mapping can be unit-tested for every supported
+    /// platform on any host; <see cref="GetOs()"/> calls it with <see cref="RuntimeInformation.IsOSPlatform"/>.
+    /// Platforms are checked in the order Windows, Linux, FreeBSD, then macOS, and the first match wins.
+    /// The method has no side effects other than calling <paramref name="isOsPlatform"/>, and is
+    /// thread-safe if <paramref name="isOsPlatform"/> is.
+    /// </remarks>
+    /// <param name="isOsPlatform">
+    /// Returns true when the host runs the given <see cref="OSPlatform"/>. Must not be null.
+    /// </param>
+    /// <returns>
+    /// The operating system name used in configuration targets: "win", "linux", "freebsd", or "osx";
+    /// "unknown" when no platform matches.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="isOsPlatform"/> is null.</exception>
+    internal static string GetOs(Func<OSPlatform, bool> isOsPlatform)
+    {
+        // Reject a missing platform check - without it no platform can be identified
+        ArgumentNullException.ThrowIfNull(isOsPlatform);
+
+        // Return the name of the first matching platform, in priority order
+        if (isOsPlatform(OSPlatform.Windows))
         {
             return "win";
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (isOsPlatform(OSPlatform.Linux))
         {
             return "linux";
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD))
+        if (isOsPlatform(OSPlatform.FreeBSD))
         {
             return "freebsd";
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (isOsPlatform(OSPlatform.OSX))
         {
             return "osx";
         }
@@ -44,7 +71,25 @@ public static class Program
     /// <returns>Architecture name</returns>
     public static string GetArchitecture()
     {
-        return RuntimeInformation.OSArchitecture switch
+        return GetArchitecture(RuntimeInformation.OSArchitecture);
+    }
+
+    /// <summary>
+    /// Get the architecture name for the supplied processor architecture
+    /// </summary>
+    /// <remarks>
+    /// This overload exists so the architecture mapping can be unit-tested for every supported
+    /// architecture on any host; <see cref="GetArchitecture()"/> calls it with
+    /// <see cref="RuntimeInformation.OSArchitecture"/>. The method is pure and thread-safe.
+    /// </remarks>
+    /// <param name="architecture">Processor architecture to map. Any value is accepted.</param>
+    /// <returns>
+    /// The architecture name used in configuration targets: "x86", "x64", "arm", "arm64", "wasm", or "s390x";
+    /// "unknown" for any other architecture (for example LoongArch64, Armv6, Ppc64le, or an undefined value).
+    /// </returns>
+    internal static string GetArchitecture(Architecture architecture)
+    {
+        return architecture switch
         {
             Architecture.X86 => "x86",
             Architecture.X64 => "x64",
@@ -62,7 +107,31 @@ public static class Program
     /// <returns>Target string</returns>
     public static string GetTarget()
     {
-        return $"{GetOs()}-{GetArchitecture()}";
+        return GetTarget(RuntimeInformation.IsOSPlatform, RuntimeInformation.OSArchitecture);
+    }
+
+    /// <summary>
+    /// Get the target string for the supplied platform check and processor architecture
+    /// </summary>
+    /// <remarks>
+    /// This overload exists so the composition of the target string can be unit-tested for any platform on
+    /// any host; <see cref="GetTarget()"/> calls it with <see cref="RuntimeInformation.IsOSPlatform"/> and
+    /// <see cref="RuntimeInformation.OSArchitecture"/>. The target string selects the entry in the
+    /// DotnetToolWrapper.json configuration file. The method has no side effects other than calling
+    /// <paramref name="isOsPlatform"/>, and is thread-safe if <paramref name="isOsPlatform"/> is.
+    /// </remarks>
+    /// <param name="isOsPlatform">
+    /// Returns true when the host runs the given <see cref="OSPlatform"/>. Must not be null.
+    /// </param>
+    /// <param name="architecture">Processor architecture of the host. Any value is accepted.</param>
+    /// <returns>
+    /// The target string "{os}-{architecture}" built from <see cref="GetOs(Func{OSPlatform, bool})"/> and
+    /// <see cref="GetArchitecture(Architecture)"/>, for example "linux-x64" or "unknown-unknown".
+    /// </returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="isOsPlatform"/> is null.</exception>
+    internal static string GetTarget(Func<OSPlatform, bool> isOsPlatform, Architecture architecture)
+    {
+        return $"{GetOs(isOsPlatform)}-{GetArchitecture(architecture)}";
     }
 
     /// <summary>
