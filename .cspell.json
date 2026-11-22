@@ -53,6 +53,11 @@
     "*.dll",
     "*.exe",
     ".vs",
-    "*.bak"
+    "*.bak",
+    "AGENTS.md",
+    ".github/agents/**",
+    ".github/standards/**",
+    ".github/skills/**",
+    ".agent-logs/**"
   ]
 }
