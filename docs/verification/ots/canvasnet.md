@@ -3,8 +3,8 @@
 ### Verification Approach
 
 CanvasNet is verified by its self-validation. The CI documents job runs
-`dotnet canvasnet --validate --results artifacts/canvasnet-self-validation.trx` immediately before it builds the
-User Guide, the first document that uses the CanvasNet Pandoc filter. The diagrams the filter draws are also
+`dotnet canvasnet --validate --results artifacts/canvasnet-self-validation.trx` before its first Pandoc step,
+because every document definition uses the CanvasNet Pandoc filter. The diagrams the filter draws are also
 checked indirectly: the FileAssert check of the User Guide HTML expects its embedded picture.
 
 ### Test Scenarios

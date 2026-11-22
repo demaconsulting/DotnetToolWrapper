@@ -309,11 +309,19 @@ jobs:
             fileassert reqstream
 
       # === PREPARE DOCUMENT OUTPUT ===
-      # Creates the shared docs/generated/ folder that all document sections write PDFs into.
+      # Creates the shared docs/generated/ folder that all document sections write PDFs into. Every
+      # document definition uses the CanvasNet Pandoc filter, so the CanvasNet self-validation runs here,
+      # before the first Pandoc step.
 
       - name: Create documents output directory
         shell: bash
         run: mkdir -p docs/generated
+
+      - name: Run CanvasNet self-validation
+        run: >
+          dotnet canvasnet
+          --validate
+          --results artifacts/canvasnet-self-validation.trx
 
       # === COMPILE BUILD NOTES ===
       # BuildMark generates the build report from the Git history and the GitHub issues and pull
@@ -562,18 +570,11 @@ jobs:
 
       # === COMPILE USER GUIDE ===
       # Pandoc converts the user guide to HTML, with the CanvasNet filter drawing its diagram,
-      # WeasyPrint renders the PDF, and FileAssert checks both. CanvasNet self-validation runs
-      # here to co-locate its evidence with the first document that depends on it.
+      # WeasyPrint renders the PDF, and FileAssert checks both.
 
       - name: Create user guide output directory
         shell: bash
         run: mkdir -p docs/user_guide/generated
-
-      - name: Run CanvasNet self-validation
-        run: >
-          dotnet canvasnet
-          --validate
-          --results artifacts/canvasnet-self-validation.trx
 
       - name: Generate User Guide HTML with Pandoc
         shell: bash
