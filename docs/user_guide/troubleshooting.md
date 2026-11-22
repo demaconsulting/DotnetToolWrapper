@@ -11,10 +11,12 @@ The wrapper writes its own error messages to standard output and exits with code
 | `Missing configuration file {path}` | `DotnetToolWrapper.json` is not in the folder of the wrapper DLL. |
 | `This tool does not support the {target} target` | The configuration file has no entry for the target of this host. |
 | `Bad configuration for {target} target` | The entry for the target has no `program` property. |
-| `Unable to start process {path}` | The operating system did not start the program. |
+| `Unable to start process {path}` | A safeguard only; .NET reports a program it cannot start with an exception. |
 
-Other failures, such as a configuration file that is not valid JSON or a program that does not exist,
-end with an unhandled .NET exception that describes the problem, and a non-zero exit code.
+Other failures, such as a configuration file that is not valid JSON, or a program that cannot be started because it is
+missing, is not executable, or lacks execute permission, end with an unhandled .NET exception that describes the
+problem, and a non-zero exit code (see *Program Not Found* and *Permission Denied*). The `Unable to start process`
+message is a safeguard for the case that .NET returns no process without an exception, which is not expected.
 
 ## Tool Not Found After Installation
 

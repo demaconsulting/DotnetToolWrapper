@@ -36,7 +36,7 @@ with the .NET command-line tools they already have.
 
 **Package authors** download `DotnetToolWrapper.zip` from the
 [releases page](https://github.com/demaconsulting/DotnetToolWrapper/releases). It holds the wrapper built for
-each .NET version:
+each .NET version, and each folder holds the same files:
 
 ```text
 DotnetToolWrapper.zip
@@ -44,9 +44,9 @@ DotnetToolWrapper.zip
 │   ├── DemaConsulting.DotnetToolWrapper.dll
 │   ├── DemaConsulting.DotnetToolWrapper.deps.json
 │   └── DemaConsulting.DotnetToolWrapper.runtimeconfig.json
-├── net9.0/
-├── net10.0/
-└── net11.0/
+├── net9.0/                (the same files)
+├── net10.0/               (the same files)
+└── net11.0/               (the same files)
 ```
 
 **Users of a wrapped tool** install it like any other .NET Tool:
@@ -70,9 +70,9 @@ root/
 ├── osx-arm64/
 │   └── my-tool
 └── tools/
-    ├── net8.0/any/
-    ├── net9.0/any/
-    ├── net10.0/any/
+    ├── net8.0/any/          (the same files)
+    ├── net9.0/any/          (the same files)
+    ├── net10.0/any/         (the same files)
     └── net11.0/any/
         ├── DotnetToolSettings.xml
         ├── DotnetToolWrapper.json
