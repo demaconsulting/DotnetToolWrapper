@@ -4,10 +4,10 @@
 
 We release patches for security vulnerabilities for the following versions:
 
-| Version | Supported          |
-| ------- | ------------------ |
-| Latest  | :white_check_mark: |
-| < Latest| :x:                |
+| Version | Supported |
+| --- | --- |
+| Latest | :white_check_mark: |
+| < Latest | :x: |
 
 We recommend always using the latest version of DotnetToolWrapper to ensure you have the latest security updates.
 

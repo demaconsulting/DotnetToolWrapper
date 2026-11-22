@@ -203,7 +203,8 @@ You can obtain these files by:
 
 ### 5. Add Your Native Executables
 
-Place your native executables at the root of the package in subdirectories matching the platform identifiers. For example:
+Place your native executables at the root of the package in subdirectories matching the platform identifiers. For
+example:
 
 ```text
 root/

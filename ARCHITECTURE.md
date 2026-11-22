@@ -85,12 +85,12 @@ The configuration file uses a simple JSON structure:
 
 ### Supported Target Strings
 
-| OS      | Architectures                                    | Notes                           |
-|---------|--------------------------------------------------|---------------------------------|
-| win     | x86, x64, arm, arm64                             | Windows platforms               |
-| linux   | x86, x64, arm, arm64, s390x                      | Linux distributions             |
-| freebsd | x86, x64, arm, arm64                             | FreeBSD platforms               |
-| osx     | x64, arm64                                       | macOS platforms                 |
+| OS | Architectures | Notes |
+| --- | --- | --- |
+| win | x86, x64, arm, arm64 | Windows platforms |
+| linux | x86, x64, arm, arm64, s390x | Linux distributions |
+| freebsd | x86, x64, arm, arm64 | FreeBSD platforms |
+| osx | x64, arm64 | macOS platforms |
 
 **Note**: WebAssembly (wasm) architecture is detected but typically results in an "unknown" OS unless explicitly
 handled by the runtime environment.
@@ -155,17 +155,20 @@ Potential future extensions could include:
 
 The project includes comprehensive automated tests using MSTest:
 
-1. **Unit Tests** (`ProgramTests.cs`): Tests for core program logic including platform detection and configuration parsing
+1. **Unit Tests** (`ProgramTests.cs`): Tests for core program logic including platform detection and configuration
+   parsing
 2. **Integration Tests** (`IntegrationTests.cs`): End-to-end tests with actual execution scenarios
 3. **Test Infrastructure** (`Runner.cs`): Helper utilities for running the tool in test environments
-4. **CI/CD Testing**: Automated tests run on multiple platforms (Windows, Linux, macOS) to ensure cross-platform compatibility
+4. **CI/CD Testing**: Automated tests run on multiple platforms (Windows, Linux, macOS) to ensure cross-platform
+   compatibility
 
 ## Build and Release Process
 
 The project uses GitHub Actions for CI/CD:
 
 1. **Build Workflow**: Compiles the application for all target frameworks
-2. **Testing**: Runs automated tests on multiple platforms (Windows, Linux, macOS) to ensure cross-platform compatibility
+2. **Testing**: Runs automated tests on multiple platforms (Windows, Linux, macOS) to ensure cross-platform
+   compatibility
 3. **SBOM Generation**: Creates Software Bill of Materials for transparency
 4. **Artifact Publishing**: Publishes build artifacts for packaging
 5. **Release Workflow**: Creates releases with versioned artifacts
