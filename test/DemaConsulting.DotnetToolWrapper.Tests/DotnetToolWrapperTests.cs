@@ -10,9 +10,19 @@ namespace DemaConsulting.DotnetToolWrapper.Tests;
 public sealed class DotnetToolWrapperTests : IDisposable
 {
     /// <summary>
+    /// Environment variable used by the environment-variable expansion test
+    /// </summary>
+    private const string ShellDirectoryVariable = "DOTNETTOOLWRAPPER_TEST_SHELL_DIRECTORY";
+
+    /// <summary>
     /// Test setup directory
     /// </summary>
     private readonly string _testDirectory;
+
+    /// <summary>
+    /// Unique program folder beside the wrapper DLL, used by the relative-path test
+    /// </summary>
+    private readonly string _programDirectory;
 
     /// <summary>
     /// Initialize test
@@ -22,6 +32,11 @@ public sealed class DotnetToolWrapperTests : IDisposable
         // Create a unique test directory
         _testDirectory = Path.Combine(Path.GetTempPath(), $"DotnetToolWrapperTests_{Guid.NewGuid()}");
         Directory.CreateDirectory(_testDirectory);
+
+        // Name a unique program folder beside the wrapper DLL (created only by the tests that need it)
+        var dllDirectory = Path.GetDirectoryName(GetDotnetToolWrapperDllPath());
+        Assert.NotNull(dllDirectory);
+        _programDirectory = Path.Combine(dllDirectory, Path.GetFileName(_testDirectory));
     }
 
     /// <summary>
@@ -34,6 +49,15 @@ public sealed class DotnetToolWrapperTests : IDisposable
         {
             Directory.Delete(_testDirectory, true);
         }
+
+        // Clean up program folder beside the DLL
+        if (Directory.Exists(_programDirectory))
+        {
+            Directory.Delete(_programDirectory, true);
+        }
+
+        // Clean up environment variable
+        Environment.SetEnvironmentVariable(ShellDirectoryVariable, null);
 
         // Clean up config file next to DLL
         var dllPath = GetDotnetToolWrapperDllPath();
@@ -122,6 +146,41 @@ public sealed class DotnetToolWrapperTests : IDisposable
         return RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
             ? ["/c", $"echo {text}"]
             : ["-c", $"echo {text}"];
+    }
+
+    /// <summary>
+    /// Get shell arguments that print the working directory
+    /// </summary>
+    /// <returns>Shell arguments</returns>
+    private static string[] GetPrintWorkingDirectoryArgs()
+    {
+        return RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? ["/c", "cd"]
+            : ["-c", "pwd"];
+    }
+
+    /// <summary>
+    /// Create a script that prints the specified text
+    /// </summary>
+    /// <param name="directory">Directory to create the script in</param>
+    /// <param name="text">Text for the script to print</param>
+    /// <returns>Script file name</returns>
+    private static string CreateEchoScript(string directory, string text)
+    {
+        Directory.CreateDirectory(directory);
+
+        // Windows runs a batch file directly
+        if (OperatingSystem.IsWindows())
+        {
+            File.WriteAllText(Path.Combine(directory, "tool.cmd"), $"@echo {text}\r\n");
+            return "tool.cmd";
+        }
+
+        // Other platforms run an executable shell script
+        var scriptPath = Path.Combine(directory, "tool.sh");
+        File.WriteAllText(scriptPath, $"#!/bin/sh\necho {text}\n");
+        File.SetUnixFileMode(scriptPath, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
+        return "tool.sh";
     }
 
     /// <summary>
@@ -237,5 +296,70 @@ public sealed class DotnetToolWrapperTests : IDisposable
         // Assert: wrapper reports the bad configuration and exits with 1
         Assert.Equal(1, exitCode);
         Assert.Contains("Bad configuration", output);
+    }
+
+    /// <summary>
+    /// Test that a relative program path is resolved from the wrapper folder
+    /// </summary>
+    [Fact]
+    public void DotnetToolWrapper_ProgramPath_Relative_ResolvesFromWrapperFolder()
+    {
+        // Arrange: place a script in a sub-folder beside the wrapper and configure it by relative path
+        var dllPath = GetDotnetToolWrapperDllPath();
+        var marker = "RelativeProgramRan";
+        var scriptName = CreateEchoScript(_programDirectory, marker);
+        CreateConfigFile($"{Path.GetFileName(_programDirectory)}/{scriptName}");
+
+        // Act: run the wrapper from a different working directory
+        var exitCode = Runner.RunInDirectory(out var output, _testDirectory, "dotnet", dllPath);
+
+        // Assert: the script beside the wrapper ran
+        Assert.Equal(0, exitCode);
+        Assert.Contains(marker, output);
+    }
+
+    /// <summary>
+    /// Test that environment variables in the program path are expanded
+    /// </summary>
+    [Fact]
+    public void DotnetToolWrapper_ProgramPath_EnvironmentVariable_ExpandsVariable()
+    {
+        // Arrange: name the shell folder through an environment variable in the configured program path
+        var dllPath = GetDotnetToolWrapperDllPath();
+        var shellProgram = GetShellProgram();
+        var shellDirectory = Path.GetDirectoryName(shellProgram);
+        Assert.NotNull(shellDirectory);
+        Environment.SetEnvironmentVariable(ShellDirectoryVariable, shellDirectory);
+        CreateConfigFile($"%{ShellDirectoryVariable}%/{Path.GetFileName(shellProgram)}");
+        var testText = "HelloEnvironment";
+        var args = new List<string> { dllPath };
+        args.AddRange(GetEchoArgs(testText));
+
+        // Act: run the wrapper with the shell echo arguments
+        var exitCode = Runner.Run(out var output, "dotnet", args.ToArray());
+
+        // Assert: the expanded program path found the shell, which printed the text
+        Assert.Equal(0, exitCode);
+        Assert.Contains(testText, output);
+    }
+
+    /// <summary>
+    /// Test that the program runs in the working directory of the caller
+    /// </summary>
+    [Fact]
+    public void DotnetToolWrapper_WorkingDirectory_Caller_RunsProgramInCallerDirectory()
+    {
+        // Arrange: configure the wrapper to run the shell, which prints its working directory
+        var dllPath = GetDotnetToolWrapperDllPath();
+        CreateConfigFile(GetShellProgram());
+        var args = new List<string> { dllPath };
+        args.AddRange(GetPrintWorkingDirectoryArgs());
+
+        // Act: run the wrapper from the unique test directory
+        var exitCode = Runner.RunInDirectory(out var output, _testDirectory, "dotnet", args.ToArray());
+
+        // Assert: the program printed the caller's working directory (compared by its unique folder name)
+        Assert.Equal(0, exitCode);
+        Assert.Contains(Path.GetFileName(_testDirectory), output);
     }
 }

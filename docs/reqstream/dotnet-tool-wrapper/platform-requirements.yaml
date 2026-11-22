@@ -1,0 +1,102 @@
+---
+# DotnetToolWrapper platform requirements
+#
+# These system-level requirements state the operating systems, processor architectures, and
+# .NET runtimes on which the wrapper must run. Each test link carries a source filter that
+# limits the evidence to test-result files whose name contains the filter text:
+#
+#   windows@, linux@, macos@        - the operating system tag that build.ps1 puts first in the
+#                                     test-result file name
+#   x64@, arm64@                    - the processor architecture that the test platform puts last
+#                                     in the file name
+#   net8.0@, net9.0@, net10.0@, ... - the target framework that the test platform puts in the
+#                                     file name
+#
+# Removing a source filter lets results from any platform count as evidence, which would
+# invalidate the platform claim.
+sections:
+  - title: DotnetToolWrapper Requirements
+    sections:
+      - title: Platform Support
+        requirements:
+          - id: DotnetToolWrapper-Platform-Windows
+            title: The DotnetToolWrapper shall run the configured program on Windows.
+            justification: |
+              Windows is a major development platform for the users of wrapped tools.
+            tags: [system]
+            tests:
+              - windows@DotnetToolWrapper_Arguments_Provided_PassesArgumentsToProgram
+              - windows@DotnetToolWrapper_ExitCode_ProgramExits_ReturnsProgramExitCode
+
+          - id: DotnetToolWrapper-Platform-Linux
+            title: The DotnetToolWrapper shall run the configured program on Linux.
+            justification: |
+              Linux is the main platform for CI/CD pipelines and containers that run wrapped tools.
+            tags: [system]
+            tests:
+              - linux@DotnetToolWrapper_Arguments_Provided_PassesArgumentsToProgram
+              - linux@DotnetToolWrapper_ExitCode_ProgramExits_ReturnsProgramExitCode
+
+          - id: DotnetToolWrapper-Platform-MacOS
+            title: The DotnetToolWrapper shall run the configured program on macOS.
+            justification: |
+              Developers on Apple computers need to run wrapped tools.
+            tags: [system]
+            tests:
+              - macos@DotnetToolWrapper_Arguments_Provided_PassesArgumentsToProgram
+              - macos@DotnetToolWrapper_ExitCode_ProgramExits_ReturnsProgramExitCode
+
+          - id: DotnetToolWrapper-Platform-X64
+            title: The DotnetToolWrapper shall run the configured program on x64 processors.
+            justification: |
+              Most desktop computers, servers, and hosted CI runners use x64 processors.
+            tags: [system]
+            tests:
+              - x64@DotnetToolWrapper_Arguments_Provided_PassesArgumentsToProgram
+              - x64@DotnetToolWrapper_ExitCode_ProgramExits_ReturnsProgramExitCode
+
+          - id: DotnetToolWrapper-Platform-Arm64
+            title: The DotnetToolWrapper shall run the configured program on arm64 processors.
+            justification: |
+              Apple silicon computers, Windows on Arm devices, and Arm cloud servers use arm64
+              processors.
+            tags: [system]
+            tests:
+              - arm64@DotnetToolWrapper_Arguments_Provided_PassesArgumentsToProgram
+              - arm64@DotnetToolWrapper_ExitCode_ProgramExits_ReturnsProgramExitCode
+
+          - id: DotnetToolWrapper-Platform-DotNet8
+            title: The DotnetToolWrapper shall run on the .NET 8 runtime.
+            justification: |
+              Users with only the .NET 8 runtime installed must be able to run wrapped tools.
+            tags: [system]
+            tests:
+              - net8.0@DotnetToolWrapper_Arguments_Provided_PassesArgumentsToProgram
+              - net8.0@DotnetToolWrapper_ExitCode_ProgramExits_ReturnsProgramExitCode
+
+          - id: DotnetToolWrapper-Platform-DotNet9
+            title: The DotnetToolWrapper shall run on the .NET 9 runtime.
+            justification: |
+              Users with only the .NET 9 runtime installed must be able to run wrapped tools.
+            tags: [system]
+            tests:
+              - net9.0@DotnetToolWrapper_Arguments_Provided_PassesArgumentsToProgram
+              - net9.0@DotnetToolWrapper_ExitCode_ProgramExits_ReturnsProgramExitCode
+
+          - id: DotnetToolWrapper-Platform-DotNet10
+            title: The DotnetToolWrapper shall run on the .NET 10 runtime.
+            justification: |
+              Users with only the .NET 10 runtime installed must be able to run wrapped tools.
+            tags: [system]
+            tests:
+              - net10.0@DotnetToolWrapper_Arguments_Provided_PassesArgumentsToProgram
+              - net10.0@DotnetToolWrapper_ExitCode_ProgramExits_ReturnsProgramExitCode
+
+          - id: DotnetToolWrapper-Platform-DotNet11
+            title: The DotnetToolWrapper shall run on the .NET 11 runtime.
+            justification: |
+              Users with only the .NET 11 runtime installed must be able to run wrapped tools.
+            tags: [system]
+            tests:
+              - net11.0@DotnetToolWrapper_Arguments_Provided_PassesArgumentsToProgram
+              - net11.0@DotnetToolWrapper_ExitCode_ProgramExits_ReturnsProgramExitCode

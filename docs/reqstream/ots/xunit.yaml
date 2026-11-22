@@ -1,0 +1,35 @@
+---
+# xUnit OTS requirements
+#
+# xUnit v3 (xunit.v3 with xunit.runner.visualstudio on Microsoft.Testing.Platform, which writes
+# TRX files through Microsoft.Testing.Extensions.TrxReport) runs the automated tests of the
+# wrapper. The passing results of the listed tests in the TRX files are the evidence.
+sections:
+  - title: OTS Software Requirements
+    sections:
+      - title: xUnit Requirements
+        requirements:
+          - id: DotnetToolWrapper-OTS-XUnit-Execute
+            title: xUnit shall discover and execute the fact and theory tests of the test project.
+            justification: |
+              build.ps1 relies on xUnit to find and run every test on each target framework. The
+              listed tests cover facts and data-driven theories in both test classes, so their
+              passing results show that discovery and execution work.
+            tags: [ots]
+            tests:
+              - Program_GetOs_WindowsPlatform_ReturnsWin
+              - Program_GetArchitecture_UnsupportedArchitecture_ReturnsUnknown
+              - DotnetToolWrapper_Configuration_FileMissing_ReportsErrorAndExitsWithOne
+              - DotnetToolWrapper_ExitCode_ProgramExits_ReturnsProgramExitCode
+
+          - id: DotnetToolWrapper-OTS-XUnit-Report
+            title: xUnit shall record the outcome of each executed test in a TRX test-result file.
+            justification: |
+              Requirements traceability reads the TRX files that the test run writes. The listed
+              tests appear in those files with their outcomes, which shows that reporting works.
+            tags: [ots]
+            tests:
+              - Program_GetOs_WindowsPlatform_ReturnsWin
+              - Program_GetArchitecture_UnsupportedArchitecture_ReturnsUnknown
+              - DotnetToolWrapper_Configuration_FileMissing_ReportsErrorAndExitsWithOne
+              - DotnetToolWrapper_ExitCode_ProgramExits_ReturnsProgramExitCode

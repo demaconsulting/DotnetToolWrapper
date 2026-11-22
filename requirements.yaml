@@ -1,0 +1,19 @@
+---
+# Root requirements file - declares the root tags and includes every requirements file.
+#
+# Requirements tagged with a root tag are the roots; ReqStream reports any requirement
+# not reachable from one through children links as orphaned (--enforce fails the build).
+root-tags:
+  - system
+  - quality
+
+includes:
+  - docs/reqstream/quality.yaml
+  - docs/reqstream/dotnet-tool-wrapper.yaml
+  - docs/reqstream/dotnet-tool-wrapper/platform-requirements.yaml
+  - docs/reqstream/dotnet-tool-wrapper/program.yaml
+  - docs/reqstream/ots/xunit.yaml
+  - docs/reqstream/ots/reqstream.yaml
+  - docs/reqstream/ots/textlint.yaml
+  - docs/reqstream/ots/lintmark.yaml
+  - docs/reqstream/ots/spdx-tool.yaml

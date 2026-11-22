@@ -1,0 +1,32 @@
+---
+# TextLint OTS requirements
+#
+# DemaConsulting.TextLint.Tool spell-checks the repository text in lint.ps1. Its
+# self-validation results are the evidence.
+sections:
+  - title: OTS Software Requirements
+    sections:
+      - title: TextLint Requirements
+        requirements:
+          - id: DotnetToolWrapper-OTS-TextLint
+            title: TextLint shall report misspelled words in the files and with the settings configured in .textlint.yaml.
+            justification: |
+              lint.ps1 runs TextLint, which fails the quality checks on any finding. The
+              self-validation checks that the tool starts, that a clean file passes, that a
+              misspelling is reported, and that the settings file, overrides, technical terms,
+              language, and inline directives are honored.
+            tags: [ots]
+            tests:
+              - TextLintTool_VersionDisplay
+              - TextLintTool_HelpDisplay
+              - TextLintTool_CheckCleanFile
+              - TextLintTool_CheckMisspelling
+              - TextLintTool_CheckSettingsFile
+              - TextLintTool_CheckSettingsError
+              - TextLintTool_CheckGlobsReplaceFiles
+              - TextLintTool_CheckOverrides
+              - TextLintTool_CheckTechnicalTerms
+              - TextLintTool_CheckLanguageOption
+              - TextLintTool_CheckInlineDirective
+              - TextLintTool_CheckBinaryFileSkipped
+              - TextLintTool_CheckCspellTokenization

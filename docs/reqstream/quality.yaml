@@ -1,0 +1,52 @@
+---
+# Repository quality requirements
+#
+# Each requirement states a repository or process outcome the project needs. The tools that
+# achieve the outcome appear only as children links to their OTS requirements, so the outcome
+# survives a tool change. These requirements have no tests of their own: the tests of their
+# children are the evidence.
+sections:
+  - title: Repository Quality Requirements
+    requirements:
+      - id: DotnetToolWrapper-Quality-AutomatedTesting
+        title: Every build shall run the automated tests and record their results.
+        justification: |
+          The wrapper is shipped to downstream tool packages that rely on it on every supported
+          platform, so each change must be proven by automated tests whose recorded results
+          serve as verification evidence.
+        tags: [quality]
+        children:
+          - DotnetToolWrapper-OTS-XUnit-Execute
+          - DotnetToolWrapper-OTS-XUnit-Report
+
+      - id: DotnetToolWrapper-Quality-RequirementsTraceability
+        title: Every build shall prove that each requirement is traced to passing test evidence.
+        justification: |
+          Continuous Compliance requires that every requirement is covered by passing tests
+          before a release, and that requirement files stay free of structural problems such as
+          orphaned requirements.
+        tags: [quality]
+        children:
+          - DotnetToolWrapper-OTS-ReqStream-Enforce
+          - DotnetToolWrapper-OTS-ReqStream-Lint
+
+      - id: DotnetToolWrapper-Quality-TextConsistency
+        title: Every build shall check the repository text for spelling errors and Markdown formatting rule violations.
+        justification: |
+          Documentation, requirements, and source comments are review and compliance evidence,
+          so spelling errors and inconsistent Markdown formatting must be caught before merge.
+        tags: [quality]
+        children:
+          - DotnetToolWrapper-OTS-TextLint
+          - DotnetToolWrapper-OTS-LintMark-Check
+          - DotnetToolWrapper-OTS-LintMark-Fix
+
+      - id: DotnetToolWrapper-Quality-SoftwareBillOfMaterials
+        title: Every build shall produce a validated software bill of materials for the wrapper.
+        justification: |
+          Consumers of DotnetToolWrapper.zip need to know which components and build tools went
+          into the wrapper, so each build publishes a software bill of materials that is checked
+          against the NTIA minimum elements.
+        tags: [quality]
+        children:
+          - DotnetToolWrapper-OTS-SpdxTool

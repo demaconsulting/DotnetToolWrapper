@@ -1,0 +1,120 @@
+---
+# DotnetToolWrapper system-level requirements
+#
+# These requirements describe the externally visible behavior of the wrapper as seen by a
+# .NET tool package that ships it. They are verified by the system tests, which run the built
+# wrapper with 'dotnet' against a DotnetToolWrapper.json configuration file.
+sections:
+  - title: DotnetToolWrapper Requirements
+    requirements:
+      - id: DotnetToolWrapper-System-RunProgram
+        title: >-
+          The DotnetToolWrapper shall run the program configured in the DotnetToolWrapper.json file beside the
+          wrapper for the target named after the host operating system and architecture.
+        justification: |
+          A .NET tool package carries one native executable per platform. The wrapper is the tool
+          entry point, so it must start the executable that the package configured for the
+          platform it runs on.
+        tags: [system]
+        children:
+          - DotnetToolWrapper-Program-TargetName
+          - DotnetToolWrapper-Program-OsWindows
+          - DotnetToolWrapper-Program-OsLinux
+          - DotnetToolWrapper-Program-OsFreeBsd
+          - DotnetToolWrapper-Program-OsMacOs
+          - DotnetToolWrapper-Program-ArchX86
+          - DotnetToolWrapper-Program-ArchX64
+          - DotnetToolWrapper-Program-ArchArm
+          - DotnetToolWrapper-Program-ArchArm64
+          - DotnetToolWrapper-Program-ArchWasm
+          - DotnetToolWrapper-Program-ArchS390x
+        tests:
+          - DotnetToolWrapper_Arguments_Provided_PassesArgumentsToProgram
+          - DotnetToolWrapper_ExitCode_ProgramExits_ReturnsProgramExitCode
+
+      - id: DotnetToolWrapper-System-PassArguments
+        title: The DotnetToolWrapper shall pass its command-line arguments to the configured program.
+        justification: |
+          Users run the wrapped tool exactly as they would run the native executable, so every
+          argument given to the tool command must reach the native executable.
+        tags: [system]
+        tests:
+          - DotnetToolWrapper_Arguments_Provided_PassesArgumentsToProgram
+
+      - id: DotnetToolWrapper-System-ExitCode
+        title: The DotnetToolWrapper shall exit with the exit code of the configured program.
+        justification: |
+          Build scripts and automation detect success or failure of the wrapped tool from its
+          exit code, so the wrapper must return the exit code of the native executable.
+        tags: [system]
+        tests:
+          - DotnetToolWrapper_ExitCode_ProgramExits_ReturnsProgramExitCode
+
+      - id: DotnetToolWrapper-System-RelativeProgramPath
+        title: >-
+          The DotnetToolWrapper shall resolve a relative program path against the folder that contains the
+          DotnetToolWrapper.json file.
+        justification: |
+          Tool packages place the native executables beside the wrapper inside the installed
+          package and refer to them with paths relative to the configuration file, because the
+          install location is not known when the package is built.
+        tags: [system]
+        tests:
+          - DotnetToolWrapper_ProgramPath_Relative_ResolvesFromWrapperFolder
+
+      - id: DotnetToolWrapper-System-EnvironmentVariables
+        title: >-
+          The DotnetToolWrapper shall expand environment variable references written as %NAME% in the configured
+          program path.
+        justification: |
+          Some tools install their native executable in a user-specific location, such as the
+          user's local application data folder, which the configuration can only name through an
+          environment variable.
+        tags: [system]
+        tests:
+          - DotnetToolWrapper_ProgramPath_EnvironmentVariable_ExpandsVariable
+
+      - id: DotnetToolWrapper-System-WorkingDirectory
+        title: The DotnetToolWrapper shall run the configured program in the working directory of the caller.
+        justification: |
+          Wrapped tools usually operate on files named relative to the folder the user runs them
+          from, so the native executable must start in that folder.
+        tags: [system]
+        tests:
+          - DotnetToolWrapper_WorkingDirectory_Caller_RunsProgramInCallerDirectory
+
+      - id: DotnetToolWrapper-System-MissingConfiguration
+        title: >-
+          The DotnetToolWrapper shall report the missing file and exit with code 1 when the DotnetToolWrapper.json
+          file is missing.
+        justification: |
+          A tool package built without its configuration file must fail with a message that
+          names the missing file, so that the package author can find and fix the problem.
+        tags: [system]
+        tests:
+          - DotnetToolWrapper_Configuration_FileMissing_ReportsErrorAndExitsWithOne
+
+      - id: DotnetToolWrapper-System-UnsupportedTarget
+        title: >-
+          The DotnetToolWrapper shall report that the host target is not supported and exit with code 1 when the
+          configuration has no entry for the host target.
+        justification: |
+          A user who installs the tool on a platform that the package does not support must be
+          told which target is missing instead of seeing an unrelated failure.
+        tags: [system]
+        children:
+          - DotnetToolWrapper-Program-OsUnknown
+          - DotnetToolWrapper-Program-ArchUnknown
+        tests:
+          - DotnetToolWrapper_Target_NotInConfiguration_ReportsErrorAndExitsWithOne
+
+      - id: DotnetToolWrapper-System-InvalidTargetConfiguration
+        title: >-
+          The DotnetToolWrapper shall report a bad configuration and exit with code 1 when the entry for the host
+          target does not name a program.
+        justification: |
+          A malformed configuration entry is a packaging error that must be reported clearly
+          rather than causing an unhandled failure.
+        tags: [system]
+        tests:
+          - DotnetToolWrapper_Configuration_ProgramMissing_ReportsErrorAndExitsWithOne

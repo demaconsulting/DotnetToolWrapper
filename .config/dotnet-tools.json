@@ -14,6 +14,13 @@
         "spdx-tool"
       ]
     },
+    "demaconsulting.reqstream": {
+      "version": "1.12.0",
+      "commands": [
+        "reqstream"
+      ],
+      "rollForward": false
+    },
     "demaconsulting.textlint.tool": {
       "version": "0.1.0-beta.5",
       "commands": [

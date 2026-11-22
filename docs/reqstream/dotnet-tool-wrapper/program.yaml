@@ -1,0 +1,111 @@
+---
+# Program unit requirements
+#
+# Program is the single software unit of the DotnetToolWrapper system. These requirements
+# decompose the system requirements into the naming of the host target, which selects the
+# entry of the DotnetToolWrapper.json configuration file. The unit tests simulate every host
+# operating system and architecture, so they are the evidence for platforms that have no CI
+# runner (FreeBSD, x86, arm, wasm, and s390x).
+sections:
+  - title: DotnetToolWrapper Requirements
+    sections:
+      - title: Program Requirements
+        requirements:
+          - id: DotnetToolWrapper-Program-TargetName
+            title: >-
+              Program shall name the host target as the operating system name and the architecture name joined by a
+              hyphen.
+            justification: |
+              Tool packages key the DotnetToolWrapper.json entries by targets such as win-x64 and
+              linux-arm64, so the host target name must follow the same {os}-{architecture} form.
+            tests:
+              - Program_GetTarget_WindowsX64_ReturnsWinX64
+              - Program_GetTarget_LinuxArm64_ReturnsLinuxArm64
+              - Program_GetTarget_UnknownPlatformAndArchitecture_ReturnsUnknownUnknown
+              - Program_GetTarget_CurrentHost_ReturnsOsAndArchitectureTarget
+
+          - id: DotnetToolWrapper-Program-OsWindows
+            title: Program shall name the Windows operating system win.
+            justification: |
+              Tool packages configure Windows executables under targets that start with win.
+            tests:
+              - Program_GetOs_WindowsPlatform_ReturnsWin
+
+          - id: DotnetToolWrapper-Program-OsLinux
+            title: Program shall name the Linux operating system linux.
+            justification: |
+              Tool packages configure Linux executables under targets that start with linux.
+            tests:
+              - Program_GetOs_LinuxPlatform_ReturnsLinux
+
+          - id: DotnetToolWrapper-Program-OsFreeBsd
+            title: Program shall name the FreeBSD operating system freebsd.
+            justification: |
+              Tool packages configure FreeBSD executables under targets that start with freebsd.
+            tests:
+              - Program_GetOs_FreeBsdPlatform_ReturnsFreeBsd
+
+          - id: DotnetToolWrapper-Program-OsMacOs
+            title: Program shall name the macOS operating system osx.
+            justification: |
+              Tool packages configure macOS executables under targets that start with osx.
+            tests:
+              - Program_GetOs_OsxPlatform_ReturnsOsx
+
+          - id: DotnetToolWrapper-Program-OsUnknown
+            title: Program shall name any other operating system unknown.
+            justification: |
+              An unsupported host must still produce a target name, so that the wrapper can report
+              that the target is not supported.
+            tests:
+              - Program_GetOs_UnknownPlatform_ReturnsUnknown
+
+          - id: DotnetToolWrapper-Program-ArchX86
+            title: Program shall name the 32-bit x86 architecture x86.
+            justification: |
+              Tool packages configure 32-bit Intel and AMD executables under targets that end with x86.
+            tests:
+              - Program_GetArchitecture_X86_ReturnsX86
+
+          - id: DotnetToolWrapper-Program-ArchX64
+            title: Program shall name the x64 architecture x64.
+            justification: |
+              Tool packages configure 64-bit Intel and AMD executables under targets that end with x64.
+            tests:
+              - Program_GetArchitecture_X64_ReturnsX64
+
+          - id: DotnetToolWrapper-Program-ArchArm
+            title: Program shall name the 32-bit Arm architecture arm.
+            justification: |
+              Tool packages configure 32-bit Arm executables under targets that end with arm.
+            tests:
+              - Program_GetArchitecture_Arm_ReturnsArm
+
+          - id: DotnetToolWrapper-Program-ArchArm64
+            title: Program shall name the 64-bit Arm architecture arm64.
+            justification: |
+              Tool packages configure 64-bit Arm executables under targets that end with arm64.
+            tests:
+              - Program_GetArchitecture_Arm64_ReturnsArm64
+
+          - id: DotnetToolWrapper-Program-ArchWasm
+            title: Program shall name the WebAssembly architecture wasm.
+            justification: |
+              Tool packages configure WebAssembly executables under targets that end with wasm.
+            tests:
+              - Program_GetArchitecture_Wasm_ReturnsWasm
+
+          - id: DotnetToolWrapper-Program-ArchS390x
+            title: Program shall name the IBM s390x architecture s390x.
+            justification: |
+              Tool packages configure IBM Z executables under targets that end with s390x.
+            tests:
+              - Program_GetArchitecture_S390x_ReturnsS390x
+
+          - id: DotnetToolWrapper-Program-ArchUnknown
+            title: Program shall name any other architecture unknown.
+            justification: |
+              An unsupported processor must still produce a target name, so that the wrapper can
+              report that the target is not supported.
+            tests:
+              - Program_GetArchitecture_UnsupportedArchitecture_ReturnsUnknown
