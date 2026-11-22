@@ -22,6 +22,7 @@ Local items:
 
 OTS items:
 
+- **BuildMark**: verification evidence.
 - **CanvasNet**: verification evidence.
 - **FileAssert**: verification evidence.
 - **LintMark**: verification evidence.
@@ -31,6 +32,7 @@ OTS items:
 - **SpdxTool**: verification evidence.
 - **SysML2Tools**: verification evidence.
 - **TextLint**: verification evidence.
+- **VersionMark**: verification evidence.
 - **WeasyPrint**: verification evidence.
 - **xUnit**: verification evidence.
 

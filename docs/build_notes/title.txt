@@ -1,0 +1,12 @@
+---
+title: "DotnetToolWrapper Build Notes"
+subtitle: "Run native applications as .NET Tools"
+author: "DEMA Consulting"
+description: "Build Notes for DotnetToolWrapper"
+lang: en-US
+keywords:
+  - Build Notes
+  - Release Notes
+  - DotnetToolWrapper
+  - .NET Tool
+---

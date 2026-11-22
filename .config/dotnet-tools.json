@@ -21,6 +21,20 @@
       ],
       "rollForward": false
     },
+    "demaconsulting.buildmark": {
+      "version": "1.3.0",
+      "commands": [
+        "buildmark"
+      ],
+      "rollForward": false
+    },
+    "demaconsulting.versionmark": {
+      "version": "1.4.3",
+      "commands": [
+        "versionmark"
+      ],
+      "rollForward": false
+    },
     "demaconsulting.reviewmark": {
       "version": "1.4.0",
       "commands": [

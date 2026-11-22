@@ -7,6 +7,16 @@ package OtsDependencies {
      * is part of the shipped wrapper, so the system does not reference them as parts.
      */
 
+    part def BuildMark {
+        doc /* OTS: BuildMark - generates the build notes from the Git history and the GitHub issues and pull requests. */
+
+        metadata info : SoftwareInfo {
+            designFiles = ("docs/design/ots/buildmark.md");
+            verificationFiles = ("docs/verification/ots/buildmark.md");
+            requirementFiles = ("docs/reqstream/ots/buildmark.yaml");
+        }
+    }
+
     part def CanvasNet {
         doc /* OTS: CanvasNet - draws the diagrams referenced by the Pandoc documents and the README picture. */
 
@@ -94,6 +104,16 @@ package OtsDependencies {
             designFiles = ("docs/design/ots/textlint.md");
             verificationFiles = ("docs/verification/ots/textlint.md");
             requirementFiles = ("docs/reqstream/ots/textlint.yaml");
+        }
+    }
+
+    part def VersionMark {
+        doc /* OTS: VersionMark - captures the versions of the build tools in each CI job and publishes them. */
+
+        metadata info : SoftwareInfo {
+            designFiles = ("docs/design/ots/versionmark.md");
+            verificationFiles = ("docs/verification/ots/versionmark.md");
+            requirementFiles = ("docs/reqstream/ots/versionmark.yaml");
         }
     }
 

@@ -15,6 +15,8 @@ includes:
   - docs/reqstream/ots/xunit.yaml
   - docs/reqstream/ots/reqstream.yaml
   - docs/reqstream/ots/reviewmark.yaml
+  - docs/reqstream/ots/buildmark.yaml
+  - docs/reqstream/ots/versionmark.yaml
   - docs/reqstream/ots/textlint.yaml
   - docs/reqstream/ots/lintmark.yaml
   - docs/reqstream/ots/spdx-tool.yaml

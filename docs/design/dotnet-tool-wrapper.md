@@ -97,6 +97,8 @@ The OTS items below build, check, test, and document the wrapper; none of them s
 - **xUnit**: runs the unit and system tests - see *xUnit* in *OTS Software Integration Design*.
 - **ReqStream**: checks the requirements and traces them to the tests - see *ReqStream*.
 - **ReviewMark**: checks the review configuration and generates the review plan and report - see *ReviewMark*.
+- **BuildMark** and **VersionMark**: generate the build notes and record the tool versions - see *BuildMark* and
+  *VersionMark*.
 - **TextLint** and **LintMark**: check the spelling and the Markdown formatting - see *TextLint* and *LintMark*.
 - **SysML2Tools**: lints the architecture model and renders its diagrams - see *SysML2Tools*.
 - **SpdxTool**: enhances and validates the software bill of materials - see *SpdxTool*.

@@ -43,6 +43,18 @@ jobs:
         with:
           python-version: '3.14'
 
+      # === CAPTURE TOOL VERSIONS ===
+      # VersionMark records the versions of the tools this job uses; the build-docs job publishes
+      # them in the Build Notes.
+
+      - name: Capture tool versions
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          dotnet versionmark --capture --job-id "quality" \
+            --output "artifacts/versionmark-quality.json" -- \
+            dotnet git versionmark textlint lintmark reqstream reviewmark sysml2tools
+
       # === CAPTURE OTS SELF-VALIDATION RESULTS ===
       # This section captures the self-validation results of the lint tools as OTS evidence
       # for the build-docs job. The tools do not create the results folder themselves.
@@ -104,6 +116,18 @@ jobs:
             10.x
             11.x
 
+      - name: Restore Tools
+        run: >
+          dotnet tool restore
+
+      - name: Capture tool versions
+        shell: bash
+        run: |
+          mkdir -p artifacts/tests
+          dotnet versionmark --capture --job-id "test-${{ matrix.os }}" \
+            --output "artifacts/tests/versionmark-test-${{ matrix.os }}.json" -- \
+            dotnet git versionmark
+
       - name: Build and Test
         shell: pwsh
         run: ./build.ps1
@@ -145,6 +169,13 @@ jobs:
       - name: Create artifacts directory
         shell: bash
         run: mkdir -p artifacts
+
+      - name: Capture tool versions
+        shell: bash
+        run: |
+          dotnet versionmark --capture --job-id "build" \
+            --output "artifacts/versionmark-build.json" -- \
+            dotnet git versionmark sbom-tool spdx-tool
 
       - name: Run SpdxTool self-validation
         run: >
@@ -214,16 +245,17 @@ jobs:
           name: artifacts-build-validation
           path: artifacts/
 
-  # Builds the release documents (Review Plan, Review Report, Software Design Document, Software
-  # Verification Design Document, User Guide, Requirements Document, and Trace Matrix) as PDFs. It
-  # runs on Windows because the WeasyPrint tool package ships only a win-x64 build. ReviewMark
+  # Builds the release documents (Build Notes, Code Quality Report, Review Plan, Review Report,
+  # Software Design Document, Software Verification Design Document, User Guide, Requirements
+  # Document, and Trace Matrix) as PDFs. It runs on Windows because the WeasyPrint tool package
+  # ships only a win-x64 build. BuildMark and VersionMark generate the build notes, ReviewMark
   # generates the review documents, and SysML2Tools renders the design diagrams from the
-  # architecture model. Each document section converts Markdown to HTML with Pandoc,
-  # renders the PDF with WeasyPrint, and checks both with FileAssert; the FileAssert results and
-  # the tool self-validations are OTS evidence. ReqStream traces every requirement to the TRX
-  # evidence that all jobs uploaded as 'artifacts-*' and fails the build with --enforce when a
-  # requirement is not satisfied. The PDFs are uploaded as the 'documents' artifact that the
-  # release workflow attaches to the GitHub release.
+  # architecture model. Each document section converts Markdown to HTML with Pandoc, renders the
+  # PDF with WeasyPrint, and checks both with FileAssert; the FileAssert results and the tool
+  # self-validations are OTS evidence. ReqStream traces every requirement to the TRX evidence that
+  # all jobs uploaded as 'artifacts-*' and fails the build with --enforce when a requirement is not
+  # satisfied. The PDFs and the build notes Markdown are uploaded as the 'documents' artifact that
+  # the release workflow attaches to the GitHub release.
   build-docs:
     name: Build Documents
     needs: [quality-checks, test, build]
@@ -259,6 +291,15 @@ jobs:
         run: >
           dotnet tool restore
 
+      - name: Capture tool versions
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          dotnet versionmark --capture --job-id "build-docs" \
+            --output "artifacts/versionmark-build-docs.json" -- \
+            dotnet git versionmark buildmark reviewmark sysml2tools pandoc canvasnet weasyprint \
+            fileassert reqstream
+
       # === PREPARE DOCUMENT OUTPUT ===
       # Creates the shared docs/generated/ folder that all document sections write PDFs into.
 
@@ -266,9 +307,103 @@ jobs:
         shell: bash
         run: mkdir -p docs/generated
 
-      # Later stages add their document sections here (Build Notes and Code Quality before the
-      # Code Review section), before the FileAssert self-validation, so their FileAssert results
-      # are OTS evidence for ReqStream.
+      # === COMPILE BUILD NOTES ===
+      # BuildMark generates the build report from the Git history and the GitHub issues and pull
+      # requests, and VersionMark publishes the tool versions captured by all jobs; their
+      # self-validations run here, next to the document that depends on them. Pandoc converts the
+      # notes to HTML, WeasyPrint renders the PDF, and FileAssert checks both. The build report
+      # Markdown is copied to docs/generated/ as the release notes of the GitHub release.
+
+      - name: Create build notes output directory
+        shell: bash
+        run: mkdir -p docs/build_notes/generated
+
+      - name: Run BuildMark self-validation
+        run: >
+          dotnet buildmark
+          --validate
+          --results artifacts/buildmark-self-validation.trx
+
+      - name: Run VersionMark self-validation
+        run: >
+          dotnet versionmark
+          --validate
+          --results artifacts/versionmark-self-validation.trx
+
+      - name: Generate Build Notes with BuildMark
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >
+          dotnet buildmark
+          --build-version ${{ inputs.semver }}
+          --report docs/build_notes/generated/build_notes.md
+          --report-depth 1
+
+      - name: Publish Tool Versions with VersionMark
+        shell: bash
+        run: >
+          dotnet versionmark
+          --publish
+          --report docs/build_notes/generated/versions.md
+          --report-depth 1
+          -- "artifacts/**/versionmark-*.json"
+
+      - name: Generate Build Notes HTML with Pandoc
+        shell: bash
+        run: >
+          dotnet pandoc
+          --defaults docs/build_notes/definition.yaml
+          --metadata version="${{ inputs.semver }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/build_notes/generated/build_notes.html
+
+      - name: Generate Build Notes PDF with WeasyPrint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/build_notes/generated/build_notes.html
+          "docs/generated/DotnetToolWrapper Build Notes.pdf"
+
+      - name: Assert Build Notes Documents with FileAssert
+        run: >
+          dotnet fileassert
+          --results artifacts/fileassert-build-notes.trx
+          build-notes
+
+      - name: Copy Build Notes report to docs/generated
+        shell: bash
+        run: cp docs/build_notes/generated/build_notes.md docs/generated/build_notes.md
+
+      # === COMPILE CODE QUALITY REPORT ===
+      # The Code Quality Report describes the compiler, analyzer, lint, and CodeQL controls. CodeQL
+      # runs through the GitHub default setup, so this workflow runs no CodeQL analysis of its own.
+      # Pandoc converts the report to HTML, WeasyPrint renders the PDF, and FileAssert checks both.
+
+      - name: Create code quality output directory
+        shell: bash
+        run: mkdir -p docs/code_quality/generated
+
+      - name: Generate Code Quality HTML with Pandoc
+        shell: bash
+        run: >
+          dotnet pandoc
+          --defaults docs/code_quality/definition.yaml
+          --metadata version="${{ inputs.semver }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/code_quality/generated/quality.html
+
+      - name: Generate Code Quality PDF with WeasyPrint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/code_quality/generated/quality.html
+          "docs/generated/DotnetToolWrapper Code Quality Report.pdf"
+
+      - name: Assert Code Quality Documents with FileAssert
+        run: >
+          dotnet fileassert
+          --results artifacts/fileassert-code-quality.trx
+          code-quality
 
       # === COMPILE CODE REVIEW DOCUMENTS ===
       # ReviewMark generates the Review Plan and the Review Report from .reviewmark.yaml and the
@@ -521,11 +656,13 @@ jobs:
           requirements
 
       # === UPLOAD ARTIFACTS ===
-      # Only the PDFs are uploaded, so the docs/generated/canvasnet/ diagram cache stays out of
-      # the artifact and the release.
+      # Only the PDFs and the build notes Markdown (the release notes) are uploaded, so the
+      # docs/generated/canvasnet/ diagram cache stays out of the artifact and the release.
 
       - name: Upload documents
         uses: actions/upload-artifact@v7
         with:
           name: documents
-          path: docs/generated/*.pdf
+          path: |-
+            docs/generated/*.pdf
+            docs/generated/build_notes.md

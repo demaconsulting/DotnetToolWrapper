@@ -10,6 +10,9 @@ results are the evidence for the Pandoc requirement.
 
 ### Test Scenarios
 
+- **Pandoc_BuildNotesHtml**: the Build Notes HTML has a title and contains the version information and the tool
+  versions.
+- **Pandoc_CodeQualityHtml**: the Code Quality Report HTML has a title and contains `CodeQL`.
 - **Pandoc_DesignHtml**: the Software Design Document HTML has a title, embeds the three SysML2 diagrams, and
   contains `Software Design Document`.
 - **Pandoc_ReviewPlanHtml** and **Pandoc_ReviewReportHtml**: the Review Plan and Review Report HTML have a title

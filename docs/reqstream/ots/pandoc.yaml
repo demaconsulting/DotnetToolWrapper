@@ -22,3 +22,5 @@ sections:
               - Pandoc_VerificationHtml
               - Pandoc_ReviewPlanHtml
               - Pandoc_ReviewReportHtml
+              - Pandoc_BuildNotesHtml
+              - Pandoc_CodeQualityHtml

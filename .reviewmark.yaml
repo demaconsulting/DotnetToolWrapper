@@ -111,6 +111,12 @@ reviews:
       - test/**/ProgramTests.cs
 
   # OTS reviews (one per OTS item)
+  - id: OTS-BuildMark
+    title: Review that BuildMark Provides Required Functionality
+    paths:
+      - docs/reqstream/ots/buildmark.yaml
+      - docs/design/ots/buildmark.md
+      - docs/verification/ots/buildmark.md
   - id: OTS-CanvasNet
     title: Review that CanvasNet Provides Required Functionality
     paths:
@@ -173,6 +179,13 @@ reviews:
       - docs/reqstream/ots/textlint.yaml
       - docs/design/ots/textlint.md
       - docs/verification/ots/textlint.md
+
+  - id: OTS-VersionMark
+    title: Review that VersionMark Provides Required Functionality
+    paths:
+      - docs/reqstream/ots/versionmark.yaml
+      - docs/design/ots/versionmark.md
+      - docs/verification/ots/versionmark.md
 
   - id: OTS-WeasyPrint
     title: Review that WeasyPrint Provides Required Functionality

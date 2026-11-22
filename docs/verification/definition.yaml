@@ -8,6 +8,7 @@ input-files:
   - docs/verification/dotnet-tool-wrapper.md
   - docs/verification/dotnet-tool-wrapper/program.md
   - docs/verification/ots.md
+  - docs/verification/ots/buildmark.md
   - docs/verification/ots/canvasnet.md
   - docs/verification/ots/fileassert.md
   - docs/verification/ots/lintmark.md
@@ -17,6 +18,7 @@ input-files:
   - docs/verification/ots/spdx-tool.md
   - docs/verification/ots/sysml2tools.md
   - docs/verification/ots/textlint.md
+  - docs/verification/ots/versionmark.md
   - docs/verification/ots/weasyprint.md
   - docs/verification/ots/xunit.md
 template: template.html

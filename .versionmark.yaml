@@ -1,0 +1,82 @@
+---
+# VersionMark Configuration File
+#
+# Defines the tools whose versions the CI jobs capture with 'versionmark --capture' and how each
+# version is extracted from the output of its command. The build-docs job publishes the versions
+# captured by all jobs into the Build Notes with 'versionmark --publish'.
+
+tools:
+  # .NET SDK
+  dotnet:
+    command: dotnet --version
+    regex: '(?<version>\d+\.\d+\.\d+(?:\.\d+)?)'
+
+  # Git
+  git:
+    command: git --version
+    regex: '(?i)git version (?<version>\d+\.\d+\.\d+)'
+
+  # Microsoft SBOM Tool (Microsoft.Sbom.DotNetTool from dotnet tool list)
+  sbom-tool:
+    command: dotnet tool list
+    regex: '(?i)microsoft\.sbom\.dotnettool\s+(?<version>\d+\.\d+\.\d+(?:-[a-zA-Z0-9.]+)?)'
+
+  # SpdxTool (DemaConsulting.SpdxTool from dotnet tool list)
+  spdx-tool:
+    command: dotnet tool list
+    regex: '(?i)demaconsulting\.spdxtool\s+(?<version>\d+\.\d+\.\d+(?:-[a-zA-Z0-9.]+)?)'
+
+  # ReqStream (DemaConsulting.ReqStream from dotnet tool list)
+  reqstream:
+    command: dotnet tool list
+    regex: '(?i)demaconsulting\.reqstream\s+(?<version>\d+\.\d+\.\d+(?:-[a-zA-Z0-9.]+)?)'
+
+  # BuildMark (DemaConsulting.BuildMark from dotnet tool list)
+  buildmark:
+    command: dotnet tool list
+    regex: '(?i)demaconsulting\.buildmark\s+(?<version>\d+\.\d+\.\d+(?:-[a-zA-Z0-9.]+)?)'
+
+  # VersionMark (DemaConsulting.VersionMark from dotnet tool list)
+  versionmark:
+    command: dotnet tool list
+    regex: '(?i)demaconsulting\.versionmark\s+(?<version>\d+\.\d+\.\d+(?:-[a-zA-Z0-9.]+)?)'
+
+  # ReviewMark (DemaConsulting.ReviewMark from dotnet tool list)
+  reviewmark:
+    command: dotnet tool list
+    regex: '(?i)demaconsulting\.reviewmark\s+(?<version>\d+\.\d+\.\d+(?:-[a-zA-Z0-9.]+)?)'
+
+  # TextLint (DemaConsulting.TextLint.Tool from dotnet tool list)
+  textlint:
+    command: dotnet tool list
+    regex: '(?i)demaconsulting\.textlint\.tool\s+(?<version>\d+\.\d+\.\d+(?:-[a-zA-Z0-9.]+)?)'
+
+  # LintMark (DemaConsulting.LintMark from dotnet tool list)
+  lintmark:
+    command: dotnet tool list
+    regex: '(?i)demaconsulting\.lintmark\s+(?<version>\d+\.\d+\.\d+(?:-[a-zA-Z0-9.]+)?)'
+
+  # Pandoc (DemaConsulting.PandocTool from dotnet tool list)
+  pandoc:
+    command: dotnet tool list
+    regex: '(?i)demaconsulting\.pandoctool\s+(?<version>\d+\.\d+\.\d+(?:-[a-zA-Z0-9.]+)?)'
+
+  # WeasyPrint (DemaConsulting.WeasyPrintTool from dotnet tool list)
+  weasyprint:
+    command: dotnet tool list
+    regex: '(?i)demaconsulting\.weasyprinttool\s+(?<version>\d+\.\d+\.\d+(?:-[a-zA-Z0-9.]+)?)'
+
+  # FileAssert (DemaConsulting.FileAssert from dotnet tool list)
+  fileassert:
+    command: dotnet tool list
+    regex: '(?i)demaconsulting\.fileassert\s+(?<version>\d+\.\d+\.\d+(?:-[a-zA-Z0-9.]+)?)'
+
+  # SysML2Tools (DemaConsulting.SysML2Tools.Tool from dotnet tool list)
+  sysml2tools:
+    command: dotnet tool list
+    regex: '(?i)demaconsulting\.sysml2tools\.tool\s+(?<version>\d+\.\d+\.\d+(?:-[a-zA-Z0-9.]+)?)'
+
+  # CanvasNet (DemaConsulting.CanvasNet.Tool from dotnet tool list)
+  canvasnet:
+    command: dotnet tool list
+    regex: '(?i)demaconsulting\.canvasnet\.tool\s+(?<version>\d+\.\d+\.\d+(?:-[a-zA-Z0-9.]+)?)'

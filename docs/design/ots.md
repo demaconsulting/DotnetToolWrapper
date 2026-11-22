@@ -31,11 +31,12 @@ All OTS items except xUnit are .NET local tools, restored with `dotnet tool rest
 `dotnet {command}` from the repository scripts and the CI workflow:
 
 - `build.ps1` builds the solution and runs the xUnit tests;
-- `lint.ps1` runs TextLint, LintMark, ReqStream, ReviewMark, and SysML2Tools as quality checks, and `fix.ps1`
-  runs the LintMark fixer;
+- `lint.ps1` runs TextLint, LintMark, ReqStream, ReviewMark, VersionMark, and SysML2Tools as quality checks, and
+  `fix.ps1` runs the LintMark fixer;
+- every CI job runs VersionMark to capture the versions of the tools it uses;
 - the CI build job runs SpdxTool on the software bill of materials;
-- the CI documents job runs ReviewMark, SysML2Tools, Pandoc, CanvasNet, WeasyPrint, FileAssert, and ReqStream to
-  build and check the release documents.
+- the CI documents job runs BuildMark, VersionMark, ReviewMark, SysML2Tools, Pandoc, CanvasNet, WeasyPrint,
+  FileAssert, and ReqStream to build and check the release documents.
 
 xUnit is a NuGet test framework referenced by the test project. Each tool runs as a separate process with its
 configuration in a checked-in file or on its command line; none needs initialization or disposal beyond that
@@ -61,6 +62,7 @@ checks.
 
 The following OTS items are described in the sections that follow:
 
+- **BuildMark** - generates the build notes from the Git history and GitHub.
 - **CanvasNet** - draws the diagrams of the Pandoc documents and the README picture.
 - **FileAssert** - checks the generated diagrams and documents.
 - **LintMark** - checks and fixes the Markdown formatting.
@@ -70,5 +72,6 @@ The following OTS items are described in the sections that follow:
 - **SpdxTool** - enhances, validates, and summarizes the software bill of materials.
 - **SysML2Tools** - lints, queries, and renders the SysML2 architecture model.
 - **TextLint** - checks the spelling of the repository text.
+- **VersionMark** - captures and publishes the versions of the build tools.
 - **WeasyPrint** - renders the HTML of each document to PDF/A.
 - **xUnit** - runs the automated tests and records their results.

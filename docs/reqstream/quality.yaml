@@ -54,8 +54,9 @@ sections:
       - id: DotnetToolWrapper-Quality-ReleaseDocuments
         title: Every build shall generate the release documents as PDF documents and check that each contains its expected content.
         justification: |
-          The release documents (the design, verification, review, requirements, and trace
-          documents and the user guide) ship with each release as user documentation and
+          The release documents (the user guide, the design, verification, requirements, and
+          trace documents, the review plan and report, the build notes, and the code quality report)
+          ship with each release as user documentation and
           compliance evidence, so they must be generated from the repository sources on every
           build, and a missing, broken, or empty document must fail the build.
         tags: [quality]
@@ -79,6 +80,21 @@ sections:
           - DotnetToolWrapper-OTS-ReviewMark-Documents
           - DotnetToolWrapper-OTS-ReviewMark-Lint
           - DotnetToolWrapper-OTS-ReviewMark-Elaborate
+
+      - id: DotnetToolWrapper-Quality-BuildRecords
+        title: >-
+          Every build shall publish build notes of the changes since the previous release and of the tool versions
+          used by each CI job.
+        justification: |
+          Each release must record what changed and how it was built, so that users can decide
+          whether to update and maintainers and auditors can reproduce or investigate a build.
+          The build notes are also the release notes of the GitHub release.
+        tags: [quality]
+        children:
+          - DotnetToolWrapper-OTS-BuildMark
+          - DotnetToolWrapper-OTS-VersionMark-Capture
+          - DotnetToolWrapper-OTS-VersionMark-Publish
+          - DotnetToolWrapper-OTS-VersionMark-Lint
 
       - id: DotnetToolWrapper-Quality-ArchitectureModel
         title: Every build shall check the software architecture model for syntax errors and unresolved references.

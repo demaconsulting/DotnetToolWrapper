@@ -26,6 +26,7 @@ pipeline steps that use the item succeed.
 
 The following OTS items are described in the sections that follow:
 
+- **BuildMark** - self-validation.
 - **CanvasNet** - self-validation.
 - **FileAssert** - self-validation.
 - **LintMark** - self-validation.
@@ -35,5 +36,6 @@ The following OTS items are described in the sections that follow:
 - **SpdxTool** - self-validation.
 - **SysML2Tools** - self-validation and FileAssert checks of the rendered diagrams.
 - **TextLint** - self-validation.
+- **VersionMark** - self-validation.
 - **WeasyPrint** - FileAssert checks of the generated PDFs.
 - **xUnit** - the passing project tests.
