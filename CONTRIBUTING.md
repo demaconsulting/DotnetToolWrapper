@@ -52,6 +52,8 @@ We actively welcome pull requests! To submit a pull request:
 ### Prerequisites
 
 - [.NET SDK 11.0 or higher][dotnet-download] (with .NET 8.0, 9.0, and 10.0 runtimes to run all tests)
+- [PowerShell 7 or higher][powershell] (runs the `build.ps1`, `lint.ps1`, and `fix.ps1` scripts)
+- [Python 3][python] (`lint.ps1` and `fix.ps1` install yamllint and yamlfix into a local `.venv`)
 - Git
 - A code editor (Visual Studio, Visual Studio Code, Rider, etc.)
 
@@ -62,14 +64,11 @@ We actively welcome pull requests! To submit a pull request:
 git clone https://github.com/demaconsulting/DotnetToolWrapper.git
 cd DotnetToolWrapper
 
-# Restore dependencies
-dotnet restore
-
-# Build the project
-dotnet build --configuration Release
+# Build the solution and run the tests on all target frameworks
+pwsh ./build.ps1
 
 # Build for specific framework
-dotnet build --configuration Release --framework net8.0
+dotnet build DemaConsulting.DotnetToolWrapper.slnx --configuration Release --framework net8.0
 ```
 
 ### Project Structure
@@ -96,17 +95,23 @@ DotnetToolWrapper/
 │       ├── ProgramTests.cs
 │       ├── Runner.cs
 │       └── DemaConsulting.DotnetToolWrapper.Tests.csproj
-├── .cspell.json             # Spelling check configuration
 ├── .editorconfig            # Editor configuration
 ├── .gitattributes           # Git line-ending normalization
 ├── .gitignore               # Git ignore patterns
-├── .markdownlint.json       # Markdown linting rules
+├── .lintmark.yaml           # Markdown linting rules (LintMark)
+├── .textlint.yaml           # Spelling check configuration (TextLint)
+├── .yamlfix.toml            # YAML auto-fix configuration (yamlfix)
+├── .yamllint.yaml           # YAML linting rules (yamllint)
 ├── AGENTS.md                # GitHub Copilot agent instructions
 ├── ARCHITECTURE.md          # Architecture documentation
+├── build.ps1                # Build the solution and run all tests
 ├── CODE_OF_CONDUCT.md       # Code of conduct
 ├── CONTRIBUTING.md          # This file
 ├── DemaConsulting.DotnetToolWrapper.slnx
+├── fix.ps1                  # Apply all auto-fixers
 ├── LICENSE                  # MIT License
+├── lint.ps1                 # Run all lint checks
+├── pip-requirements.txt     # Python dependencies for yamllint and yamlfix
 ├── README.md                # Project overview
 ├── SECURITY.md              # Security policy
 └── spdx-workflow.yaml       # SBOM enhancement workflow
@@ -132,8 +137,8 @@ DotnetToolWrapper/
 
 ### Documentation Standards
 
-- Follow markdown linting rules (`.markdownlint.json`)
-- Check spelling using the cspell dictionary (`.cspell.json`)
+- Follow the markdown linting rules (`.lintmark.yaml`)
+- Check spelling using the TextLint dictionary (`.textlint.yaml`); fix typos in the source rather than adding words
 - Keep documentation in sync with code changes
 - Use clear, concise language
 - Include code examples where helpful
@@ -142,14 +147,14 @@ DotnetToolWrapper/
 ### Testing Your Changes
 
 ```bash
-# Run spelling check
-npx cspell "**/*.md"
+# Apply all auto-fixers (dotnet format, LintMark, yamlfix); always exits 0
+pwsh ./fix.ps1
 
-# Run markdown linting
-npx markdownlint "**/*.md"
+# Run all lint checks (yamllint, TextLint, LintMark, dotnet format); CI runs the same script
+pwsh ./lint.ps1
 
-# Build all target frameworks
-dotnet build --configuration Release
+# Build all target frameworks and run the tests
+pwsh ./build.ps1
 ```
 
 ## Commit Guidelines
@@ -261,6 +266,8 @@ Thank you for contributing to DotnetToolWrapper! 🎉
 
 [dotnet-download]: https://dotnet.microsoft.com/download
 [dotnet-tools]: https://learn.microsoft.com/en-us/dotnet/core/tools/global-tools
+[powershell]: https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell
+[python]: https://www.python.org/downloads/
 [nuget-docs]: https://learn.microsoft.com/en-us/nuget/
 [github-flow]: https://guides.github.com/introduction/flow/
 [git-commit-guide]: https://chris.beams.io/posts/git-commit/

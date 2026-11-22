@@ -13,6 +13,20 @@
       "commands": [
         "spdx-tool"
       ]
+    },
+    "demaconsulting.textlint.tool": {
+      "version": "0.1.0-beta.5",
+      "commands": [
+        "textlint"
+      ],
+      "rollForward": false
+    },
+    "demaconsulting.lintmark": {
+      "version": "0.1.0-beta.3",
+      "commands": [
+        "lintmark"
+      ],
+      "rollForward": false
     }
   }
 }
