@@ -98,13 +98,14 @@ DotnetToolWrapper/
 │       └── DemaConsulting.DotnetToolWrapper.Tests.csproj
 ├── .cspell.json             # Spelling check configuration
 ├── .editorconfig            # Editor configuration
+├── .gitattributes           # Git line-ending normalization
 ├── .gitignore               # Git ignore patterns
 ├── .markdownlint.json       # Markdown linting rules
 ├── AGENTS.md                # GitHub Copilot agent instructions
 ├── ARCHITECTURE.md          # Architecture documentation
 ├── CODE_OF_CONDUCT.md       # Code of conduct
 ├── CONTRIBUTING.md          # This file
-├── DemaConsulting.DotnetToolWrapper.sln
+├── DemaConsulting.DotnetToolWrapper.slnx
 ├── LICENSE                  # MIT License
 ├── README.md                # Project overview
 ├── SECURITY.md              # Security policy

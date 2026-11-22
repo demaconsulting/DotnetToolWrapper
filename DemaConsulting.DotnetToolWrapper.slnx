@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/DemaConsulting.DotnetToolWrapper/DemaConsulting.DotnetToolWrapper.csproj" />
+  <Project Path="test/DemaConsulting.DotnetToolWrapper.Tests/DemaConsulting.DotnetToolWrapper.Tests.csproj" />
+</Solution>
