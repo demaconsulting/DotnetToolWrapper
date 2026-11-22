@@ -43,6 +43,26 @@ jobs:
         with:
           python-version: '3.14'
 
+      # === CAPTURE OTS SELF-VALIDATION RESULTS ===
+      # This section captures the self-validation results of the lint tools as OTS evidence
+      # for the requirements job. The tools do not create the results folder themselves.
+
+      - name: Create artifacts directory
+        shell: bash
+        run: mkdir -p artifacts
+
+      - name: Run TextLint self-validation
+        run: >
+          dotnet textlint
+          --validate
+          --results artifacts/textlint-self-validation.trx
+
+      - name: Run LintMark self-validation
+        run: >
+          dotnet lintmark
+          --validate
+          --results artifacts/lintmark-self-validation.trx
+
       # === RUN QUALITY CHECKS ===
       # This section runs the linting and quality checks for the project.
 
@@ -50,9 +70,17 @@ jobs:
         shell: pwsh
         run: ./lint.ps1
 
+      - name: Upload quality artifacts
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: artifacts-quality
+          path: artifacts/
+
   # Builds and tests the wrapper on every supported operating system, on both x64 and arm64
   # (macos-latest is arm64), using build.ps1, which runs the tests on net8.0, net9.0, net10.0,
-  # and net11.0.
+  # and net11.0. The TRX file names carry the operating system, framework, and architecture
+  # ({os}_{asm}_{tfm}_{arch}.trx) for the ReqStream source filters of the platform requirements.
   test:
     name: Test (${{ matrix.os }})
     needs: quality-checks
@@ -84,7 +112,7 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v7
         with:
-          name: test-results-${{ matrix.os }}
+          name: artifacts-test-${{ matrix.os }}
           path: artifacts/tests/
 
   # Builds the versioned wrapper, collects the per-framework drop folders, and
@@ -113,6 +141,16 @@ jobs:
       - name: Restore Tools
         run: >
           dotnet tool restore
+
+      - name: Create artifacts directory
+        shell: bash
+        run: mkdir -p artifacts
+
+      - name: Run SpdxTool self-validation
+        run: >
+          dotnet spdx-tool
+          --validate
+          --result artifacts/spdx-tool-self-validation.trx
 
       - name: Build
         run: >
@@ -168,3 +206,74 @@ jobs:
             drop/net9.0/*.*
             drop/net10.0/*.*
             drop/net11.0/*.*
+
+      - name: Upload OTS validation artifacts
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: artifacts-build-validation
+          path: artifacts/
+
+  # Traces every requirement to passing test evidence. ReqStream reads the TRX files that
+  # the other jobs uploaded as 'artifacts-*' (the per-platform test results and the OTS
+  # self-validation results) and fails the build with --enforce when a requirement is not
+  # satisfied. The generated requirements, justifications, and trace matrix are uploaded
+  # as the 'requirements' artifact.
+  requirements:
+    name: Requirements Traceability
+    needs: [quality-checks, test, build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Download all job artifacts
+        uses: actions/download-artifact@v8
+        with:
+          path: artifacts
+          pattern: 'artifacts-*'
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: |
+            8.x
+            9.x
+            10.x
+            11.x
+
+      - name: Restore Tools
+        run: >
+          dotnet tool restore
+
+      - name: Create requirements output directories
+        shell: bash
+        run: mkdir -p docs/requirements_doc/generated docs/requirements_report/generated
+
+      - name: Run ReqStream self-validation
+        run: >
+          dotnet reqstream
+          --validate
+          --results artifacts/reqstream-self-validation.trx
+
+      - name: Generate Requirements Report, Justifications, and Trace Matrix
+        run: >
+          dotnet reqstream
+          --requirements requirements.yaml
+          --tests "artifacts/**/*.trx"
+          --report docs/requirements_doc/generated/requirements.md
+          --justifications docs/requirements_doc/generated/justifications.md
+          --matrix docs/requirements_report/generated/trace_matrix.md
+          --enforce
+
+      - name: Upload requirements documents
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: requirements
+          path: |-
+            docs/requirements_doc/generated/
+            docs/requirements_report/generated/
