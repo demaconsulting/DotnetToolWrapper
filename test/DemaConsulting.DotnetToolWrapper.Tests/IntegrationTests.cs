@@ -99,7 +99,7 @@ public class IntegrationTests
             var comspec = Environment.GetEnvironmentVariable("COMSPEC");
             return comspec ?? throw new InvalidOperationException("COMSPEC environment variable not found");
         }
-        
+
         return "/bin/sh";
     }
 

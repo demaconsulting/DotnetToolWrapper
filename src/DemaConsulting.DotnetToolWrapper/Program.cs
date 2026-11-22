@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 
@@ -15,10 +15,26 @@ public static class Program
     /// <returns>Operating system name</returns>
     public static string GetOs()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return "win";
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) return "linux";
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD)) return "freebsd";
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) return "osx";
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return "win";
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            return "linux";
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD))
+        {
+            return "freebsd";
+        }
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            return "osx";
+        }
+
         return "unknown";
     }
 
@@ -64,7 +80,9 @@ public static class Program
         // Get the tool location
         var location = Path.GetDirectoryName(typeof(Program).Assembly.Location);
         if (string.IsNullOrEmpty(location))
+        {
             location = workingDirectory;
+        }
 
         // Get the configuration file path
         var configPath = Path.Combine(location, "DotnetToolWrapper.json");
@@ -103,7 +121,9 @@ public static class Program
             UseShellExecute = false
         };
         foreach (var arg in args)
+        {
             startInfo.ArgumentList.Add(arg);
+        }
 
         // Run the process
         var process = Process.Start(startInfo);
