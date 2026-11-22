@@ -136,6 +136,5 @@ This project is licensed under the MIT License; see
 - [Report a bug or request a feature](https://github.com/demaconsulting/DotnetToolWrapper/issues)
 - [Ask a question or start a discussion](https://github.com/demaconsulting/DotnetToolWrapper/discussions)
 - [Report a security vulnerability](https://github.com/demaconsulting/DotnetToolWrapper/blob/main/SECURITY.md)
-- [Read the architecture overview](https://github.com/demaconsulting/DotnetToolWrapper/blob/main/ARCHITECTURE.md)
 
 [hero]: https://raw.githubusercontent.com/demaconsulting/DotnetToolWrapper/main/docs/images/hero.png
