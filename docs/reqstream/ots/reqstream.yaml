@@ -1,0 +1,36 @@
+---
+# ReqStream OTS requirements
+#
+# DemaConsulting.ReqStream checks the requirements files in lint.ps1 and traces every
+# requirement to test evidence in CI. Its self-validation results are the evidence.
+sections:
+  - title: OTS Software Requirements
+    sections:
+      - title: ReqStream Requirements
+        requirements:
+          - id: DotnetToolWrapper-OTS-ReqStream-Enforce
+            title: >-
+              ReqStream shall fail when a requirement is not satisfied by passing tests in the test-result files or
+              is not reachable from a root requirement.
+            justification: |
+              The CI documents job runs ReqStream with --enforce on the collected TRX files, so a
+              requirement without passing evidence or an orphaned requirement breaks the build.
+              The self-validation covers requirement processing, trace-matrix and report export,
+              tag filtering, enforcement, and orphan detection.
+            tags: [ots]
+            tests:
+              - ReqStream_RequirementsProcessing
+              - ReqStream_TraceMatrix
+              - ReqStream_ReportExport
+              - ReqStream_TagsFiltering
+              - ReqStream_EnforcementMode
+              - ReqStream_OrphanDetection
+
+          - id: DotnetToolWrapper-OTS-ReqStream-Lint
+            title: ReqStream shall report structural problems in the requirements files.
+            justification: |
+              lint.ps1 runs ReqStream with --lint so that malformed requirements files fail the
+              quality checks before any test evidence is collected.
+            tags: [ots]
+            tests:
+              - ReqStream_Lint

@@ -1,0 +1,12 @@
+---
+title: "DotnetToolWrapper Software Design Document"
+subtitle: "Run native applications as .NET Tools"
+author: "DEMA Consulting"
+description: "Software Design Document for DotnetToolWrapper"
+lang: en-US
+keywords:
+  - Design
+  - Software Design Document
+  - DotnetToolWrapper
+  - .NET Tool
+---

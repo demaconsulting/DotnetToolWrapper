@@ -1,0 +1,13 @@
+---
+title: "DotnetToolWrapper Code Quality Report"
+subtitle: "Run native applications as .NET Tools"
+author: "DEMA Consulting"
+description: "Code Quality Report for DotnetToolWrapper"
+lang: en-US
+keywords:
+  - Code Quality
+  - Static Analysis
+  - CodeQL
+  - DotnetToolWrapper
+  - .NET Tool
+---

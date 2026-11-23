@@ -1,0 +1,11 @@
+---
+title: "DotnetToolWrapper Requirements Document"
+subtitle: "Run native applications as .NET Tools"
+author: "DEMA Consulting"
+description: "Requirements Document for DotnetToolWrapper"
+lang: en-US
+keywords:
+  - Requirements
+  - DotnetToolWrapper
+  - .NET Tool
+---

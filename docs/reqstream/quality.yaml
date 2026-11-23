@@ -1,0 +1,110 @@
+---
+# Repository quality requirements
+#
+# Each requirement states a repository or process outcome the project needs. The tools that
+# achieve the outcome appear only as children links to their OTS requirements, so the outcome
+# survives a tool change. These requirements have no tests of their own: the tests of their
+# children are the evidence.
+sections:
+  - title: Repository Quality Requirements
+    requirements:
+      - id: DotnetToolWrapper-Quality-AutomatedTesting
+        title: Every build shall run the automated tests and record their results.
+        justification: |
+          The wrapper is shipped to downstream tool packages that rely on it on every supported
+          platform, so each change must be proven by automated tests whose recorded results
+          serve as verification evidence.
+        tags: [quality]
+        children:
+          - DotnetToolWrapper-OTS-XUnit-Execute
+          - DotnetToolWrapper-OTS-XUnit-Report
+
+      - id: DotnetToolWrapper-Quality-RequirementsTraceability
+        title: Every build shall prove that each requirement is traced to passing test evidence.
+        justification: |
+          Continuous Compliance requires that every requirement is covered by passing tests
+          before a release, and that requirement files stay free of structural problems such as
+          orphaned requirements.
+        tags: [quality]
+        children:
+          - DotnetToolWrapper-OTS-ReqStream-Enforce
+          - DotnetToolWrapper-OTS-ReqStream-Lint
+
+      - id: DotnetToolWrapper-Quality-TextConsistency
+        title: Every build shall check the repository text for spelling errors and Markdown formatting rule violations.
+        justification: |
+          Documentation, requirements, and source comments are review and compliance evidence,
+          so spelling errors and inconsistent Markdown formatting must be caught before merge.
+        tags: [quality]
+        children:
+          - DotnetToolWrapper-OTS-TextLint
+          - DotnetToolWrapper-OTS-LintMark-Check
+          - DotnetToolWrapper-OTS-LintMark-Fix
+
+      - id: DotnetToolWrapper-Quality-SoftwareBillOfMaterials
+        title: Every build shall produce a validated software bill of materials for the wrapper.
+        justification: |
+          Consumers of DotnetToolWrapper.zip need to know which components and build tools went
+          into the wrapper, so each build publishes a software bill of materials that is checked
+          against the NTIA minimum elements.
+        tags: [quality]
+        children:
+          - DotnetToolWrapper-OTS-SbomTool
+          - DotnetToolWrapper-OTS-SpdxTool
+
+      - id: DotnetToolWrapper-Quality-ReleaseDocuments
+        title: Every build shall generate the release documents as PDF documents and check that each contains its expected content.
+        justification: |
+          The release documents (the user guide, the design, verification, requirements, and
+          trace documents, the review plan and report, the build notes, and the code quality report)
+          ship with each release as user documentation and
+          compliance evidence, so they must be generated from the repository sources on every
+          build, and a missing, broken, or empty document must fail the build.
+        tags: [quality]
+        children:
+          - DotnetToolWrapper-OTS-Pandoc
+          - DotnetToolWrapper-OTS-WeasyPrint
+          - DotnetToolWrapper-OTS-CanvasNet
+          - DotnetToolWrapper-OTS-FileAssert
+          - DotnetToolWrapper-OTS-SysML2Tools-Render
+
+      - id: DotnetToolWrapper-Quality-ReviewCoverage
+        title: >-
+          Every build shall check the review configuration, fail when a file needing formal review is not covered by a
+          review-set, and publish a review plan and a review report of the files needing formal review.
+        justification: |
+          Continuous Compliance requires evidence that every file that defines, implements, or
+          verifies the wrapper is covered by a formal review-set, and that the status of each
+          review is visible for each release. Coverage is enforced on every build now. Failing the
+          build on missing or outdated review evidence follows once review evidence is published;
+          until then the review report shows the status of each review-set without failing the build.
+        tags: [quality]
+        children:
+          - DotnetToolWrapper-OTS-ReviewMark-Documents
+          - DotnetToolWrapper-OTS-ReviewMark-Lint
+          - DotnetToolWrapper-OTS-ReviewMark-Enforce
+
+      - id: DotnetToolWrapper-Quality-BuildRecords
+        title: >-
+          Every build shall publish build notes of the changes since the previous release and of the tool versions
+          used by each CI job.
+        justification: |
+          Each release must record what changed and how it was built, so that users can decide
+          whether to update and maintainers and auditors can reproduce or investigate a build.
+          The build notes are also the release notes of the GitHub release.
+        tags: [quality]
+        children:
+          - DotnetToolWrapper-OTS-BuildMark
+          - DotnetToolWrapper-OTS-VersionMark-Capture
+          - DotnetToolWrapper-OTS-VersionMark-Publish
+          - DotnetToolWrapper-OTS-VersionMark-Lint
+
+      - id: DotnetToolWrapper-Quality-ArchitectureModel
+        title: Every build shall check the software architecture model for syntax errors and unresolved references.
+        justification: |
+          The architecture model is the authoritative description of the software structure that
+          the design document and the development agents rely on, so an invalid model or a
+          reference to an element that does not exist must fail the build.
+        tags: [quality]
+        children:
+          - DotnetToolWrapper-OTS-SysML2Tools-Lint

@@ -1,0 +1,29 @@
+---
+# SpdxTool OTS requirements
+#
+# DemaConsulting.SpdxTool runs spdx-workflow.yaml in the CI build job to enhance, validate, and
+# summarize the software bill of materials. Its self-validation results are the evidence.
+sections:
+  - title: OTS Software Requirements
+    sections:
+      - title: SpdxTool Requirements
+        requirements:
+          - id: DotnetToolWrapper-OTS-SpdxTool
+            title: >-
+              SpdxTool shall run the steps of spdx-workflow.yaml to rename, extend, hash, validate, and summarize the
+              SPDX document of the wrapper.
+            justification: |
+              The CI build job runs spdx-workflow.yaml, which renames the root package, runs remote
+              workflows that query the .NET SDK version and add it as a package, adds a relationship,
+              updates the hash, validates the document against the NTIA minimum elements, and writes
+              a Markdown summary. The self-validation covers each of these commands.
+            tags: [ots]
+            tests:
+              - SpdxTool_RenameId
+              - SpdxTool_RunNuGetWorkflow
+              - SpdxTool_Query
+              - SpdxTool_AddPackage
+              - SpdxTool_AddRelationship
+              - SpdxTool_Hash
+              - SpdxTool_Ntia
+              - SpdxTool_ToMarkdown

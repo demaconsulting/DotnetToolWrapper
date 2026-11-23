@@ -1,3 +1,4 @@
+---
 on:
   workflow_call:
     inputs:
@@ -9,41 +10,138 @@ on:
         type: string
 
 jobs:
+  # Performs quick quality checks for project formatting consistency including
+  # markdown linting, spell checking, YAML validation, and dotnet format, all
+  # run by lint.ps1.
+  quality-checks:
+    name: Quality Checks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      # === INSTALL DEPENDENCIES ===
+      # This section installs all required dependencies and tools for quality checks.
+
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: |
+            8.x
+            9.x
+            10.x
+            11.x
+
+      - name: Restore Tools
+        run: >
+          dotnet tool restore
+
+      - name: Setup Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.14'
+
+      # === CAPTURE TOOL VERSIONS ===
+      # VersionMark records the versions of the tools this job uses; the build-docs job publishes
+      # them in the Build Notes.
+
+      - name: Capture tool versions
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          dotnet versionmark --capture --job-id "quality" \
+            --output "artifacts/versionmark-quality.json" -- \
+            dotnet git versionmark textlint lintmark reqstream reviewmark sysml2tools
+
+      # === CAPTURE OTS SELF-VALIDATION RESULTS ===
+      # This section captures the self-validation results of the lint tools as OTS evidence
+      # for the build-docs job. The tools do not create the results folder themselves.
+
+      - name: Create artifacts directory
+        shell: bash
+        run: mkdir -p artifacts
+
+      - name: Run TextLint self-validation
+        run: >
+          dotnet textlint
+          --validate
+          --results artifacts/textlint-self-validation.trx
+
+      - name: Run LintMark self-validation
+        run: >
+          dotnet lintmark
+          --validate
+          --results artifacts/lintmark-self-validation.trx
+
+      # === RUN QUALITY CHECKS ===
+      # This section runs the linting and quality checks for the project.
+
+      - name: Run linters
+        shell: pwsh
+        run: ./lint.ps1
+
+      - name: Upload quality artifacts
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: artifacts-quality
+          path: artifacts/
+
+  # Builds and tests the wrapper on every supported operating system, on both x64 and arm64
+  # (macos-latest is arm64), using build.ps1, which runs the tests on net8.0, net9.0, net10.0,
+  # and net11.0. The TRX file names carry the operating system, framework, and architecture
+  # ({os}_{asm}_{tfm}_{arch}.trx) for the ReqStream source filters of the platform requirements.
   test:
     name: Test (${{ matrix.os }})
+    needs: quality-checks
     runs-on: ${{ matrix.os }}
     permissions:
       contents: read
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest, windows-11-arm, macos-latest]
     steps:
 
-    - uses: actions/checkout@v7
+      - name: Checkout
+        uses: actions/checkout@v7
 
-    - name: Setup dotnet
-      uses: actions/setup-dotnet@v6
-      with:
-        dotnet-version: |
-          8.x          
-          9.x
-          10.x
-          11.x
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: |
+            8.x
+            9.x
+            10.x
+            11.x
 
-    - name: Build
-      run: >
-        dotnet build
-        --configuration Release
-        --property:Version=${{ inputs.semver }}
-        --property:InformationalVersion=${{ inputs.semver }}
-        --property:AssemblyVersion=${{ inputs.winver }}
+      - name: Restore Tools
+        run: >
+          dotnet tool restore
 
-    - name: Test
-      run: >
-        dotnet test
-        --configuration Release
-        --no-build
+      - name: Capture tool versions
+        shell: bash
+        run: |
+          mkdir -p artifacts/tests
+          dotnet versionmark --capture --job-id "test-${{ matrix.os }}" \
+            --output "artifacts/tests/versionmark-test-${{ matrix.os }}.json" -- \
+            dotnet git versionmark
 
+      - name: Build and Test
+        shell: pwsh
+        run: ./build.ps1
+
+      - name: Upload test results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: artifacts-test-${{ matrix.os }}
+          path: artifacts/tests/
+
+  # Builds the versioned wrapper, collects the per-framework drop folders, and
+  # generates the SBOM. The 'build-artifacts' artifact is consumed by the
+  # release workflow to assemble DotnetToolWrapper.zip.
   build:
     name: Build Artifacts
     needs: test
@@ -52,71 +150,535 @@ jobs:
       contents: read
     steps:
 
-    - uses: actions/checkout@v7
+      - name: Checkout
+        uses: actions/checkout@v7
 
-    - name: Setup dotnet
-      uses: actions/setup-dotnet@v6
-      with:
-        dotnet-version: |
-          8.x          
-          9.x
-          10.x
-          11.x
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: |
+            8.x
+            9.x
+            10.x
+            11.x
 
-    - name: Restore Tools
-      run: >
-        dotnet tool restore
+      - name: Restore Tools
+        run: >
+          dotnet tool restore
 
-    - name: Build
-      run: >
-        dotnet build
-        --configuration Release
-        --property:Version=${{ inputs.semver }}
-        --property:InformationalVersion=${{ inputs.semver }}
-        --property:AssemblyVersion=${{ inputs.winver }}
+      - name: Create artifacts directory
+        shell: bash
+        run: mkdir -p artifacts
 
-    - name: Create Drop Folder
-      shell: bash
-      run: |
-        mkdir -p drop/net8.0
-        mkdir -p drop/net9.0
-        mkdir -p drop/net10.0
-        mkdir -p drop/net11.0
-        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.dll drop/net8.0
-        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.runtimeconfig.json drop/net8.0
-        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.deps.json drop/net8.0
-        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net9.0/*.dll drop/net9.0
-        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net9.0/*.runtimeconfig.json drop/net9.0
-        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net9.0/*.deps.json drop/net9.0
-        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net10.0/*.dll drop/net10.0
-        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net10.0/*.runtimeconfig.json drop/net10.0
-        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net10.0/*.deps.json drop/net10.0
-        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net11.0/*.dll drop/net11.0
-        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net11.0/*.runtimeconfig.json drop/net11.0
-        cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net11.0/*.deps.json drop/net11.0
+      - name: Capture tool versions
+        shell: bash
+        run: |
+          dotnet versionmark --capture --job-id "build" \
+            --output "artifacts/versionmark-build.json" -- \
+            dotnet git versionmark sbom-tool fileassert spdx-tool
 
-    - name: Generate SBOM
-      run: >
-        dotnet sbom-tool generate
-        -b drop
-        -bc src/DemaConsulting.DotnetToolWrapper
-        -pn DemaConsulting.DotnetToolWrapper
-        -pv ${{ inputs.semver }}
-        -ps DemaConsulting
-        -nsb https://DemaConsulting.com/DotnetToolWrapper
+      - name: Run SpdxTool self-validation
+        run: >
+          dotnet spdx-tool
+          --validate
+          --result artifacts/spdx-tool-self-validation.trx
 
-    - name: Enhance SBOM
-      run: >
-        dotnet spdx-tool
-        run-workflow spdx-workflow.yaml
+      - name: Build
+        run: >
+          dotnet build
+          DemaConsulting.DotnetToolWrapper.slnx
+          --configuration Release
+          --property:Version=${{ inputs.semver }}
+          --property:InformationalVersion=${{ inputs.semver }}
+          --property:AssemblyVersion=${{ inputs.winver }}
 
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v7
-      with:
-        name: build-artifacts
-        path: |
-          drop/_manifest/spdx_2.2/*.*
-          drop/net8.0/*.*
-          drop/net9.0/*.*
-          drop/net10.0/*.*
-          drop/net11.0/*.*
+      - name: Create Drop Folder
+        shell: bash
+        run: |
+          mkdir -p drop/net8.0
+          mkdir -p drop/net9.0
+          mkdir -p drop/net10.0
+          mkdir -p drop/net11.0
+          cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.dll drop/net8.0
+          cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.runtimeconfig.json drop/net8.0
+          cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net8.0/*.deps.json drop/net8.0
+          cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net9.0/*.dll drop/net9.0
+          cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net9.0/*.runtimeconfig.json drop/net9.0
+          cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net9.0/*.deps.json drop/net9.0
+          cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net10.0/*.dll drop/net10.0
+          cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net10.0/*.runtimeconfig.json drop/net10.0
+          cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net10.0/*.deps.json drop/net10.0
+          cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net11.0/*.dll drop/net11.0
+          cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net11.0/*.runtimeconfig.json drop/net11.0
+          cp src/DemaConsulting.DotnetToolWrapper/bin/Release/net11.0/*.deps.json drop/net11.0
+
+      - name: Generate SBOM
+        run: >
+          dotnet sbom-tool generate
+          -b drop
+          -bc src/DemaConsulting.DotnetToolWrapper
+          -pn DemaConsulting.DotnetToolWrapper
+          -pv ${{ inputs.semver }}
+          -ps DemaConsulting
+          -nsb https://DemaConsulting.com/DotnetToolWrapper
+
+      # The Microsoft SBOM tool has no self-validation; this check of its output, run before SpdxTool
+      # changes the document, is its OTS evidence for ReqStream.
+      - name: Assert SBOM with FileAssert
+        run: >
+          dotnet fileassert
+          --results artifacts/fileassert-sbom.trx
+          sbom
+
+      - name: Enhance SBOM
+        run: >
+          dotnet spdx-tool
+          run-workflow spdx-workflow.yaml
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: build-artifacts
+          path: |-
+            drop/_manifest/spdx_2.2/*.*
+            drop/net8.0/*.*
+            drop/net9.0/*.*
+            drop/net10.0/*.*
+            drop/net11.0/*.*
+
+      - name: Upload OTS validation artifacts
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: artifacts-build-validation
+          path: artifacts/
+
+  # Builds the release documents (Build Notes, Code Quality Report, Review Plan, Review Report,
+  # Software Design Document, Software Verification Design Document, User Guide, Requirements
+  # Document, and Trace Matrix) as PDFs. It runs on Windows because the WeasyPrint tool package
+  # ships only a win-x64 build. BuildMark and VersionMark generate the build notes, ReviewMark
+  # generates the review documents, and SysML2Tools renders the design diagrams from the
+  # architecture model. Each document section converts Markdown to HTML with Pandoc, renders the
+  # PDF with WeasyPrint, and checks both with FileAssert; the FileAssert results and the tool
+  # self-validations are OTS evidence. ReqStream traces every requirement to the TRX evidence that
+  # all jobs uploaded as 'artifacts-*' and fails the build with --enforce when a requirement is not
+  # satisfied. The PDFs and the build notes Markdown are uploaded as the 'documents' artifact that
+  # the release workflow attaches to the GitHub release.
+  build-docs:
+    name: Build Documents
+    needs: [quality-checks, test, build]
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    steps:
+      # === CHECKOUT AND DOWNLOAD ARTIFACTS ===
+      # The artifacts are not merged: each one keeps its own folder so the unique TRX file
+      # names stay intact for the ReqStream source filters.
+
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Download all job artifacts
+        uses: actions/download-artifact@v8
+        with:
+          path: artifacts
+          pattern: 'artifacts-*'
+
+      # === INSTALL DEPENDENCIES ===
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: |
+            8.x
+            9.x
+            10.x
+            11.x
+
+      - name: Restore Tools
+        run: >
+          dotnet tool restore
+
+      - name: Capture tool versions
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          dotnet versionmark --capture --job-id "build-docs" \
+            --output "artifacts/versionmark-build-docs.json" -- \
+            dotnet git versionmark buildmark reviewmark sysml2tools pandoc canvasnet weasyprint \
+            fileassert reqstream
+
+      # === PREPARE DOCUMENT OUTPUT ===
+      # Creates the shared docs/generated/ folder that all document sections write PDFs into. Every
+      # document definition uses the CanvasNet Pandoc filter, so the CanvasNet self-validation runs here,
+      # before the first Pandoc step.
+
+      - name: Create documents output directory
+        shell: bash
+        run: mkdir -p docs/generated
+
+      - name: Run CanvasNet self-validation
+        run: >
+          dotnet canvasnet
+          --validate
+          --results artifacts/canvasnet-self-validation.trx
+
+      # === COMPILE BUILD NOTES ===
+      # BuildMark generates the build report from the Git history and the GitHub issues and pull
+      # requests, and VersionMark publishes the tool versions captured by all jobs; their
+      # self-validations run here, next to the document that depends on them. Pandoc converts the
+      # notes to HTML, WeasyPrint renders the PDF, and FileAssert checks both. The build report
+      # Markdown is copied to docs/generated/ as the release notes of the GitHub release.
+
+      - name: Create build notes output directory
+        shell: bash
+        run: mkdir -p docs/build_notes/generated
+
+      - name: Run BuildMark self-validation
+        run: >
+          dotnet buildmark
+          --validate
+          --results artifacts/buildmark-self-validation.trx
+
+      - name: Run VersionMark self-validation
+        run: >
+          dotnet versionmark
+          --validate
+          --results artifacts/versionmark-self-validation.trx
+
+      - name: Generate Build Notes with BuildMark
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >
+          dotnet buildmark
+          --build-version ${{ inputs.semver }}
+          --report docs/build_notes/generated/build_notes.md
+          --report-depth 1
+
+      - name: Publish Tool Versions with VersionMark
+        shell: bash
+        run: >
+          dotnet versionmark
+          --publish
+          --report docs/build_notes/generated/versions.md
+          --report-depth 1
+          -- "artifacts/**/versionmark-*.json"
+
+      - name: Generate Build Notes HTML with Pandoc
+        shell: bash
+        run: >
+          dotnet pandoc
+          --defaults docs/build_notes/definition.yaml
+          --metadata version="${{ inputs.semver }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/build_notes/generated/build_notes.html
+
+      - name: Generate Build Notes PDF with WeasyPrint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/build_notes/generated/build_notes.html
+          "docs/generated/DotnetToolWrapper Build Notes.pdf"
+
+      - name: Assert Build Notes Documents with FileAssert
+        run: >
+          dotnet fileassert
+          --results artifacts/fileassert-build-notes.trx
+          build-notes
+
+      - name: Copy Build Notes report to docs/generated
+        shell: bash
+        run: cp docs/build_notes/generated/build_notes.md docs/generated/build_notes.md
+
+      # === COMPILE CODE QUALITY REPORT ===
+      # The Code Quality Report describes the compiler, analyzer, lint, and CodeQL controls. CodeQL
+      # runs through the GitHub default setup, so this workflow runs no CodeQL analysis of its own.
+      # Pandoc converts the report to HTML, WeasyPrint renders the PDF, and FileAssert checks both.
+
+      - name: Create code quality output directory
+        shell: bash
+        run: mkdir -p docs/code_quality/generated
+
+      - name: Generate Code Quality HTML with Pandoc
+        shell: bash
+        run: >
+          dotnet pandoc
+          --defaults docs/code_quality/definition.yaml
+          --metadata version="${{ inputs.semver }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/code_quality/generated/quality.html
+
+      - name: Generate Code Quality PDF with WeasyPrint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/code_quality/generated/quality.html
+          "docs/generated/DotnetToolWrapper Code Quality Report.pdf"
+
+      - name: Assert Code Quality Documents with FileAssert
+        run: >
+          dotnet fileassert
+          --results artifacts/fileassert-code-quality.trx
+          code-quality
+
+      # === COMPILE CODE REVIEW DOCUMENTS ===
+      # ReviewMark generates the Review Plan and the Review Report from .reviewmark.yaml and the
+      # review evidence; its self-validation runs here, next to the documents that depend on it.
+      # Pandoc converts each to HTML, WeasyPrint renders the PDFs, and FileAssert checks both.
+      # The plan is generated with --enforce, so a file needing review that no review-set covers fails
+      # the build. The report is generated without --enforce until review evidence is published
+      # (evidence-source type 'none'), because every review-set lacks current evidence until then.
+
+      - name: Create code review output directories
+        shell: bash
+        run: mkdir -p docs/code_review_plan/generated docs/code_review_report/generated
+
+      - name: Run ReviewMark self-validation
+        run: >
+          dotnet reviewmark
+          --validate
+          --results artifacts/reviewmark-self-validation.trx
+
+      - name: Generate Review Plan with ReviewMark
+        run: >
+          dotnet reviewmark
+          --plan docs/code_review_plan/generated/plan.md
+          --plan-depth 1
+          --enforce
+
+      - name: Generate Review Report with ReviewMark
+        run: >
+          dotnet reviewmark
+          --report docs/code_review_report/generated/report.md
+          --report-depth 1
+
+      - name: Generate Review Plan HTML with Pandoc
+        shell: bash
+        run: >
+          dotnet pandoc
+          --defaults docs/code_review_plan/definition.yaml
+          --metadata version="${{ inputs.semver }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/code_review_plan/generated/plan.html
+
+      - name: Generate Review Plan PDF with WeasyPrint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/code_review_plan/generated/plan.html
+          "docs/generated/DotnetToolWrapper Review Plan.pdf"
+
+      - name: Generate Review Report HTML with Pandoc
+        shell: bash
+        run: >
+          dotnet pandoc
+          --defaults docs/code_review_report/definition.yaml
+          --metadata version="${{ inputs.semver }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/code_review_report/generated/report.html
+
+      - name: Generate Review Report PDF with WeasyPrint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/code_review_report/generated/report.html
+          "docs/generated/DotnetToolWrapper Review Report.pdf"
+
+      - name: Assert Code Review Documents with FileAssert
+        run: >
+          dotnet fileassert
+          --results artifacts/fileassert-code-review.trx
+          code-review
+
+      # === COMPILE DESIGN DOCUMENT ===
+      # SysML2Tools renders the views of the architecture model in docs/sysml2/ to SVG, Pandoc
+      # converts the design documentation to HTML, WeasyPrint renders the PDF, and FileAssert
+      # checks the diagrams, the HTML, and the PDF. The SysML2Tools self-validation and these
+      # FileAssert results are OTS evidence for ReqStream. lint.ps1 lints the model itself.
+
+      - name: Create design output directory
+        shell: bash
+        run: mkdir -p docs/design/generated
+
+      - name: Run SysML2Tools self-validation
+        run: >
+          dotnet sysml2tools
+          --validate
+          --results artifacts/sysml2tools-self-validation.trx
+
+      - name: Render design diagrams with SysML2Tools
+        shell: pwsh
+        run: >
+          dotnet sysml2tools render
+          --output docs/design/generated
+          --format svg
+          'docs/sysml2/common/**/*.sysml'
+          'docs/sysml2/model/**/*.sysml'
+          'docs/sysml2/views/design-views.sysml'
+
+      - name: Generate Design HTML with Pandoc
+        shell: bash
+        run: >
+          dotnet pandoc
+          --defaults docs/design/definition.yaml
+          --metadata version="${{ inputs.semver }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/design/generated/design.html
+
+      - name: Generate Design PDF with WeasyPrint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/design/generated/design.html
+          "docs/generated/DotnetToolWrapper Software Design Document.pdf"
+
+      - name: Assert Design Documents with FileAssert
+        run: >
+          dotnet fileassert
+          --results artifacts/fileassert-design.trx
+          design
+
+      # === COMPILE VERIFICATION DOCUMENT ===
+      # Pandoc converts the verification design documentation to HTML, WeasyPrint renders the PDF,
+      # and FileAssert checks both. These FileAssert results are OTS evidence for ReqStream.
+
+      - name: Create verification output directory
+        shell: bash
+        run: mkdir -p docs/verification/generated
+
+      - name: Generate Verification HTML with Pandoc
+        shell: bash
+        run: >
+          dotnet pandoc
+          --defaults docs/verification/definition.yaml
+          --metadata version="${{ inputs.semver }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/verification/generated/verification.html
+
+      - name: Generate Verification PDF with WeasyPrint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/verification/generated/verification.html
+          "docs/generated/DotnetToolWrapper Software Verification Design Document.pdf"
+
+      - name: Assert Verification Documents with FileAssert
+        run: >
+          dotnet fileassert
+          --results artifacts/fileassert-verification.trx
+          verification
+
+      # === COMPILE USER GUIDE ===
+      # Pandoc converts the user guide to HTML, with the CanvasNet filter drawing its diagram,
+      # WeasyPrint renders the PDF, and FileAssert checks both.
+
+      - name: Create user guide output directory
+        shell: bash
+        run: mkdir -p docs/user_guide/generated
+
+      - name: Generate User Guide HTML with Pandoc
+        shell: bash
+        run: >
+          dotnet pandoc
+          --defaults docs/user_guide/definition.yaml
+          --metadata version="${{ inputs.semver }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/user_guide/generated/user_guide.html
+
+      - name: Generate User Guide PDF with WeasyPrint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/user_guide/generated/user_guide.html
+          "docs/generated/DotnetToolWrapper User Guide.pdf"
+
+      - name: Assert User Guide Documents with FileAssert
+        run: >
+          dotnet fileassert
+          --results artifacts/fileassert-user-guide.trx
+          user-guide
+
+      # === FILEASSERT SELF-VALIDATION ===
+      # FileAssert self-validation confirms the assertion tool itself is operational.
+
+      - name: Run FileAssert self-validation
+        run: >
+          dotnet fileassert
+          --validate
+          --results artifacts/fileassert-self-validation.trx
+
+      # === COMPILE REQUIREMENTS AND TRACE MATRIX ===
+      # ReqStream --enforce consumes all previously generated TRX evidence. Pandoc and
+      # WeasyPrint then compile the final documents, and FileAssert checks their outputs.
+      # These final assertions confirm the requirements pipeline produced well-formed
+      # documents but do not contribute to OTS evidence.
+
+      - name: Create requirements output directories
+        shell: bash
+        run: mkdir -p docs/requirements_doc/generated docs/requirements_report/generated
+
+      - name: Run ReqStream self-validation
+        run: >
+          dotnet reqstream
+          --validate
+          --results artifacts/reqstream-self-validation.trx
+
+      - name: Generate Requirements Report, Justifications, and Trace Matrix
+        run: >
+          dotnet reqstream
+          --requirements requirements.yaml
+          --tests "artifacts/**/*.trx"
+          --report docs/requirements_doc/generated/requirements.md
+          --justifications docs/requirements_doc/generated/justifications.md
+          --matrix docs/requirements_report/generated/trace_matrix.md
+          --enforce
+
+      - name: Generate Requirements HTML with Pandoc
+        shell: bash
+        run: >
+          dotnet pandoc
+          --defaults docs/requirements_doc/definition.yaml
+          --metadata version="${{ inputs.semver }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/requirements_doc/generated/requirements.html
+
+      - name: Generate Requirements PDF with WeasyPrint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/requirements_doc/generated/requirements.html
+          "docs/generated/DotnetToolWrapper Requirements Document.pdf"
+
+      - name: Generate Trace Matrix HTML with Pandoc
+        shell: bash
+        run: >
+          dotnet pandoc
+          --defaults docs/requirements_report/definition.yaml
+          --metadata version="${{ inputs.semver }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/requirements_report/generated/trace_matrix.html
+
+      - name: Generate Trace Matrix PDF with WeasyPrint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/requirements_report/generated/trace_matrix.html
+          "docs/generated/DotnetToolWrapper Trace Matrix.pdf"
+
+      - name: Assert Requirements Documents with FileAssert
+        run: >
+          dotnet fileassert
+          --results artifacts/fileassert-requirements.trx
+          requirements
+
+      # === UPLOAD ARTIFACTS ===
+      # Only the PDFs and the build notes Markdown (the release notes) are uploaded, so the
+      # docs/generated/canvasnet/ diagram cache stays out of the artifact and the release.
+
+      - name: Upload documents
+        uses: actions/upload-artifact@v7
+        with:
+          name: documents
+          path: |-
+            docs/generated/*.pdf
+            docs/generated/build_notes.md

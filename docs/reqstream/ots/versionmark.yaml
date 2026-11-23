@@ -1,0 +1,38 @@
+---
+# VersionMark OTS requirements
+#
+# DemaConsulting.VersionMark captures the tool versions of each CI job, publishes them in the
+# Build Notes, and checks .versionmark.yaml in lint.ps1. Its self-validation results are the
+# evidence.
+sections:
+  - title: OTS Software Requirements
+    sections:
+      - title: VersionMark Requirements
+        requirements:
+          - id: DotnetToolWrapper-OTS-VersionMark-Capture
+            title: VersionMark shall capture the versions of the tools configured in .versionmark.yaml.
+            justification: |
+              Each CI job captures the versions of the tools it uses, so that the tool versions of
+              every build are recorded as evidence of how it was built.
+            tags: [ots]
+            tests:
+              - VersionMark_CapturesVersions
+
+          - id: DotnetToolWrapper-OTS-VersionMark-Publish
+            title: VersionMark shall publish the captured tool versions of all CI jobs as a Markdown report.
+            justification: |
+              The CI documents job publishes the versions captured by all jobs into the Build Notes,
+              so that each release documents the tool versions used to build it.
+            tags: [ots]
+            tests:
+              - VersionMark_GeneratesMarkdownReport
+
+          - id: DotnetToolWrapper-OTS-VersionMark-Lint
+            title: VersionMark shall report problems in the .versionmark.yaml configuration file.
+            justification: |
+              lint.ps1 runs VersionMark with --lint so that a malformed tool configuration fails the
+              quality checks before any CI job captures versions with it.
+            tags: [ots]
+            tests:
+              - VersionMark_LintPassesForValidConfig
+              - VersionMark_LintReportsErrorsForInvalidConfig

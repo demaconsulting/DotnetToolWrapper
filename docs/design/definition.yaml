@@ -1,0 +1,34 @@
+---
+resource-path:
+  - docs/design
+  - docs/template
+  # SysML2Tools renders the architecture views into the generated folder, and the CanvasNet filter
+  # writes picture links relative to the HTML output folder; this entry lets Pandoc find and embed
+  # both.
+  - docs/design/generated
+embed-resources: true
+input-files:
+  - docs/design/title.txt
+  - docs/design/introduction.md
+  - docs/design/dotnet-tool-wrapper.md
+  - docs/design/dotnet-tool-wrapper/program.md
+  - docs/design/ots.md
+  - docs/design/ots/buildmark.md
+  - docs/design/ots/canvasnet.md
+  - docs/design/ots/fileassert.md
+  - docs/design/ots/lintmark.md
+  - docs/design/ots/pandoc.md
+  - docs/design/ots/reqstream.md
+  - docs/design/ots/reviewmark.md
+  - docs/design/ots/sbom-tool.md
+  - docs/design/ots/spdx-tool.md
+  - docs/design/ots/sysml2tools.md
+  - docs/design/ots/textlint.md
+  - docs/design/ots/versionmark.md
+  - docs/design/ots/weasyprint.md
+  - docs/design/ots/xunit.md
+template: template.html
+table-of-contents: true
+number-sections: true
+filters:
+  - docs/filters/canvasnet.lua

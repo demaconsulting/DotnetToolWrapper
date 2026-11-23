@@ -1,25 +1,44 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <!-- Build Configuration -->
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net8.0;net9.0;net10.0;net11.0</TargetFrameworks>
-    <LangVersion>12</LangVersion>
+    <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Title>Dotnet Tool Wrapper</Title>
-    <AssemblyTitle>Dotnet Tool Wrapper</AssemblyTitle>
-    <Description>Entry application for Dotnet Tool Wrappers</Description>
-    <Copyright>Copyright © Dema Consulting</Copyright>
-    <Company>Dema Consulting</Company>
+
+    <!-- Assembly Metadata (shipped in DotnetToolWrapper.zip, not as a NuGet package) -->
+    <IsPackable>false</IsPackable>
     <Version>0.0.0</Version>
     <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <Authors>DEMA Consulting</Authors>
+    <Company>DEMA Consulting</Company>
+    <Description>Entry application for Dotnet Tool Wrappers</Description>
+    <Copyright>Copyright DEMA Consulting</Copyright>
+    <Title>Dotnet Tool Wrapper</Title>
+    <AssemblyTitle>Dotnet Tool Wrapper</AssemblyTitle>
+    <Product>DemaConsulting.DotnetToolWrapper</Product>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/demaconsulting/DotnetToolWrapper</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/demaconsulting/DotnetToolWrapper</RepositoryUrl>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+
+    <!-- Code Quality Configuration -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+    <AnalysisLevel>latest</AnalysisLevel>
   </PropertyGroup>
 
+  <!-- Code Analysis Dependencies -->
   <ItemGroup>
+    <!-- Analyzer packages use child-element form to configure both PrivateAssets and IncludeAssets:
+         - PrivateAssets="all" prevents these build-time analyzers from becoming transitive dependencies
+           of any project that references this one.
+         - IncludeAssets lists all asset types (including 'analyzers' and 'buildtransitive') to ensure
+           Roslyn analyzers and MSBuild targets are fully activated during the build. -->
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="11.0.100">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -28,6 +47,11 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <!-- Test Access: the tests drive the internal platform-mapping overloads with simulated platforms -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="DemaConsulting.DotnetToolWrapper.Tests" />
   </ItemGroup>
 
 </Project>

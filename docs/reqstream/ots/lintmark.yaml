@@ -1,0 +1,34 @@
+---
+# LintMark OTS requirements
+#
+# DemaConsulting.LintMark checks Markdown formatting in lint.ps1 and fixes it in fix.ps1. Its
+# self-validation results are the evidence.
+sections:
+  - title: OTS Software Requirements
+    sections:
+      - title: LintMark Requirements
+        requirements:
+          - id: DotnetToolWrapper-OTS-LintMark-Check
+            title: >-
+              LintMark shall report each violation of the rules configured in .lintmark.yaml and exit with a non-zero
+              code, while passing a conforming file.
+            justification: |
+              lint.ps1 relies on LintMark failing the quality checks when a Markdown file breaks a
+              configured rule. The self-validation checks that the tool starts, that a conforming
+              file passes, that violations are reported, and that the configuration is honored.
+            tags: [ots]
+            tests:
+              - LintMark_VersionDisplay
+              - LintMark_HelpDisplay
+              - LintMark_CleanFileNoFindings
+              - LintMark_ViolationsReported
+              - LintMark_ConfigurationHonored
+
+          - id: DotnetToolWrapper-OTS-LintMark-Fix
+            title: LintMark shall rewrite fixable rule violations in a Markdown file to the canonical form.
+            justification: |
+              fix.ps1 runs LintMark with --fix so that Markdown files conform before the lint gate
+              checks them.
+            tags: [ots]
+            tests:
+              - LintMark_FixRewritesToCanonicalForm

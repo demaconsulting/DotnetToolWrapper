@@ -1,0 +1,32 @@
+---
+# YAML Linting Standards
+#
+# DO NOT MODIFY: These rules represent coding standards.
+# If files fail linting, fix the files to meet these standards.
+extends: default
+ignore: |
+  **/.git/**
+  **/node_modules/**
+  **/.venv/**
+  **/thirdparty/**
+  **/third-party/**
+  **/3rd-party/**
+  **/generated/**
+  **/.agent-logs/**
+rules:
+  # Allow 'on:' in GitHub Actions workflows (not a boolean value)
+  truthy:
+    allowed-values: ['true', 'false']
+    check-keys: false
+
+  # No YAML line-length limit in DEMA repositories (yamlfix uses line_length = 10000 for the same reason)
+  line-length: disable
+
+  # Ensure proper indentation
+  indentation:
+    spaces: 2
+    indent-sequences: true
+
+  # Ensure proper comment formatting
+  comments:
+    min-spaces-from-content: 2

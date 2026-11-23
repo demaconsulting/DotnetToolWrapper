@@ -1,0 +1,25 @@
+---
+# Microsoft SBOM tool OTS requirements
+#
+# Microsoft.Sbom.DotNetTool generates the SPDX software bill of materials of the wrapper drop folder in
+# the CI build job. The tool has no self-validation, so the FileAssert check of the generated SPDX
+# document, run right after the tool, is the evidence.
+sections:
+  - title: OTS Software Requirements
+    sections:
+      - title: SbomTool Requirements
+        requirements:
+          - id: DotnetToolWrapper-OTS-SbomTool
+            title: >-
+              The Microsoft SBOM tool shall generate an SPDX 2.2 JSON document that describes the files of the
+              wrapper drop folder.
+            justification: |
+              The CI build job runs the Microsoft SBOM tool on the drop folder that holds the wrapper
+              files for each target framework, and SpdxTool then completes and validates the generated
+              document. FileAssert checks, before SpdxTool changes the document, that the SPDX 2.2 JSON
+              document exists with its hash file, holds the document information, creators, files, and
+              packages, names the wrapper package and namespace, and lists the wrapper assembly of each
+              target framework, which proves that the tool generated the base document correctly.
+            tags: [ots]
+            tests:
+              - SbomTool_SpdxManifest

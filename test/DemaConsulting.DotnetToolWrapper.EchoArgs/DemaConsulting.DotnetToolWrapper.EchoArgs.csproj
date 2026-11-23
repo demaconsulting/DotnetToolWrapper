@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Test helper: a console program that prints each of its arguments exactly, so the system tests can check
+       that the wrapper passes arguments through unchanged on every operating system. Not shipped. -->
+  <PropertyGroup>
+    <!-- Build Configuration -->
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>net8.0;net9.0;net10.0;net11.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>false</IsTestProject>
+
+    <!-- Code Quality Configuration -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest</AnalysisLevel>
+  </PropertyGroup>
+
+  <!-- Code Analysis Dependencies -->
+  <ItemGroup>
+    <!-- Analyzer packages use child-element form to configure both PrivateAssets and IncludeAssets:
+         - PrivateAssets="all" prevents these build-time analyzers from becoming transitive dependencies
+           of any project that references this one.
+         - IncludeAssets lists all asset types (including 'analyzers' and 'buildtransitive') to ensure
+           Roslyn analyzers and MSBuild targets are fully activated during the build. -->
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="11.0.100">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.36.0.15337">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

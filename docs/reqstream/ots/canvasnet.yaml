@@ -1,0 +1,22 @@
+---
+# CanvasNet OTS requirements
+#
+# DemaConsulting.CanvasNet.Tool draws the diagrams of the Pandoc documents through the
+# docs/filters/canvasnet.lua filter in the CI documents job. Its self-validation results are the
+# evidence.
+sections:
+  - title: OTS Software Requirements
+    sections:
+      - title: CanvasNet Requirements
+        requirements:
+          - id: DotnetToolWrapper-OTS-CanvasNet
+            title: CanvasNet shall draw the diagrams of a Pandoc document through the Pandoc filter.
+            justification: |
+              The documents reference their diagram sources, such as Mermaid files, and the
+              CanvasNet Pandoc filter draws them while Pandoc builds the HTML. The self-validation
+              proves that the Pandoc filter replaces diagram references with drawn pictures and
+              that Mermaid diagrams are drawn.
+            tags: [ots]
+            tests:
+              - CanvasNetTool_PandocFilter
+              - CanvasNetTool_RenderMermaid
