@@ -21,10 +21,12 @@ needs-review:
   - '!**/generated/**'
   - '!**/.venv/**'
 
-# Source of review evidence. No formal reviews have been recorded yet; change this to type 'url'
-# (for example a 'reviews' branch index.json) once review evidence is published.
+# Source of review evidence. The orphan 'reviews' branch holds the review PDFs and the index.json
+# that lists them. No reviews are recorded yet, so the review report is generated without
+# --enforce; add --enforce to the review report once reviews are recorded.
 evidence-source:
-  type: none
+  type: url
+  location: https://raw.githubusercontent.com/demaconsulting/DotnetToolWrapper/reviews/index.json
 
 # Context included for all reviews.
 context:

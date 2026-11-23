@@ -39,8 +39,9 @@ sections:
             justification: |
               lint.ps1 and the CI documents job generate the review plan with --enforce, so a file that
               needs review but is not covered by any review-set fails the build. The review report is not
-              generated with --enforce until review evidence is published, because every review-set is
-              reported without current evidence until then. The self-validation proves the enforcement.
+              generated with --enforce until reviews are recorded on the reviews branch, because every
+              review-set is reported without current evidence until then. The self-validation proves the
+              enforcement.
             tags: [ots]
             tests:
               - ReviewMark_Enforce

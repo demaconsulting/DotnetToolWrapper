@@ -8,9 +8,10 @@ Plan and the Review Report. The use of the tool on this project is also checked:
 configuration problem in `.reviewmark.yaml` or a file needing review that no review-set covers, the CI documents job
 fails on the same coverage problem when it generates the review plan with `--enforce`, and the FileAssert tests
 `Pandoc_ReviewPlanHtml`, `WeasyPrint_ReviewPlanPdf`, `Pandoc_ReviewReportHtml`, and `WeasyPrint_ReviewReportPdf`
-check the documents built from the generated plan and report. Review evidence is not published yet, so the review
-report is generated without `--enforce`; missing or outdated reviews are shown in the report but do not fail the
-build until the evidence is published and enforcement of the report is enabled.
+check the documents built from the generated plan and report. The review evidence is read from the `index.json` of
+the `reviews` branch, where no reviews are recorded yet, so the review report is generated without `--enforce`;
+missing or outdated reviews are shown in the report but do not fail the build until reviews are recorded and
+enforcement of the report is enabled.
 
 ### Test Scenarios
 

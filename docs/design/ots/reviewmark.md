@@ -25,6 +25,7 @@ ReviewMark is restored from the local tool manifest and started as `dotnet revie
 review plan with `--enforce`, which fails them when a file needing review is not covered by a review-set. The CI
 documents job runs the self-validation, then `dotnet reviewmark --plan docs/code_review_plan/generated/plan.md
 --enforce` and `dotnet reviewmark --report docs/code_review_report/generated/report.md`, and Pandoc and WeasyPrint
-build the Review Plan and Review Report from the generated Markdown. The configuration names no evidence source yet
-(`type: none`), so the report shows every review-set without current evidence and is generated without
-`--enforce`; enforcing the review evidence follows once it is published. Each run is a single process with no state.
+build the Review Plan and Review Report from the generated Markdown. The configuration reads the review evidence from
+the `index.json` of the orphan `reviews` branch (`type: url`), which also holds the review PDFs. No reviews are
+recorded yet, so the report shows every review-set without current evidence and is generated without `--enforce`;
+enforcing the review evidence follows once reviews are recorded. Each run is a single process with no state.

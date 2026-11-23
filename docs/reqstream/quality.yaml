@@ -75,9 +75,10 @@ sections:
         justification: |
           Continuous Compliance requires evidence that every file that defines, implements, or
           verifies the wrapper is covered by a formal review-set, and that the status of each
-          review is visible for each release. Coverage is enforced on every build now. Failing the
-          build on missing or outdated review evidence follows once review evidence is published;
-          until then the review report shows the status of each review-set without failing the build.
+          review is visible for each release. Coverage is enforced on every build now. The review
+          evidence is read from the reviews branch; failing the build on missing or outdated review
+          evidence follows once reviews are recorded there, and until then the review report shows
+          the status of each review-set without failing the build.
         tags: [quality]
         children:
           - DotnetToolWrapper-OTS-ReviewMark-Documents
