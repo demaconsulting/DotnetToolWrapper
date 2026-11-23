@@ -9,134 +9,58 @@
 [![License](https://img.shields.io/github/license/demaconsulting/DotnetToolWrapper?style=plastic)](https://github.com/demaconsulting/DotnetToolWrapper/blob/main/LICENSE)
 [![Build](https://github.com/demaconsulting/DotnetToolWrapper/actions/workflows/build_on_push.yaml/badge.svg)](https://github.com/demaconsulting/DotnetToolWrapper/actions/workflows/build_on_push.yaml)
 
-## Overview
-
-DotnetToolWrapper lets a native command-line program be distributed through NuGet and installed with
-`dotnet tool install`, like any other [.NET Tool](https://learn.microsoft.com/dotnet/core/tools/global-tools).
-The wrapper is the managed entry point of the tool package: when the tool runs, it detects the operating system
-and processor architecture, looks up the matching native executable in `DotnetToolWrapper.json`, and runs it.
-
-Package authors build one tool package for every platform they support, and users install and update the tool
-with the .NET command-line tools they already have.
-
 ## Features
 
-- Selects the native executable by operating system (Windows, Linux, FreeBSD, macOS) and architecture (x86,
-  x64, ARM, ARM64, WASM, S390x)
-- Passes the arguments to the program unchanged, runs it in the caller's working directory, and returns its
-  exit code
-- Uses one JSON file for configuration, with paths relative to the file and `%NAME%` environment variables
-- Runs on .NET 8.0, 9.0, 10.0, and 11.0
-- Has no dependencies beyond the .NET runtime
-- Reports a missing configuration file, a missing entry for the host target, and an entry without a `program`
-  property with a clear message and exit code 1
-- Traces its requirements to passing tests on every build, and ships a User Guide, a Software Design Document,
-  a Software Verification Design Document, a Requirements Document, a Trace Matrix, a Review Plan, a Review Report,
-  Build Notes, and a Code Quality Report with each release
+- 🌍 Runs on Windows, Linux, FreeBSD, and macOS
+- 🏗️ Selects the native executable for x86, x64, Arm, Arm64, WASM, or S390x
+- 🎯 Runs on .NET 8, 9, 10, and 11
+- 📦 Has no dependencies beyond the .NET runtime
+- ⚙️ Maps each `{os}-{arch}` target to its executable in one JSON file
+- 🔄 Passes arguments through unchanged and returns the program's exit code
 
-## Installation
+## Getting Started
 
-**Package authors** download `DotnetToolWrapper.zip` from the
-[releases page](https://github.com/demaconsulting/DotnetToolWrapper/releases). It holds the wrapper built for
-each .NET version, and each folder holds the same files:
+1. Download `DotnetToolWrapper.zip` from the
+   [releases page](https://github.com/demaconsulting/DotnetToolWrapper/releases) and copy the files of each
+   framework folder (for example `net8.0/`) into the matching `tools/{framework}/any/` folder of the tool package.
+2. Add a `DotnetToolWrapper.json` beside the wrapper files that maps each target to its native executable,
+   relative to the file:
 
-```text
-DotnetToolWrapper.zip
-├── net8.0/
-│   ├── DemaConsulting.DotnetToolWrapper.dll
-│   ├── DemaConsulting.DotnetToolWrapper.deps.json
-│   └── DemaConsulting.DotnetToolWrapper.runtimeconfig.json
-├── net9.0/                (the same files)
-├── net10.0/               (the same files)
-└── net11.0/               (the same files)
-```
+   ```json
+   {
+     "win-x64": { "program": "../../../win-x64/my-tool.exe" },
+     "linux-x64": { "program": "../../../linux-x64/my-tool" },
+     "osx-arm64": { "program": "../../../osx-arm64/my-tool" }
+   }
+   ```
 
-**Users of a wrapped tool** install it like any other .NET Tool:
+3. Add a `DotnetToolSettings.xml` that names the command and makes the wrapper its entry point:
 
-```bash
-dotnet tool install -g My.Tool.Package
-```
+   ```xml
+   <?xml version="1.0" encoding="utf-8"?>
+   <DotNetCliTool Version="1">
+     <Commands>
+       <Command Name="my-tool" EntryPoint="DemaConsulting.DotnetToolWrapper.dll" Runner="dotnet" />
+     </Commands>
+   </DotNetCliTool>
+   ```
 
-## Usage
+4. Pack the package with a `.nuspec` of package type `DotnetTool`, then install and run the tool:
 
-A wrapped tool package puts the wrapper files, `DotnetToolSettings.xml`, and `DotnetToolWrapper.json` in each
-framework folder, and the native executables at the package root:
+   ```bash
+   nuget pack tool.nuspec -Version 1.0.0
+   dotnet tool install -g My.Tool.Package --add-source ./
+   my-tool --help
+   ```
 
-```text
-root/
-├── tool.nuspec
-├── win-x64/
-│   └── my-tool.exe
-├── linux-x64/
-│   └── my-tool
-├── osx-arm64/
-│   └── my-tool
-└── tools/
-    ├── net8.0/any/          (the same files)
-    ├── net9.0/any/          (the same files)
-    ├── net10.0/any/         (the same files)
-    └── net11.0/any/
-        ├── DotnetToolSettings.xml
-        ├── DotnetToolWrapper.json
-        └── DemaConsulting.DotnetToolWrapper.* (the three wrapper files)
-```
+## More Information
 
-`DotnetToolWrapper.json` maps each `{os}-{arch}` target to its native executable, relative to the file:
-
-```json
-{
-  "win-x64": { "program": "../../../win-x64/my-tool.exe" },
-  "linux-x64": { "program": "../../../linux-x64/my-tool" },
-  "osx-arm64": { "program": "../../../osx-arm64/my-tool" }
-}
-```
-
-`DotnetToolSettings.xml` names the command and makes the wrapper its entry point:
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<DotNetCliTool Version="1">
-  <Commands>
-    <Command Name="my-tool" EntryPoint="DemaConsulting.DotnetToolWrapper.dll" Runner="dotnet" />
-  </Commands>
-</DotNetCliTool>
-```
-
-Pack the package, then install and run the tool:
-
-```bash
-nuget pack tool.nuspec -Version 1.0.0
-dotnet tool install -g My.Tool.Package --add-source ./
-my-tool --help
-```
-
-## Building
-
-```pwsh
-pwsh ./build.ps1
-```
-
-## User Guide
-
-The DotnetToolWrapper User Guide is available on the
-[DotnetToolWrapper releases page](https://github.com/demaconsulting/DotnetToolWrapper/releases).
-
-## Contributing
-
-See [CONTRIBUTING.md](https://github.com/demaconsulting/DotnetToolWrapper/blob/main/CONTRIBUTING.md) for
-guidelines, and the
-[Code of Conduct](https://github.com/demaconsulting/DotnetToolWrapper/blob/main/CODE_OF_CONDUCT.md) for
-community standards.
-
-## License
-
-This project is licensed under the MIT License; see
-[LICENSE](https://github.com/demaconsulting/DotnetToolWrapper/blob/main/LICENSE).
-
-## Support
-
-- [Report a bug or request a feature](https://github.com/demaconsulting/DotnetToolWrapper/issues)
-- [Ask a question or start a discussion](https://github.com/demaconsulting/DotnetToolWrapper/discussions)
-- [Report a security vulnerability](https://github.com/demaconsulting/DotnetToolWrapper/blob/main/SECURITY.md)
+- [User Guide](https://github.com/demaconsulting/DotnetToolWrapper/tree/main/docs/user_guide) - source; the
+  PDF is published with each release
+- [Releases](https://github.com/demaconsulting/DotnetToolWrapper/releases) - wrapper files, User Guide PDF,
+  and compliance documents
+- [Contributing](https://github.com/demaconsulting/DotnetToolWrapper/blob/main/CONTRIBUTING.md)
+- [Security](https://github.com/demaconsulting/DotnetToolWrapper/blob/main/SECURITY.md)
+- [License](https://github.com/demaconsulting/DotnetToolWrapper/blob/main/LICENSE)
 
 [hero]: https://raw.githubusercontent.com/demaconsulting/DotnetToolWrapper/main/docs/images/hero.png

@@ -12,7 +12,12 @@ the native executable built for the current operating system and processor archi
 the same arguments, and returns its exit code.
 
 Package authors get one distribution channel for every platform they support, and users of the tool
-install and update it with the .NET command-line tools they already have.
+install and update it with the .NET command-line tools they already have. The wrapper has no
+dependencies beyond the .NET runtime.
+
+Each release traces the wrapper's requirements to passing tests, and ships this User Guide with a
+Software Design Document, a Software Verification Design Document, a Requirements Document, a Trace
+Matrix, a Review Plan, a Review Report, Build Notes, and a Code Quality Report.
 
 ## Scope
 
