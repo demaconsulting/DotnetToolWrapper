@@ -426,8 +426,9 @@ jobs:
       # review evidence; its self-validation runs here, next to the documents that depend on it.
       # Pandoc converts each to HTML, WeasyPrint renders the PDFs, and FileAssert checks both.
       # The plan is generated with --enforce, so a file needing review that no review-set covers fails
-      # the build. The report is generated without --enforce until review evidence is published
-      # (evidence-source type 'none'), because every review-set lacks current evidence until then.
+      # the build. The review evidence is the index.json of the orphan 'reviews' branch; the report is
+      # generated without --enforce until reviews are recorded there, because every review-set lacks
+      # current evidence until then.
 
       - name: Create code review output directories
         shell: bash

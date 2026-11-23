@@ -49,11 +49,18 @@ The following topics are out of scope:
   - **DemaConsulting.DotnetToolWrapper.Tests/** - one xUnit v3 test project
     - **DotnetToolWrapperTests.cs** - system tests that run the built wrapper with `dotnet`
     - **ProgramTests.cs** - unit tests of the Program unit
-    - **Runner.cs** - helper that starts a process and captures its output and exit code
+    - **Runner.cs** - helper that starts a process and captures its output and exit code, reading the output while
+      the process runs and killing, then waiting for, a process that does not exit within its timeout (60 seconds
+      unless a test passes a shorter one)
+    - **RunnerTests.cs** - tests that the Runner helper captures output larger than the pipe buffer without blocking,
+      kills a program that exceeds its timeout and waits for it to exit, and that the echo helper prints an
+      option with an invalid value unchanged
     - **AssemblyInfo.cs** - the `Sequential` test collection that keeps the system tests from running in parallel
     - **HostTarget.cs** - helper that names the host target independently of the Program unit
   - **DemaConsulting.DotnetToolWrapper.EchoArgs/** - console helper that prints each argument it receives, run by
-    the exact argument pass-through system test
+    the exact argument pass-through system test; leading `--repeat={n}` and `--sleep={ms}` options print the
+    output n times or wait ms milliseconds for the Runner tests, and are consumed only when their value is a
+    non-negative integer
 
 ## Companion Artifact Structure
 
