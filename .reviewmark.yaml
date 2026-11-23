@@ -68,6 +68,7 @@ reviews:
       - docs/verification/dotnet-tool-wrapper.md
       - test/**/DotnetToolWrapperTests.cs
       - test/**/Runner.cs
+      - test/**/RunnerTests.cs
       - test/**/AssemblyInfo.cs
       - test/**/HostTarget.cs
       - test/**/EchoArgs.cs
