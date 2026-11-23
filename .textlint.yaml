@@ -47,6 +47,7 @@ words:
   - Armv
   - Dema
   - demaconsulting
+  - distinguishability
   - dotnettool
   - fileshare
   - gmock
@@ -57,8 +58,10 @@ words:
   - netstandard
   - runtimeconfig
   - SARIF
+  - Sensmetry
   - shopt
   - slnx
+  - Syside
   - thirdparty
   - unidirectionality
   - venv
