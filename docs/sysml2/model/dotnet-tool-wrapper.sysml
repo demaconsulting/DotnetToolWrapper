@@ -1,6 +1,6 @@
 package DotnetToolWrapper {
     private import SoftwareItemMetadata::*;
-    private import DotnetToolWrapper_Program::*;
+    public import DotnetToolWrapper_Program::*;
 
     doc
     /*
