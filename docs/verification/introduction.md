@@ -29,6 +29,7 @@ OTS items:
 - **Pandoc**: verification evidence.
 - **ReqStream**: verification evidence.
 - **ReviewMark**: verification evidence.
+- **SbomTool**: verification evidence.
 - **SpdxTool**: verification evidence.
 - **SysML2Tools**: verification evidence.
 - **TextLint**: verification evidence.
