@@ -249,8 +249,7 @@ git clone https://github.com/demaconsulting/DotnetToolWrapper.git
 cd DotnetToolWrapper
 
 # Build and test for all target frameworks
-pwsh ./build.ps1
-
+pwsh ./build.ps1 -All
 # Or build only
 dotnet build DemaConsulting.DotnetToolWrapper.slnx --configuration Release
 ```

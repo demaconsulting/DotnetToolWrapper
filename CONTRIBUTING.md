@@ -65,7 +65,7 @@ git clone https://github.com/demaconsulting/DotnetToolWrapper.git
 cd DotnetToolWrapper
 
 # Build the solution and run the tests on all target frameworks
-pwsh ./build.ps1
+pwsh ./build.ps1 -All
 
 # Build for specific framework
 dotnet build DemaConsulting.DotnetToolWrapper.slnx --configuration Release --framework net8.0
@@ -124,16 +124,18 @@ DotnetToolWrapper/
 ├── .yamlfix.toml            # YAML auto-fix configuration (yamlfix)
 ├── .yamllint.yaml           # YAML linting rules (yamllint)
 ├── AGENTS.md                # GitHub Copilot agent instructions
-├── build.ps1                # Build the solution and run all tests
+├── build.ps1                # Build the solution and run the tests (-All, -Changed)
 ├── CODE_OF_CONDUCT.md       # Code of conduct
 ├── CONTRIBUTING.md          # This file
 ├── DemaConsulting.DotnetToolWrapper.slnx
-├── fix.ps1                  # Apply all auto-fixers
+├── fix.ps1                  # Apply the auto-fixers
 ├── LICENSE                  # MIT License
-├── lint.ps1                 # Run all lint checks
+├── lint.ps1                 # Run the lint checks (-All is the CI gate)
 ├── pip-requirements.txt     # Python dependencies for yamllint and yamlfix
 ├── README.md                # Project overview
 ├── requirements.yaml        # Root requirements file (ReqStream)
+├── scripts/
+│   └── ProjectScripts.psm1  # Shared scoping logic of the build/lint/fix scripts (never edit here)
 ├── SECURITY.md              # Security policy
 └── spdx-workflow.yaml       # SBOM enhancement workflow
 ```
@@ -173,16 +175,19 @@ DotnetToolWrapper/
 
 ### Testing Your Changes
 
+While iterating, use `-Changed` to run only what the changes affect (add `-DryRun` to see the selection); run
+`pwsh ./<script> -Help` for the switches. Before opening a pull request, run the full gates once:
+
 ```bash
 # Apply all auto-fixers (dotnet format, LintMark, yamlfix); always exits 0
-pwsh ./fix.ps1
+pwsh ./fix.ps1 -All
 
 # Run all lint checks (yamllint, TextLint, LintMark, ReqStream, ReviewMark, VersionMark, SysML2Tools,
-# dotnet format); CI runs the same script
-pwsh ./lint.ps1
+# dotnet format); CI runs the same command
+pwsh ./lint.ps1 -All
 
 # Build all target frameworks and run the tests
-pwsh ./build.ps1
+pwsh ./build.ps1 -All
 ```
 
 ## Commit Guidelines
