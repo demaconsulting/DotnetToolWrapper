@@ -66,8 +66,8 @@ yet cover something.
 - **`docs/sysml2/`** - SysML2 architecture model; authoritative source for software structure
 - **`fix.ps1`** - Applies the auto-fixers (dotnet format, LintMark, YAML); a fixer run always exits 0.
   Requires a scope; see `pwsh ./fix.ps1 -Help`.
-- **`build.ps1`** - Builds the solution and runs the tests. Requires a scope (`-All` is the full build);
-  see `pwsh ./build.ps1 -Help`.
+- **`build.ps1`** - Builds the solution and runs the tests. Requires a scope (`-All` is the full build,
+  `-Project Tests` builds and tests one project and what depends on it); see `pwsh ./build.ps1 -Help`.
 - **`lint.ps1`** - Runs the lint checks (`-All` is the CI merge gate). Requires a scope; see
   `pwsh ./lint.ps1 -Help`.
 - **`scripts/ProjectScripts.psm1`** - PowerShell module with the scoping logic the three scripts share.
