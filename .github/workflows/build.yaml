@@ -12,7 +12,7 @@ on:
 jobs:
   # Performs quick quality checks for project formatting consistency including
   # markdown linting, spell checking, YAML validation, and dotnet format, all
-  # run by lint.ps1.
+  # run by lint.ps1 -All.
   quality-checks:
     name: Quality Checks
     runs-on: ubuntu-latest
@@ -80,7 +80,7 @@ jobs:
 
       - name: Run linters
         shell: pwsh
-        run: ./lint.ps1
+        run: ./lint.ps1 -All
 
       - name: Upload quality artifacts
         if: ${{ !cancelled() }}
@@ -90,7 +90,7 @@ jobs:
           path: artifacts/
 
   # Builds and tests the wrapper on every supported operating system, on both x64 and arm64
-  # (macos-latest is arm64), using build.ps1, which runs the tests on net8.0, net9.0, net10.0,
+  # (macos-latest is arm64), using build.ps1 -All, which runs the tests on net8.0, net9.0, net10.0,
   # and net11.0. The TRX file names carry the operating system, framework, and architecture
   # ({os}_{asm}_{tfm}_{arch}.trx) for the ReqStream source filters of the platform requirements.
   test:
@@ -130,7 +130,7 @@ jobs:
 
       - name: Build and Test
         shell: pwsh
-        run: ./build.ps1
+        run: ./build.ps1 -All
 
       - name: Upload test results
         if: ${{ !cancelled() }}
